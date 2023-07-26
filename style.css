@@ -1,0 +1,13 @@
+body {
+    background-color: #5c86bd;
+    font-family: 'Roboto', sans-serif;
+    font-size: 160px;
+    color: #212529;
+    text-align: center;
+}
+
+.game {
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    border-radius: 0.1em;
+}
