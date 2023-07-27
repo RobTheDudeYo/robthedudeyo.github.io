@@ -21,9 +21,11 @@ class Ball {
         this.ballY += this.velocityY;
         // check for collisions
         if ((this.ballX <= 0 && this.velocityX < 0) || (this.ballX >= (resolution - this.ballSize) && this.velocityX > 0)) {
+            this.ballX = (this.ballX <= 0 ? 0 : resolution - this.ballSize);
             this.velocityX = -this.velocityX;
         }
         if ((this.ballY <= 0 && this.velocityY < 0) || (this.ballY >= (resolution - this.ballSize) && this.velocityY > 0)) {
+            this.ballY = (this.ballY <= 0 ? 0 : resolution - this.ballSize);
             this.velocityY = -this.velocityY;
         }
         // normalise the velocity
