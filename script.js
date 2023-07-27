@@ -20,7 +20,6 @@ gamePanel.addEventListener('click', function () {
 }
 );
 
-
 function mainLoop() {
 
     theBall.move();
