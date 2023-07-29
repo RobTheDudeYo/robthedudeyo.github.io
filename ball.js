@@ -16,7 +16,7 @@ class Ball {
     }
 
     move() {
-        // move the dot
+        // move the ball
         this.ballX += this.velocityX;
         this.ballY += this.velocityY;
         // check for collisions
