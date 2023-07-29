@@ -49,7 +49,7 @@ class Ball {
     }
 }
 class paddle {
-    constructor(gameWidth, gameHeight) {
+    constructor(resolution) {
         this.width = 150;
         this.height = 30;
 
@@ -57,8 +57,8 @@ class paddle {
         this.speed = 0;
 
         this.position = {
-            x: gameWidth / 2 - this.width / 2,
-            y: gameHeight - this.height - 10
+            x: resolution / 2 - this.width / 2,
+            y: resolution - this.height - 10
         };
     }
 
@@ -91,7 +91,7 @@ class paddle {
 let speed_constant = 0.5;
 
 let theBall = new Ball();
-let thePaddle = new paddle(resolution, resolution);
+let thePaddle = new paddle(resolution);
 
 
 let gameState = 'start';
