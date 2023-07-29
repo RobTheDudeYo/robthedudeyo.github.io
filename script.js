@@ -100,11 +100,11 @@ let lastTime = Date.now();
 
 function mainLoop() {
     if (gameState === 'start') {
-        gameState = startScreen();
+        startScreen();
     } else if (gameState === 'game') {
-        gameState = gameLoop(deltaTime, theBall);
+        gameLoop(deltaTime, theBall);
     } else if (gameState === 'end') {
-        gameState = endScreen();
+        endScreen();
     }
     deltaTime = Date.now() - lastTime;
     lastTime = Date.now();
@@ -120,6 +120,7 @@ function startScreen() {
         // check for startButton clicks
         document.getElementById('startButton').onclick = () => {
             document.body.removeChild(startPanel);
+            lastTime = Date.now();
             gameState = 'game';
         };
     }
@@ -147,7 +148,6 @@ function startScreen() {
         startPanel.appendChild(startButton);
     }
 
-    return 'start';
 }
 
 let lives = 3;
@@ -165,14 +165,11 @@ function gameLoop(deltaTime, theBall) {
         gamePanel.style.top = (window.innerHeight - resolution) / 2 + 'px';
         gamePanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
         gamePanel.appendChild(theBall.element);
-        return 'game';
     } else {
         // run the game
         theBall.move(deltaTime);
-        if (lives > 0) {
-            return 'game';
-        } else {
-            return 'end';
+        if (lives = 0) {
+            gameState = 'end';
         }
     }
 }
