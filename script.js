@@ -10,7 +10,7 @@ gamePanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
 let panelWidth = gamePanel.style.width;
 let panelHeight = gamePanel.style.height;
 
-const speed_constant = 10;
+const speed_constant = 2.5;
 
 let theBall = new Ball();
 
