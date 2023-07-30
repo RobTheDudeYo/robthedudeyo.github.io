@@ -6,6 +6,8 @@ body {
     position: absolute;
     background-color: #f8f9fa;
     border-radius: 2%;
+    transition: all 0.1s ease;
+    opacity: 0;
 }
 
 #ball {
@@ -41,7 +43,6 @@ body {
 #startButton p {
     font-size: 3em;
     color: white;
-    /* centered x and y */
     position: absolute;
     left: 50%;
     transform: translate(-50%, -50%);
