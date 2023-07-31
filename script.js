@@ -128,7 +128,11 @@ function startScreen() {
         startPanel.className = 'panel';
         startPanel.style.width = resolution + 'px';
         startPanel.style.height = resolution + 'px';
-        startPanel.style.top = (window.innerHeight - resolution) / 2 + 'px';
+        if (window.innerHeight < window.innerWidth) {
+            startPanel.style.top = (window.innerHeight - resolution) / 2 + 'px';
+        } else {
+            startPanel.style.top = (window.innerWidth - resolution) / 2 + 'px';
+        }
         startPanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
         // set up the start button
         const startButton = document.createElement('div');
@@ -170,7 +174,11 @@ function gameLoop() {
         gamePanel.className = 'panel';
         gamePanel.style.width = resolution + 'px';
         gamePanel.style.height = resolution + 'px';
-        gamePanel.style.top = (window.innerHeight - resolution) / 2 + 'px';
+        if (window.innerHeight < window.innerWidth) {
+            gamePanel.style.top = (window.innerHeight - resolution) / 2 + 'px';
+        } else {
+            gamePanel.style.top = (window.innerWidth - resolution) / 2 + 'px';
+        }
         gamePanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
         // wait 1ms otherwise the transition doesn't work
         setTimeout(() => {
@@ -193,28 +201,68 @@ function gameLoop() {
 // Define a variable to store the current movement direction
 let currentDirection = 0;
 
-// Add event listeners for keydown and keyup events
-document.addEventListener('keydown', (event) => {
-    // Update the direction based on the currently pressed keys
-    if (event.key === 'ArrowLeft') {
-        currentDirection = -1;
-    } else if (event.key === 'ArrowRight') {
-        currentDirection = 1;
-    }
-});
+if (window.innerWidth > window.innerHeight) {
+    // Add constrols for desktop
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+            currentDirection = -1;
+        } else if (event.key === 'ArrowRight') {
+            currentDirection = 1;
+        }
+    });
 
-document.addEventListener('keyup', (event) => {
-    // Reset the direction based on the currently pressed keys
-    if (event.key === 'ArrowLeft' && currentDirection === -1) {
-        currentDirection = 0;
-    } else if (event.key === 'ArrowRight' && currentDirection === 1) {
-        currentDirection = 0;
-    }
-});
+    document.addEventListener('keyup', (event) => {
+        if (event.key === 'ArrowLeft' && currentDirection === -1) {
+            currentDirection = 0;
+        } else if (event.key === 'ArrowRight' && currentDirection === 1) {
+            currentDirection = 0;
+        }
+    });
+} else {
+    // Add controls for mobile
+    // left button and right button, below the gamePanel
+    const leftButton = document.createElement('div');
+    leftButton.id = 'leftButton';
+    leftButton.className = 'button';
+    leftButton.style.width = resolution / 2 + 'px';
+    leftButton.style.height = resolution / 2 + 'px';
+    leftButton.style.left = (window.innerWidth - resolution) / 2 + 'px';
+    leftButton.style.top = resolution + 'px';
+    document.body.appendChild(leftButton);
 
-// Update the paddle's direction in a separate update loop (e.g., game loop)
-function updatePaddleDirection() {
-    thePaddle.direction = currentDirection;
+    const rightButton = document.createElement('div');
+    rightButton.id = 'rightButton';
+    rightButton.className = 'button';
+    rightButton.style.width = resolution / 2 + 'px';
+    rightButton.style.height = resolution / 2 + 'px';
+    rightButton.style.left = ((window.innerWidth - resolution) / 2) + (resolution / 2) + 'px';
+    rightButton.style.top = resolution + 'px';
+    document.body.appendChild(rightButton);
+
+    leftButton.addEventListener("touchstart", () => {
+        if (currentDirection === 0) {
+            currentDirection = -1;
+        }
+    });
+
+    leftButton.addEventListener("touchend", () => {
+        if (currentDirection === -1) {
+            currentDirection = 0;
+        }
+    });
+
+    rightButton.addEventListener("touchstart", () => {
+        if (currentDirection === 0) {
+            currentDirection = 1;
+        }
+    });
+
+    rightButton.addEventListener("touchend", () => {
+        if (currentDirection === 1) {
+            currentDirection = 0;
+        }
+    });
+
 }
 
 
