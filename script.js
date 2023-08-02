@@ -5,12 +5,15 @@ let speed_constant = grain * 5;
 const ballSize = grain * 400;
 let lives = 3;
 
-let balls = [];
-let blocks = [];
+const balls = [];
+const blocks = [];
 
 let gameState = 'start';
 let deltaTime = Date.now();
 let lastTime = Date.now();
+
+class Block {
+}
 
 class Ball {
     constructor() {
@@ -19,12 +22,12 @@ class Ball {
         this.element.id = 'ball';
         this.element.style.width = ballSize + 'px';
         this.element.style.height = ballSize + 'px';
-        this.element.style.left = 1 + 'px';
-        this.element.style.top = 1 + 'px';
-        this.x = this.element.offsetLeft;
-        this.y = this.element.offsetTop;
+        this.x = parseInt(Math.random() * resolution);
+        this.y = parseInt(Math.random() * resolution);
+        this.element.style.left = this.x + 'px';
+        this.element.style.top = this.y + 'px';
         this.velocityX = grain * Math.random() * 100;
-        this.velocityY = grain * Math.random() * 100;
+        this.velocityY = grain * Math.random() * 50 - 5;
     }
 
     move() {
@@ -41,9 +44,15 @@ class Ball {
             this.x = (this.x <= 0 ? 0 : resolution - ballSize);
             this.velocityX = -this.velocityX;
         }
-        if ((this.y <= 0 && this.velocityY < 0) || (this.y >= (resolution - ballSize) && this.velocityY > 0)) {
+        if (this.y <= 0 && this.velocityY < 0) {
             this.y = (this.y <= 0 ? 0 : resolution - ballSize);
             this.velocityY = -this.velocityY;
+        } else if (this.y >= (resolution - ballSize) && this.velocityY > 0) {
+            // the ball has hit the bottom of the screen
+            // remove the element from the DOM and the balls array
+            this.element.remove();
+            balls.splice(balls.indexOf(this), 1);
+            return;
         }
         // normalise the velocity
         this.velocityMagnitude = (this.velocityX ** 2 + this.velocityY ** 2) ** 0.5;
@@ -56,16 +65,22 @@ class Ball {
     }
 
     checkCollision(object) {
-        // check for collision with the object
-        if (this.x + ballSize >= object.x && this.x <= object.x + object.width && this.y + ballSize >= object.y && this.y <= object.y + object.height) {
-            // collision detected
-            // check if the ball is hitting the top or bottom of the paddle
+        // check for collisions with the paddle
+        if (object instanceof Paddle) {
+            // check for collisions with the top of the paddle only
             if (this.y + ballSize >= object.y && this.y <= object.y + object.height && this.velocityY > 0) {
-                // the ball is hitting the top or bottom of the paddle
-                this.velocityY = -this.velocityY;
-            } else {
-                // the ball is hitting the side of the paddle
-                this.velocityX = -this.velocityX;
+                if (this.x + ballSize >= object.x && this.x <= object.x + object.width) {
+                    this.velocityY = -this.velocityY;
+                }
+            }
+        } else if (object instanceof Block) {
+            if (this.y + ballSize >= object.y && this.y <= object.y + object.height) {
+                if (this.x + ballSize >= object.x && this.x <= object.x + object.width) {
+                    this.y = object.y - ballSize;
+                    this.velocityY = -this.velocityY;
+                    object.element.remove();
+                    blocks.splice(blocks.indexOf(object), 1);
+                }
             }
         }
     }
@@ -168,7 +183,7 @@ const thePaddle = new Paddle();
 function gameLoop() {
     // if the game window isn't built yet, build it
     if (!document.getElementById('gamePanel')) {
-        for (let i = 0; i < 100; i++)
+        for (let i = 0; i < 50; i++)
             balls.push(new Ball());
         lives = 3;
         const gamePanel = document.createElement('div');
@@ -196,11 +211,18 @@ function gameLoop() {
         thePaddle.move(deltaTime);
         // for ball in balls
         if (balls.length < 1) {
-            
+            console.log('no balls');
+            balls.push(new Ball());
+            gamePanel.appendChild(balls[0].element);
         }
         for (let i = 0; i < balls.length; i++) {
-            balls[i].move(deltaTime);
             balls[i].checkCollision(thePaddle);
+            for (let j = 0; j < balls.length; j++) {
+                if (i !== j) {
+                    balls[i].checkCollision(balls[j]);
+                }
+            }
+            balls[i].move(deltaTime);
         }
         if (lives < 1) {
             gameState = 'end';
@@ -218,6 +240,9 @@ document.addEventListener('keydown', (event) => {
         currentDirection = -1;
     } else if (event.key === 'ArrowRight') {
         currentDirection = 1;
+    }
+    else if (event.key === 'Enter' && gameState === 'start') {
+        gameState = 'game';
     }
 });
 
