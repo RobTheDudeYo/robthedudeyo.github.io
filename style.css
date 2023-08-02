@@ -49,14 +49,12 @@ body {
 #startButton {
     position: absolute;
     background-color: #5c86bd;
-    border-radius: 5%;
 }
 
 #startButton p {
     color: white;
-}
-
-p {
+    text-align: center;
+    vertical-align: middle;
     pointer-events: none;
     user-select: none;
 }

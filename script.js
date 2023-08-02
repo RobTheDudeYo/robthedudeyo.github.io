@@ -1,13 +1,12 @@
-// set up the game panel
-const bestResolutions = [840, 720, 420, 360, 240]
-const maxResolution = (window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth) * 0.95;
-//const resolution = bestResolutions.find(res => res <= maxResolution);
 const resolution = (window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth) * 0.90;
 const grain = resolution / 10000;
 
 let speed_constant = grain * 5;
 const ballSize = grain * 400;
 let lives = 3;
+
+let balls = [];
+let blocks = [];
 
 let gameState = 'start';
 let deltaTime = Date.now();
@@ -24,8 +23,8 @@ class Ball {
         this.element.style.top = 1 + 'px';
         this.x = this.element.offsetLeft;
         this.y = this.element.offsetTop;
-        this.velocityX = grain * 100;
-        this.velocityY = grain * 100;
+        this.velocityX = grain * Math.random() * 100;
+        this.velocityY = grain * Math.random() * 100;
     }
 
     move() {
@@ -109,7 +108,7 @@ function mainLoop() {
     if (gameState === 'start') {
         startScreen();
     } else if (gameState === 'game') {
-        gameLoop(deltaTime, theBall);
+        gameLoop(deltaTime);
     } else if (gameState === 'end') {
         endScreen();
     }
@@ -143,6 +142,8 @@ function startScreen() {
         startButton.id = 'startButton';
         const startButtonText = document.createElement('p');
         startButtonText.innerHTML = 'Start';
+        startButtonText.style.fontSize = grain * 400 + 'px';
+        console.log(startButtonText.style.height)
         startButton.appendChild(startButtonText);
         startPanel.appendChild(startButton);
         document.body.appendChild(startPanel);
@@ -162,12 +163,13 @@ function startScreen() {
     }
 }
 
-let theBall = new Ball();
-let thePaddle = new Paddle();
+const thePaddle = new Paddle();
 
 function gameLoop() {
     // if the game window isn't built yet, build it
     if (!document.getElementById('gamePanel')) {
+        for (let i = 0; i < 100; i++)
+            balls.push(new Ball());
         lives = 3;
         const gamePanel = document.createElement('div');
         gamePanel.id = 'gamePanel';
@@ -182,16 +184,24 @@ function gameLoop() {
         gamePanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
         // wait 1ms otherwise the transition doesn't work
         setTimeout(() => {
-            gamePanel.appendChild(theBall.element);
+            for (let i = 0; i < balls.length; i++) {
+                gamePanel.appendChild(balls[i].element);
+            }
             gamePanel.appendChild(thePaddle.element);
             document.body.appendChild(gamePanel);
             gamePanel.style.opacity = 1;
         }, 1);
     } else {
         // run the game
-        theBall.move(deltaTime);
         thePaddle.move(deltaTime);
-        theBall.checkCollision(thePaddle);
+        // for ball in balls
+        if (balls.length < 1) {
+            
+        }
+        for (let i = 0; i < balls.length; i++) {
+            balls[i].move(deltaTime);
+            balls[i].checkCollision(thePaddle);
+        }
         if (lives < 1) {
             gameState = 'end';
         }
@@ -201,24 +211,24 @@ function gameLoop() {
 // Define a variable to store the current movement direction
 let currentDirection = 0;
 
-if (window.innerWidth > window.innerHeight) {
-    // Add constrols for desktop
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft') {
-            currentDirection = -1;
-        } else if (event.key === 'ArrowRight') {
-            currentDirection = 1;
-        }
-    });
 
-    document.addEventListener('keyup', (event) => {
-        if (event.key === 'ArrowLeft' && currentDirection === -1) {
-            currentDirection = 0;
-        } else if (event.key === 'ArrowRight' && currentDirection === 1) {
-            currentDirection = 0;
-        }
-    });
-} else {
+// Add constrols for desktop
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') {
+        currentDirection = -1;
+    } else if (event.key === 'ArrowRight') {
+        currentDirection = 1;
+    }
+});
+
+document.addEventListener('keyup', (event) => {
+    if (event.key === 'ArrowLeft' && currentDirection === -1) {
+        currentDirection = 0;
+    } else if (event.key === 'ArrowRight' && currentDirection === 1) {
+        currentDirection = 0;
+    }
+});
+if (window.innerWidth < window.innerHeight) {
     // Add controls for mobile
     // left button and right button, below the gamePanel
     const leftButton = document.createElement('div');
