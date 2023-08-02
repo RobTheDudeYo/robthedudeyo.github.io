@@ -183,7 +183,7 @@ const thePaddle = new Paddle();
 function gameLoop() {
     // if the game window isn't built yet, build it
     if (!document.getElementById('gamePanel')) {
-        for (let i = 0; i < 50; i++)
+        for (let i = 0; i < 20; i++)
             balls.push(new Ball());
         lives = 3;
         const gamePanel = document.createElement('div');
