@@ -130,6 +130,9 @@ class Paddle {
 }
 
 const actionButtonText = document.createElement('p');
+actionButtonText.style.fontSize = grain * 800 + 'px';
+
+
 function mainLoop() {
     if (gameState === 'start') {
         actionButtonText.innerHTML = 'Start';
@@ -142,6 +145,7 @@ function mainLoop() {
         }
         gameLoop(deltaTime);
     } else if (gameState === 'end') {
+        actionButtonText.innerHTML = 'Restart';
         endScreen();
     }
     deltaTime = Date.now() - lastTime;
@@ -166,13 +170,13 @@ function startScreen() {
         }
         startPanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
 
-        const titleText = document.createElement('h1');
+        const titleText = document.createElement('p');
         titleText.id = 'titleText';
         titleText.innerHTML = "Robsanoid";
         titleText.style.fontSize = grain * 2000 + 'px';
         startPanel.appendChild(titleText);
 
-        const pressStart = document.createElement('h2');
+        const pressStart = document.createElement('p');
         pressStart.id = 'pressStart';
         if (window.innerHeight > window.innerWidth) {
             pressStart.innerHTML = "Press Start";
@@ -196,6 +200,12 @@ const thePaddle = new Paddle();
 function gameLoop() {
     // if the game window isn't built yet, build it
     if (!document.getElementById('gamePanel')) {
+        if (document.getElementById('startPanel')) {
+            document.getElementById('startPanel').style.opacity = 0;
+            setTimeout(() => {
+                document.getElementById('startPanel').remove();
+            }, 1000);
+        }
         for (let i = 0; i < 3; i++) {
             balls.push(new Ball());
             servingBalls.push(balls[i]);
@@ -280,6 +290,7 @@ if (window.innerWidth < window.innerHeight) {
     leftButton.id = 'leftButton';
     leftButton.className = 'button';
     const leftButtonText = document.createElement('p');
+    leftButtonText.style.fontSize = grain * 800 + 'px';
     leftButtonText.innerHTML = 'left';
     leftButton.appendChild(leftButtonText);
     leftButton.style.width = resolution * 0.48 + 'px';
@@ -292,6 +303,7 @@ if (window.innerWidth < window.innerHeight) {
     rightButton.id = 'rightButton';
     rightButton.className = 'button';
     const rightButtonText = document.createElement('p');
+    rightButtonText.style.fontSize = grain * 800 + 'px';
     rightButtonText.innerHTML = 'right';
     rightButton.appendChild(rightButtonText);
     rightButton.style.width = resolution * 0.48 + 'px';
@@ -303,10 +315,7 @@ if (window.innerWidth < window.innerHeight) {
     const actionButton = document.createElement('div');
     actionButton.id = 'actionButton';
     actionButton.className = 'button';
-
     actionButton.appendChild(actionButtonText);
-
-
     actionButton.style.width = resolution + 'px';
     actionButton.style.height = resolution / 4 + 'px';
     actionButton.style.left = (window.innerWidth - resolution) / 2 + 'px';
@@ -325,18 +334,6 @@ if (window.innerWidth < window.innerHeight) {
         }
     });
 
-    leftButton.addEventListener("mousedown", () => {
-        if (currentDirection === 0) {
-            currentDirection = -1;
-        }
-    });
-
-    leftButton.addEventListener("mouseup", () => {
-        if (currentDirection === -1) {
-            currentDirection = 0;
-        }
-    });
-
     rightButton.addEventListener("touchstart", () => {
         if (currentDirection === 0) {
             currentDirection = 1;
@@ -344,18 +341,6 @@ if (window.innerWidth < window.innerHeight) {
     });
 
     rightButton.addEventListener("touchend", () => {
-        if (currentDirection === 1) {
-            currentDirection = 0;
-        }
-    });
-
-    rightButton.addEventListener("mousedown", () => {
-        if (currentDirection === 0) {
-            currentDirection = 1;
-        }
-    });
-
-    rightButton.addEventListener("mouseup", () => {
         if (currentDirection === 1) {
             currentDirection = 0;
         }
@@ -370,17 +355,6 @@ if (window.innerWidth < window.innerHeight) {
             servingBalls.shift();
         }
     });
-
-    actionButton.addEventListener("mouseup", () => {
-        if (gameState === 'start') {
-            gameState = 'game';
-
-        } else if (servingBalls[0]) {
-            servingBalls[0].serve = false;
-            servingBalls.shift();
-        }
-    });
-
 }
 
 

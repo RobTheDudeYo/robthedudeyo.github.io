@@ -24,6 +24,10 @@ body {
     cursor: none;
 }
 
+#startPanel {
+    color: #004181
+}
+
 #ball {
     position: absolute;
     background-image: url("favicon.ico");
@@ -54,7 +58,7 @@ body {
     background-color: #5c86bd;
 }
 
-p, h1, h2 {
+p {
     text-align: center;
     vertical-align: middle;
     pointer-events: none;
