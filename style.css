@@ -1,5 +1,6 @@
 body {
     background-color: #5c86bd;
+    overflow: hidden; /* Hide scrollbars */
 }
 
 .panel {
