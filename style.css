@@ -1,6 +1,7 @@
 body {
     background-color: #5c86bd;
     overflow: hidden; /* Hide scrollbars */
+    text-align: center;
 }
 
 .panel {
@@ -13,7 +14,8 @@ body {
 
 .button {
     position: absolute;
-    background-color: #5cbd7c;
+    background-color: #004181;
+    color: #f8f9fa;
     border-radius: 5%;
     transition: all 0.1s ease;
 }
@@ -52,8 +54,7 @@ body {
     background-color: #5c86bd;
 }
 
-#startButton p {
-    color: white;
+p, h1, h2 {
     text-align: center;
     vertical-align: middle;
     pointer-events: none;

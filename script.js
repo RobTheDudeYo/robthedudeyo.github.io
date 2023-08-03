@@ -129,11 +129,17 @@ class Paddle {
     }
 }
 
-
+const actionButtonText = document.createElement('p');
 function mainLoop() {
     if (gameState === 'start') {
+        actionButtonText.innerHTML = 'Start';
         startScreen();
     } else if (gameState === 'game') {
+        if (servingBalls.length > 0) {
+            actionButtonText.innerHTML = 'Serve';
+        } else {
+            actionButtonText.innerHTML = '';
+        }
         gameLoop(deltaTime);
     } else if (gameState === 'end') {
         endScreen();
@@ -159,33 +165,29 @@ function startScreen() {
             startPanel.style.top = (window.innerWidth - resolution) / 2 + 'px';
         }
         startPanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
-        // set up the start button
-        const startButton = document.createElement('div');
-        startButton.style.width = grain * 2000 + 'px';
-        startButton.style.height = grain * 1000 + 'px';
-        startButton.style.top = (resolution - parseInt(startButton.style.height)) / 2 + 'px';
-        startButton.style.left = (resolution - parseInt(startButton.style.width)) / 2 + 'px';
-        startButton.id = 'startButton';
-        const startButtonText = document.createElement('p');
-        startButtonText.innerHTML = 'Start';
-        startButtonText.style.fontSize = grain * 400 + 'px';
-        console.log(startButtonText.style.height)
-        startButton.appendChild(startButtonText);
-        startPanel.appendChild(startButton);
+
+        const titleText = document.createElement('h1');
+        titleText.id = 'titleText';
+        titleText.innerHTML = "Robsanoid";
+        titleText.style.fontSize = grain * 2000 + 'px';
+        startPanel.appendChild(titleText);
+
+        const pressStart = document.createElement('h2');
+        pressStart.id = 'pressStart';
+        if (window.innerHeight > window.innerWidth) {
+            pressStart.innerHTML = "Press Start";
+        } else {
+            pressStart.innerHTML = "Press Space";
+        }
+        pressStart.style.fontSize = grain * 1000 + 'px';
+        startPanel.appendChild(pressStart);
+
+
         document.body.appendChild(startPanel);
         // wait 1ms otherwise the transition doesn't work
         setTimeout(() => {
             startPanel.style.opacity = 1;
         }, 1);
-    } else {
-        // wait for some interaction
-        document.getElementById('startButton').onclick = () => {
-            startPanel.style.opacity = 0;
-            startPanel.addEventListener("transitionend", () => {
-                startPanel.parentNode.removeChild(startPanel);
-                gameState = 'game';
-            });
-        };
     }
 }
 
@@ -222,20 +224,16 @@ function gameLoop() {
     } else {
         // run the game
         thePaddle.move(deltaTime);
-        // for ball in balls
-        if (balls.length < 1) {
-            console.log('no balls');
-            balls.push(new Ball());
-            gamePanel.appendChild(balls[0].element);
-        }
-        for (let i = 0; i < balls.length; i++) {
-            balls[i].checkCollision(thePaddle);
-            for (let j = 0; j < balls.length; j++) {
-                if (i !== j) {
-                    balls[i].checkCollision(balls[j]);
+        if (balls.length > 0) {
+            for (let i = 0; i < balls.length; i++) {
+                balls[i].checkCollision(thePaddle);
+                for (let j = 0; j < balls.length; j++) {
+                    if (i !== j) {
+                        balls[i].checkCollision(balls[j]);
+                    }
                 }
+                balls[i].move(deltaTime);
             }
-            balls[i].move(deltaTime);
         }
         if (lives < 1) {
             gameState = 'end';
@@ -257,10 +255,13 @@ document.addEventListener('keydown', (event) => {
     else if (event.key === 'Enter' && gameState === 'start') {
         gameState = 'game';
     }
-    else if (event.key === ' ' && servingBalls[0]) {
-        console.log('serve');
-        servingBalls[0].serve = false;
-        servingBalls.shift();
+    else if (event.key === ' ') {
+        if (servingBalls[0]) {
+            servingBalls[0].serve = false;
+            servingBalls.shift();
+        } else if (gameState === 'start') {
+            gameState = 'game';
+        }
     }
 });
 
@@ -272,26 +273,45 @@ document.addEventListener('keyup', (event) => {
     }
 });
 
+
 if (window.innerWidth < window.innerHeight) {
-    // Add controls for mobile
-    // left button and right button, below the gamePanel
+    // controls for mobile
     const leftButton = document.createElement('div');
     leftButton.id = 'leftButton';
     leftButton.className = 'button';
-    leftButton.style.width = resolution / 2 + 'px';
-    leftButton.style.height = resolution / 2 + 'px';
-    leftButton.style.left = (window.innerWidth - resolution) / 2 + 'px';
-    leftButton.style.top = resolution + 'px';
+    const leftButtonText = document.createElement('p');
+    leftButtonText.innerHTML = 'left';
+    leftButton.appendChild(leftButtonText);
+    leftButton.style.width = resolution * 0.48 + 'px';
+    leftButton.style.height = resolution / 4 + 'px';
+    leftButton.style.left = (window.innerWidth - resolution) - window.innerWidth * 0.05 + 'px';
+    leftButton.style.top = resolution + window.innerWidth * 0.1 + 'px';
     document.body.appendChild(leftButton);
 
     const rightButton = document.createElement('div');
     rightButton.id = 'rightButton';
     rightButton.className = 'button';
-    rightButton.style.width = resolution / 2 + 'px';
-    rightButton.style.height = resolution / 2 + 'px';
-    rightButton.style.left = ((window.innerWidth - resolution) / 2) + (resolution / 2) + 'px';
-    rightButton.style.top = resolution + 'px';
+    const rightButtonText = document.createElement('p');
+    rightButtonText.innerHTML = 'right';
+    rightButton.appendChild(rightButtonText);
+    rightButton.style.width = resolution * 0.48 + 'px';
+    rightButton.style.height = resolution / 4 + 'px';
+    rightButton.style.left = (window.innerWidth - resolution * 0.48) - window.innerWidth * 0.05 + 'px';
+    rightButton.style.top = resolution + window.innerWidth * 0.1 + 'px';
     document.body.appendChild(rightButton);
+
+    const actionButton = document.createElement('div');
+    actionButton.id = 'actionButton';
+    actionButton.className = 'button';
+
+    actionButton.appendChild(actionButtonText);
+
+
+    actionButton.style.width = resolution + 'px';
+    actionButton.style.height = resolution / 4 + 'px';
+    actionButton.style.left = (window.innerWidth - resolution) / 2 + 'px';
+    actionButton.style.top = (resolution + resolution / 4) + window.innerWidth * 0.15 + 'px';
+    document.body.appendChild(actionButton);
 
     leftButton.addEventListener("touchstart", () => {
         if (currentDirection === 0) {
@@ -300,6 +320,18 @@ if (window.innerWidth < window.innerHeight) {
     });
 
     leftButton.addEventListener("touchend", () => {
+        if (currentDirection === -1) {
+            currentDirection = 0;
+        }
+    });
+
+    leftButton.addEventListener("mousedown", () => {
+        if (currentDirection === 0) {
+            currentDirection = -1;
+        }
+    });
+
+    leftButton.addEventListener("mouseup", () => {
         if (currentDirection === -1) {
             currentDirection = 0;
         }
@@ -314,6 +346,38 @@ if (window.innerWidth < window.innerHeight) {
     rightButton.addEventListener("touchend", () => {
         if (currentDirection === 1) {
             currentDirection = 0;
+        }
+    });
+
+    rightButton.addEventListener("mousedown", () => {
+        if (currentDirection === 0) {
+            currentDirection = 1;
+        }
+    });
+
+    rightButton.addEventListener("mouseup", () => {
+        if (currentDirection === 1) {
+            currentDirection = 0;
+        }
+    });
+
+    actionButton.addEventListener("touchend", () => {
+        if (gameState === 'start') {
+            gameState = 'game';
+
+        } else if (servingBalls[0]) {
+            servingBalls[0].serve = false;
+            servingBalls.shift();
+        }
+    });
+
+    actionButton.addEventListener("mouseup", () => {
+        if (gameState === 'start') {
+            gameState = 'game';
+
+        } else if (servingBalls[0]) {
+            servingBalls[0].serve = false;
+            servingBalls.shift();
         }
     });
 
