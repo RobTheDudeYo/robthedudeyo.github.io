@@ -29,25 +29,6 @@ class Block {
 
     }
 
-    // NOT DETEXTING X COLLISIONS
-    checkCollision(object) {
-        if (object instanceof Ball) {
-            if (this.y < object.y + ballSize && this.y + this.height > object.y && this.x < object.x + ballSize && this.x + this.width > object.x) {
-                console.log('hitY');
-                object.velocityY = -object.velocityY;
-                this.element.remove();
-                blocks.splice(blocks.indexOf(this), 1);
-                return true;
-            } else if (this.x < object.x + ballSize && this.x + this.width > object.x && this.y < object.y + ballSize && this.y + this.height > object.y) {
-                console.log('hitX');
-                object.velocityX = -object.velocityX;
-                this.element.remove();
-                blocks.splice(blocks.indexOf(this), 1);
-                return true;
-            }
-            return false;
-        }
-    }
 }
 
 
@@ -121,7 +102,32 @@ class Ball {
             }
         } else if (object instanceof Block) {
             // check for collisions with the blocks
+            // Check for overlap
+            if (this.x < object.x + object.width &&
+                this.x + ballSize > object.x &&
+                this.y < object.y + object.height &&
+                this.y + ballSize > object.y
+            ) {
+                // Collision occurred, determine which side
+                const overlapLeft = Math.abs(this.x + ballSize - object.x);
+                const overlapRight = Math.abs(object.x + object.width - this.x);
+                const overlapTop = Math.abs(this.y + ballSize - object.y);
+                const overlapBottom = Math.abs(object.y + object.height - this.y);
 
+
+                // Find the minimum overlap to determine the side
+                const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
+
+                if (minOverlap === overlapLeft || minOverlap === overlapRight) {
+                    object.element.remove();
+                    blocks.splice(blocks.indexOf(object), 1);
+                    this.velocityX = -this.velocityX;
+                } else if (minOverlap === overlapTop || minOverlap === overlapBottom) {
+                    object.element.remove();
+                    blocks.splice(blocks.indexOf(object), 1);
+                    this.velocityY = -this.velocityY;
+                }
+            }
         }
     }
 }
@@ -253,7 +259,7 @@ function gameLoop() {
             servingBalls.push(balls[i]);
             gamePanel.appendChild(balls[i].element);
         }
-        for (let i = 1; i < 9; i++) {
+        for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 5; j++) {
                 blocks.push(new Block(i, j));
                 gamePanel.appendChild(blocks[blocks.length - 1].element);
@@ -270,7 +276,7 @@ function gameLoop() {
             for (let i = 0; i < balls.length; i++) {
                 balls[i].checkCollision(thePaddle);
                 for (let j = 0; j < blocks.length; j++) {
-                    if (blocks[j].checkCollision(balls[i])) {
+                    if (balls[i].checkCollision(blocks[j])) {
                         break;
                     };
                 }
