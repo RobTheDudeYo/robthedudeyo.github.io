@@ -107,14 +107,14 @@ class Ball {
             // Find the minimum overlap to determine the side
             const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
 
-            if (minOverlap === overlapLeft || minOverlap === overlapRight) {
+            if (minOverlap === overlapLeft && this.velocityX > 0 || minOverlap === overlapRight && this.velocityX < 0) {
                 if (object instanceof Block) {
                     object.element.remove();
                     blocks.splice(blocks.indexOf(object), 1);
                 }
                 this.velocityX = -this.velocityX;
                 return true;
-            } else if (minOverlap === overlapTop || minOverlap === overlapBottom) {
+            } else if (minOverlap === overlapTop && this.velocityY > 0 || minOverlap === overlapBottom && this.velocityY < 0) {
                 if (object instanceof Block) {
                     object.element.remove();
                     blocks.splice(blocks.indexOf(object), 1);
@@ -265,7 +265,6 @@ function gameLoop() {
         }, 100);// wait 10ms otherwise the transition doesn't work
     } else {
         // run the game
-        thePaddle.move(deltaTime);
         if (balls.length > 0) {
             for (let i = 0; i < balls.length; i++) {
                 balls[i].checkCollision(thePaddle);
@@ -277,6 +276,7 @@ function gameLoop() {
                 balls[i].move(deltaTime);
             }
         }
+        thePaddle.move(deltaTime);
         if (lives < 1) {
             gameState = 'end';
         }
