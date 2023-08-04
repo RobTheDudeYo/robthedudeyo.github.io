@@ -120,17 +120,12 @@ class Ball {
                 }
             }
         } else if (object instanceof Block) {
-            if (this.y + ballSize >= object.y && this.y <= object.y + object.height) {
-                if (this.x + ballSize >= object.x && this.x <= object.x + object.width) {
-                    this.y = object.y - ballSize;
-                    this.velocityY = -this.velocityY;
-                    object.element.remove();
-                    blocks.splice(blocks.indexOf(object), 1);
-                }
-            }
+            // check for collisions with the blocks
+
         }
     }
 }
+
 
 class Paddle {
     constructor() {
