@@ -14,6 +14,7 @@ let deltaTime = Date.now();
 let lastTime = Date.now();
 
 class Block {
+
 }
 
 class Ball {
@@ -173,7 +174,7 @@ function startScreen() {
         const titleText = document.createElement('p');
         titleText.id = 'titleText';
         titleText.innerHTML = "Robsanoid";
-        titleText.style.fontSize = grain * 2000 + 'px';
+        titleText.style.fontSize = grain * 1800 + 'px';
         startPanel.appendChild(titleText);
 
         const pressStart = document.createElement('p');
