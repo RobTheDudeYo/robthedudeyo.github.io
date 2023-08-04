@@ -209,9 +209,9 @@ function startScreen() {
         const pressStart = document.createElement('p');
         pressStart.id = 'pressStart';
         if (window.innerHeight > window.innerWidth) {
-            pressStart.innerHTML = "Press Start (it's a bit wonky right now)";
+            pressStart.innerHTML = "Press Start";
         } else {
-            pressStart.innerHTML = "Press Space (it's a bit wonky right now)";
+            pressStart.innerHTML = "Press Space";
         }
         pressStart.style.fontSize = grain * 1000 + 'px';
         startPanel.appendChild(pressStart);
