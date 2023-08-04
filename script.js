@@ -26,7 +26,6 @@ class Block {
         this.element.style.left = this.x + 'px';
         this.element.style.top = this.y + 'px';
         this.type = type != null ? type : 0;
-
     }
 
 }
@@ -92,43 +91,36 @@ class Ball {
     }
 
     checkCollision(object) {
-        // check for collisions with the paddle
-        if (object instanceof Paddle) {
-            // check for collisions with the top of the paddle only
-            if (this.y + ballSize >= object.y && this.y <= object.y + object.height && this.velocityY > 0) {
-                if (this.x + ballSize >= object.x && this.x <= object.x + object.width) {
-                    this.velocityY = -this.velocityY;
-                }
-            }
-        } else if (object instanceof Block) {
-            // check for collisions with the blocks
-            // Check for overlap
-            if (this.x < object.x + object.width &&
-                this.x + ballSize > object.x &&
-                this.y < object.y + object.height &&
-                this.y + ballSize > object.y
-            ) {
-                // Collision occurred, determine which side
-                const overlapLeft = Math.abs(this.x + ballSize - object.x);
-                const overlapRight = Math.abs(object.x + object.width - this.x);
-                const overlapTop = Math.abs(this.y + ballSize - object.y);
-                const overlapBottom = Math.abs(object.y + object.height - this.y);
+        // Check for overlap
+        if (this.x < object.x + object.width &&
+            this.x + ballSize > object.x &&
+            this.y < object.y + object.height &&
+            this.y + ballSize > object.y
+        ) {
+            // Collision occurred, determine which side
+            const overlapLeft = Math.abs(this.x + ballSize - object.x);
+            const overlapRight = Math.abs(object.x + object.width - this.x);
+            const overlapTop = Math.abs(this.y + ballSize - object.y);
+            const overlapBottom = Math.abs(object.y + object.height - this.y);
 
 
-                // Find the minimum overlap to determine the side
-                const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
+            // Find the minimum overlap to determine the side
+            const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
 
-                if (minOverlap === overlapLeft || minOverlap === overlapRight) {
+            if (minOverlap === overlapLeft || minOverlap === overlapRight) {
+                if (object instanceof Block) {
                     object.element.remove();
                     blocks.splice(blocks.indexOf(object), 1);
-                    this.velocityX = -this.velocityX;
-                    return true;
-                } else if (minOverlap === overlapTop || minOverlap === overlapBottom) {
+                }
+                this.velocityX = -this.velocityX;
+                return true;
+            } else if (minOverlap === overlapTop || minOverlap === overlapBottom) {
+                if (object instanceof Block) {
                     object.element.remove();
                     blocks.splice(blocks.indexOf(object), 1);
-                    this.velocityY = -this.velocityY;
-                    return true;
                 }
+                this.velocityY = -this.velocityY;
+                return true;
             }
         }
         return false;
@@ -140,15 +132,14 @@ class Paddle {
     constructor() {
         this.element = document.createElement('div');
         this.element.id = 'paddle';
-        this.element.style.width = grain * 2000 + 'px';
-        this.element.style.height = grain * 400 + 'px';
-        this.element.style.left = (resolution - parseInt(this.element.style.width)) / 2 + 'px';
-        this.element.style.top = resolution - parseInt(this.element.style.height) * 2 + 'px';
-        this.width = parseInt(this.element.style.width);
-        this.x = parseInt(this.element.style.left);
-        this.y = parseInt(this.element.style.top);
-        this.width = parseInt(this.element.style.width);
-        this.height = parseInt(this.element.style.height);
+        this.width = grain * 2000;
+        this.height = grain * 400;
+        this.x = (resolution - this.width) / 2;
+        this.y = resolution - this.height * 2;
+        this.element.style.width = this.width + 'px';
+        this.element.style.height = this.height + 'px';
+        this.element.style.left = this.x + 'px';
+        this.element.style.top = this.y + 'px';
         this.speed = speed_constant;
         this.direction = 0;
     }
@@ -271,7 +262,7 @@ function gameLoop() {
         document.body.appendChild(gamePanel);
         setTimeout(() => {
             gamePanel.style.opacity = 1;
-        }, 1);// wait 1ms otherwise the transition doesn't work
+        }, 100);// wait 10ms otherwise the transition doesn't work
     } else {
         // run the game
         thePaddle.move(deltaTime);
