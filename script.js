@@ -122,13 +122,16 @@ class Ball {
                     object.element.remove();
                     blocks.splice(blocks.indexOf(object), 1);
                     this.velocityX = -this.velocityX;
+                    return true;
                 } else if (minOverlap === overlapTop || minOverlap === overlapBottom) {
                     object.element.remove();
                     blocks.splice(blocks.indexOf(object), 1);
                     this.velocityY = -this.velocityY;
+                    return true;
                 }
             }
         }
+        return false;
     }
 }
 
