@@ -1,3 +1,5 @@
+const version = '0.1';
+
 const resolution = (window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth) * 0.90;
 const grain = resolution / 10000;
 
@@ -202,16 +204,16 @@ function startScreen() {
 
         const titleText = document.createElement('p');
         titleText.id = 'titleText';
-        titleText.innerHTML = `Robsanoid`;
+        titleText.innerHTML = `Robsanoid `;
         titleText.style.fontSize = grain * 1800 + 'px';
         startPanel.appendChild(titleText);
 
         const pressStart = document.createElement('p');
         pressStart.id = 'pressStart';
         if (window.innerHeight > window.innerWidth) {
-            pressStart.innerHTML = "Press Start";
+            pressStart.innerHTML = `Press Start<br><br>v${version}`;
         } else {
-            pressStart.innerHTML = "Press Space";
+            pressStart.innerHTML = `Press Space<br><br>v${version}`;
         }
         pressStart.style.fontSize = grain * 1000 + 'px';
         startPanel.appendChild(pressStart);
