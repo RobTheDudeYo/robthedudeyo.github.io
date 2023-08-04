@@ -218,9 +218,7 @@ function startScreen() {
 
         document.body.appendChild(startPanel);
         // wait 1ms otherwise the transition doesn't work
-        setTimeout(() => {
-            startPanel.style.opacity = 1;
-        }, 1);
+        setTimeout(() => { startPanel.style.opacity = 1; }, 1);
     }
 }
 
@@ -231,9 +229,7 @@ function gameLoop() {
     if (!document.getElementById('gamePanel')) {
         // setup
         if (document.getElementById('startPanel')) {
-            setTimeout(() => {
-                document.getElementById('startPanel').remove();
-            }, 1);
+            setTimeout(() => { document.getElementById('startPanel').remove(); }, 1);
         }
         lives = 3;
         const gamePanel = document.createElement('div');
@@ -253,16 +249,14 @@ function gameLoop() {
             servingBalls.push(balls[i]);
             gamePanel.appendChild(balls[i].element);
         }
-        for (let i = 0; i < 10; i++) {
+        for (let i = 1; i < 9; i++) {
             for (let j = 0; j < 5; j++) {
                 blocks.push(new Block(i, j));
                 gamePanel.appendChild(blocks[blocks.length - 1].element);
             }
         }
         document.body.appendChild(gamePanel);
-        setTimeout(() => {
-            gamePanel.style.opacity = 1;
-        }, 100);// wait 10ms otherwise the transition doesn't work
+        setTimeout(() => { gamePanel.style.opacity = 1; }, 100);// wait 10ms otherwise the transition doesn't work
     } else {
         // run the game
         if (balls.length > 0) {
@@ -303,10 +297,7 @@ document.addEventListener('keydown', (event) => {
             servingBalls.shift();
         } else if (gameState === 'start') {
             document.getElementById('startPanel').style.opacity = 0;
-            setTimeout(() => {
-                gameState = 'game';
-            }
-                , 500);
+            setTimeout(() => { gameState = 'game'; }, 500);
         }
     }
 });
