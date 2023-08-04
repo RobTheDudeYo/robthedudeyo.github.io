@@ -14,8 +14,42 @@ let deltaTime = Date.now();
 let lastTime = Date.now();
 
 class Block {
+    constructor(x, y, type) {
+        this.element = document.createElement('div');
+        this.x = x * (resolution / 10);
+        this.y = y * (resolution / 20) + (resolution / 5);
+        this.element.id = 'block';
+        this.width = resolution / 10;
+        this.height = resolution / 20;
+        this.element.style.width = this.width + 'px';
+        this.element.style.height = this.height + 'px';
+        this.element.style.left = this.x + 'px';
+        this.element.style.top = this.y + 'px';
+        this.type = type != null ? type : 0;
 
+    }
+
+    // NOT DETEXTING X COLLISIONS
+    checkCollision(object) {
+        if (object instanceof Ball) {
+            if (this.y < object.y + ballSize && this.y + this.height > object.y && this.x < object.x + ballSize && this.x + this.width > object.x) {
+                console.log('hitY');
+                object.velocityY = -object.velocityY;
+                this.element.remove();
+                blocks.splice(blocks.indexOf(this), 1);
+                return true;
+            } else if (this.x < object.x + ballSize && this.x + this.width > object.x && this.y < object.y + ballSize && this.y + this.height > object.y) {
+                console.log('hitX');
+                object.velocityX = -object.velocityX;
+                this.element.remove();
+                blocks.splice(blocks.indexOf(this), 1);
+                return true;
+            }
+            return false;
+        }
+    }
 }
+
 
 class Ball {
     constructor(vX, vY, x, y) {
@@ -173,20 +207,19 @@ function startScreen() {
 
         const titleText = document.createElement('p');
         titleText.id = 'titleText';
-        titleText.innerHTML = "Robsanoid";
+        titleText.innerHTML = `Robsanoid`;
         titleText.style.fontSize = grain * 1800 + 'px';
         startPanel.appendChild(titleText);
 
         const pressStart = document.createElement('p');
         pressStart.id = 'pressStart';
         if (window.innerHeight > window.innerWidth) {
-            pressStart.innerHTML = "Press Start";
+            pressStart.innerHTML = "Press Start (it's a bit wonky right now)";
         } else {
-            pressStart.innerHTML = "Press Space";
+            pressStart.innerHTML = "Press Space (it's a bit wonky right now)";
         }
         pressStart.style.fontSize = grain * 1000 + 'px';
         startPanel.appendChild(pressStart);
-
 
         document.body.appendChild(startPanel);
         // wait 1ms otherwise the transition doesn't work
@@ -201,15 +234,11 @@ const thePaddle = new Paddle();
 function gameLoop() {
     // if the game window isn't built yet, build it
     if (!document.getElementById('gamePanel')) {
+        // setup
         if (document.getElementById('startPanel')) {
-            document.getElementById('startPanel').style.opacity = 0;
             setTimeout(() => {
                 document.getElementById('startPanel').remove();
-            }, 1000);
-        }
-        for (let i = 0; i < 3; i++) {
-            balls.push(new Ball());
-            servingBalls.push(balls[i]);
+            }, 1);
         }
         lives = 3;
         const gamePanel = document.createElement('div');
@@ -223,25 +252,32 @@ function gameLoop() {
             gamePanel.style.top = (window.innerWidth - resolution) / 2 + 'px';
         }
         gamePanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
-        // wait 1ms otherwise the transition doesn't work
-        setTimeout(() => {
-            for (let i = 0; i < balls.length; i++) {
-                gamePanel.appendChild(balls[i].element);
+        gamePanel.appendChild(thePaddle.element);
+        for (let i = 0; i < 1; i++) {
+            balls.push(new Ball());
+            servingBalls.push(balls[i]);
+            gamePanel.appendChild(balls[i].element);
+        }
+        for (let i = 1; i < 9; i++) {
+            for (let j = 0; j < 5; j++) {
+                blocks.push(new Block(i, j));
+                gamePanel.appendChild(blocks[blocks.length - 1].element);
             }
-            gamePanel.appendChild(thePaddle.element);
-            document.body.appendChild(gamePanel);
+        }
+        document.body.appendChild(gamePanel);
+        setTimeout(() => {
             gamePanel.style.opacity = 1;
-        }, 1);
+        }, 1);// wait 1ms otherwise the transition doesn't work
     } else {
         // run the game
         thePaddle.move(deltaTime);
         if (balls.length > 0) {
             for (let i = 0; i < balls.length; i++) {
                 balls[i].checkCollision(thePaddle);
-                for (let j = 0; j < balls.length; j++) {
-                    if (i !== j) {
-                        balls[i].checkCollision(balls[j]);
-                    }
+                for (let j = 0; j < blocks.length; j++) {
+                    if (blocks[j].checkCollision(balls[i])) {
+                        break;
+                    };
                 }
                 balls[i].move(deltaTime);
             }
@@ -271,7 +307,11 @@ document.addEventListener('keydown', (event) => {
             servingBalls[0].serve = false;
             servingBalls.shift();
         } else if (gameState === 'start') {
-            gameState = 'game';
+            document.getElementById('startPanel').style.opacity = 0;
+            setTimeout(() => {
+                gameState = 'game';
+            }
+                , 500);
         }
     }
 });
