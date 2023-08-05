@@ -6,7 +6,6 @@ const grain = resolution / 10000;
 let lives = 3;
 
 const balls = [];
-const servingBalls = [];
 const blocks = [];
 
 let gameState = 'start';
@@ -71,7 +70,6 @@ class Ball {
             } else if (this.y >= (resolution - this.height) && this.velocityY > 0) {
                 // the ball has hit the bottom of the screen
                 this.serve = true;
-                servingBalls.push(this);
                 lives--;
                 return;
             }
@@ -190,7 +188,13 @@ function mainLoop() {
         actionButtonText.innerHTML = 'Start';
         startScreen();
     } else if (gameState === 'game') {
-        if (servingBalls.length > 0) {
+        let count
+        for (let i = 0; i < balls.length; i++) {
+            if (balls[i].serve) {
+                count = i;
+            }
+        }
+        if (count > 0) {
             actionButtonText.innerHTML = 'Serve';
         } else {
             actionButtonText.innerHTML = '';
@@ -286,14 +290,11 @@ function gameLoop() {
         gamePanel.appendChild(livesText);
 
         document.body.appendChild(gamePanel);
+        for (let i = 0; i < 1; i++) {
+            balls.push(new Ball());
+            gamePanel.appendChild(balls[i].element);
+        }
         setTimeout(() => { gamePanel.style.opacity = 1; }, 1);// wait 10ms otherwise the transition doesn't work
-        setTimeout(() => {
-            for (let i = 0; i < 1; i++) {
-                balls.push(new Ball());
-                servingBalls.push(balls[i]);
-                gamePanel.appendChild(balls[i].element);
-            }
-        }, 1);
     } else {
         // run the game
         if (balls.length > 0) {
@@ -314,7 +315,8 @@ function gameLoop() {
         }
         livesText.innerHTML = `Lives: ${lives}`;
         if (lives < 1) {
-            console.log('game over');
+            balls.length = 0;
+            blocks.length = 0;
             gameState = 'start';
         }
     }
@@ -335,12 +337,19 @@ document.addEventListener('keydown', (event) => {
         gameState = 'game';
     }
     else if (event.key === ' ') {
-        if (servingBalls[0]) {
-            servingBalls[0].serve = false;
-            servingBalls.shift();
-        } else if (gameState === 'start') {
+        if (gameState === 'start') {
             document.getElementById('startPanel').style.opacity = 0;
             setTimeout(() => { gameState = 'game'; }, 500);
+            return;
+        }
+        let count = [];
+        for (let i = 0; i < balls.length; i++) {
+            if (balls[i].serve) {
+                count.push(balls[i]);
+            }
+        }
+        if (count.length > 0) {
+            count[0].serve = false;
         }
     }
 });
@@ -419,10 +428,16 @@ if (window.innerWidth < window.innerHeight) {
     actionButton.addEventListener("touchend", () => {
         if (gameState === 'start') {
             gameState = 'game';
-
-        } else if (servingBalls[0]) {
-            servingBalls[0].serve = false;
-            servingBalls.shift();
+            return;
+        }
+        let count = [];
+        for (let i = 0; i < balls.length; i++) {
+            if (balls[i].serve) {
+                count.push(balls[i]);
+            }
+        }
+        if (count.length > 0) {
+            count[0].serve = false;
         }
     });
 }
