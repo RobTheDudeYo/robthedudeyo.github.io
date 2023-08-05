@@ -188,18 +188,18 @@ function mainLoop() {
         actionButtonText.innerHTML = 'Start';
         startScreen();
     } else if (gameState === 'game') {
+        gameLoop(deltaTime);
         let count
         for (let i = 0; i < balls.length; i++) {
             if (balls[i].serve) {
-                count = i;
+                count = true;
             }
         }
-        if (count > 0) {
+        if (count) {
             actionButtonText.innerHTML = 'Serve';
         } else {
             actionButtonText.innerHTML = '';
         }
-        gameLoop(deltaTime);
     } else if (gameState === 'end') {
         actionButtonText.innerHTML = 'Restart';
         endScreen();
