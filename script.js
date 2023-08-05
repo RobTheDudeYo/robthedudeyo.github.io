@@ -268,7 +268,7 @@ function gameLoop() {
         if (document.getElementById('startPanel')) {
             setTimeout(() => { document.getElementById('startPanel').remove(); }, 1);
         }
-        lives = 3;
+        lives = 2;
         const gamePanel = document.createElement('div');
         gamePanel.id = 'gamePanel';
         gamePanel.className = 'panel';
@@ -319,18 +319,16 @@ function gameLoop() {
             console.log('you win');
             gameState = 'start';
         }
-        livesText.innerHTML = `Lives: ${lives}`;
-        if (lives < 1) {
+        if (lives < 0) {
             gameState = 'start';
+            return;
         }
+        livesText.innerHTML = `Extra Lives: ${lives}`;
     }
 }
 
-// Define a variable to store the current movement direction
-let currentDirection = 0;
-
-
 // Add constrols for desktop
+let currentDirection = 0;
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') {
         currentDirection = -1;
