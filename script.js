@@ -73,6 +73,7 @@ class Ball {
                 // remove the element from the DOM and the balls array
                 this.serve = true;
                 servingBalls.push(this);
+                lives--;
                 return;
             }
             // normalise the velocity
@@ -209,6 +210,9 @@ function mainLoop() {
 function startScreen() {
     // if the start screen isn't built yet, build it
     if (!document.getElementById('startPanel')) {
+        if (document.getElementById('gamePanel')) {
+            setTimeout(() => { document.getElementById('gamePanel').remove(); }, 1);
+        }
         // set up the start screen
         const startPanel = document.createElement('div');
         startPanel.id = 'startPanel';
@@ -295,8 +299,13 @@ function gameLoop() {
             }
         }
         thePaddle.move(deltaTime);
+        if (blocks.length < 1) {
+            console.log('you win');
+            gameState = 'start';
+        }
         if (lives < 1) {
-            gameState = 'end';
+            console.log('game over');
+            gameState = 'start';
         }
     }
 }
