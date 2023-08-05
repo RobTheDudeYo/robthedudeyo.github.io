@@ -70,7 +70,6 @@ class Ball {
                 this.velocityY = -this.velocityY;
             } else if (this.y >= (resolution - this.height) && this.velocityY > 0) {
                 // the ball has hit the bottom of the screen
-                // remove the element from the DOM and the balls array
                 this.serve = true;
                 servingBalls.push(this);
                 lives--;
@@ -213,6 +212,9 @@ function startScreen() {
         if (document.getElementById('gamePanel')) {
             setTimeout(() => { document.getElementById('gamePanel').remove(); }, 1);
         }
+        if (balls.length > 0) {
+            balls.forEach(ball => ball.element.remove());
+        }
         // set up the start screen
         const startPanel = document.createElement('div');
         startPanel.id = 'startPanel';
@@ -276,6 +278,13 @@ function gameLoop() {
                 gamePanel.appendChild(blocks[blocks.length - 1].element);
             }
         }
+
+        const livesText = document.createElement('p');
+        livesText.id = 'livesText';
+        livesText.innerHTML = `Lives: ${lives}`;
+        livesText.style.fontSize = grain * 400 + 'px';
+        gamePanel.appendChild(livesText);
+
         document.body.appendChild(gamePanel);
         setTimeout(() => { gamePanel.style.opacity = 1; }, 1);// wait 10ms otherwise the transition doesn't work
         setTimeout(() => {
@@ -303,6 +312,7 @@ function gameLoop() {
             console.log('you win');
             gameState = 'start';
         }
+        livesText.innerHTML = `Lives: ${lives}`;
         if (lives < 1) {
             console.log('game over');
             gameState = 'start';
