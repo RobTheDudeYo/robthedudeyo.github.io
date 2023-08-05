@@ -1,10 +1,8 @@
-const version = '0.1';
+const version = '0.1.0';
 
 const resolution = (window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth) * 0.90;
 const grain = resolution / 10000;
 
-let speed_constant = grain * 5;
-const ballSize = grain * 400;
 let lives = 3;
 
 const balls = [];
@@ -19,10 +17,10 @@ class Block {
     constructor(x, y, type) {
         this.element = document.createElement('div');
         this.x = x * (resolution / 10);
-        this.y = y * (resolution / 20) + (resolution / 5);
+        this.y = y * (resolution / 30) + (resolution / 5);
         this.element.id = 'block';
         this.width = resolution / 10;
-        this.height = resolution / 20;
+        this.height = resolution / 30;
         this.element.style.width = this.width + 'px';
         this.element.style.height = this.height + 'px';
         this.element.style.left = this.x + 'px';
@@ -38,11 +36,14 @@ class Ball {
         // set up the ball
         this.element = document.createElement('div');
         this.element.id = 'ball';
-        this.element.style.width = ballSize + 'px';
-        this.element.style.height = ballSize + 'px';
+        this.speed = grain * 5;
+        this.width = grain * 300;
+        this.height = grain * 300;
+        this.element.style.width = this.width + 'px';
+        this.element.style.height = this.height + 'px';
         this.serve = true;
-        this.x = x != null ? x : parseInt(Math.random() * resolution);
-        this.y = y != null ? y : parseInt(Math.random() * resolution);
+        this.x = x != null ? x : resolution / 2;
+        this.y = y != null ? y : resolution * 0.75;
         this.element.style.left = this.x + 'px';
         this.element.style.top = this.y + 'px';
         this.velocityX = vX != null ? vX : grain * Math.random() * 100;
@@ -60,14 +61,14 @@ class Ball {
             this.element.style.top = `${this.y}px`;
 
             // check for collisions
-            if ((this.x <= 0 && this.velocityX < 0) || (this.x >= (resolution - ballSize) && this.velocityX > 0)) {
-                this.x = (this.x <= 0 ? 0 : resolution - ballSize);
+            if ((this.x <= 0 && this.velocityX < 0) || (this.x >= (resolution - this.width) && this.velocityX > 0)) {
+                this.x = (this.x <= 0 ? 0 : resolution - this.width);
                 this.velocityX = -this.velocityX;
             }
             if (this.y <= 0 && this.velocityY < 0) {
-                this.y = (this.y <= 0 ? 0 : resolution - ballSize);
+                this.y = (this.y <= 0 ? 0 : resolution - this.height);
                 this.velocityY = -this.velocityY;
-            } else if (this.y >= (resolution - ballSize) && this.velocityY > 0) {
+            } else if (this.y >= (resolution - this.height) && this.velocityY > 0) {
                 // the ball has hit the bottom of the screen
                 // remove the element from the DOM and the balls array
                 this.serve = true;
@@ -79,13 +80,13 @@ class Ball {
             this.vx_norm = this.velocityX / this.velocityMagnitude;
             this.vy_norm = this.velocityY / this.velocityMagnitude;
 
-            this.velocityX = this.vx_norm * speed_constant;
-            this.velocityY = this.vy_norm * speed_constant;
+            this.velocityX = this.vx_norm * this.speed;
+            this.velocityY = this.vy_norm * this.speed;
         } else {
             // if the ball is serving, keep it on the paddle
-            this.x = thePaddle.x + thePaddle.width / 2 - ballSize / 2;
-            this.y = thePaddle.y - ballSize;
-            this.velocityX = grain * 10;
+            this.x = thePaddle.x + thePaddle.width / 2 - this.width / 2;
+            this.y = thePaddle.y - this.height;
+            this.velocityX = grain * 5;
             this.velocityY = -(grain * 10);
             this.element.style.left = `${this.x}px`;
             this.element.style.top = `${this.y}px`;
@@ -95,34 +96,53 @@ class Ball {
     checkCollision(object) {
         // Check for overlap
         if (this.x < object.x + object.width &&
-            this.x + ballSize > object.x &&
+            this.x + this.width > object.x &&
             this.y < object.y + object.height &&
-            this.y + ballSize > object.y
+            this.y + this.height > object.y
         ) {
             // Collision occurred, determine which side
-            const overlapLeft = Math.abs(this.x + ballSize - object.x);
+            const overlapLeft = Math.abs(this.x + this.width - object.x);
             const overlapRight = Math.abs(object.x + object.width - this.x);
-            const overlapTop = Math.abs(this.y + ballSize - object.y);
+            const overlapTop = Math.abs(this.y + this.height - object.y);
             const overlapBottom = Math.abs(object.y + object.height - this.y);
 
 
             // Find the minimum overlap to determine the side
             const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
 
-            if (minOverlap === overlapLeft && this.velocityX > 0 || minOverlap === overlapRight && this.velocityX < 0) {
+            if (minOverlap === overlapLeft &&
+                this.velocityX > 0 ||
+                minOverlap === overlapRight &&
+                this.velocityX < 0) {
                 if (object instanceof Block) {
                     object.element.remove();
                     blocks.splice(blocks.indexOf(object), 1);
                 }
                 this.velocityX = -this.velocityX;
+                this.x += this.velocityX * deltaTime;
                 return true;
-            } else if (minOverlap === overlapTop && this.velocityY > 0 || minOverlap === overlapBottom && this.velocityY < 0) {
+            } else if (minOverlap === overlapTop &&
+                this.velocityY > 0 ||
+                minOverlap === overlapBottom &&
+                this.velocityY < 0) {
                 if (object instanceof Block) {
                     object.element.remove();
                     blocks.splice(blocks.indexOf(object), 1);
                 }
-                this.velocityY = -this.velocityY;
-                return true;
+                if (object instanceof Paddle) {
+                    // Where the ball hits the paddle dictates how it will bounce off the paddle. If the ball hits the middle, it will bounce off at a sharp angle. If it hits the sides, it will bounce off at a 45 degree angle. And if it hits the very edges of the paddle, it will bounce off at a very shallow angle. https://strategywiki.org/wiki/Arkanoid/Gameplay
+                    const paddleCenter = object.x + object.width / 2;
+                    const ballCenter = this.x + this.width / 2;
+                    const distanceFromCenter = ballCenter - paddleCenter;
+                    const normalizedDistance = distanceFromCenter / (object.width / 2);
+                    const bounceAngle = normalizedDistance * Math.PI / 3;
+                    this.velocityX = this.speed * Math.sin(bounceAngle);
+                    this.velocityY = -this.speed * Math.cos(bounceAngle);
+                } else {
+                    this.velocityY = -this.velocityY;
+                    this.y += this.velocityY * deltaTime;
+                    return true;
+                }
             }
         }
         return false;
@@ -142,7 +162,7 @@ class Paddle {
         this.element.style.height = this.height + 'px';
         this.element.style.left = this.x + 'px';
         this.element.style.top = this.y + 'px';
-        this.speed = speed_constant;
+        this.speed = grain * 5;
         this.direction = 0;
     }
 
@@ -246,19 +266,21 @@ function gameLoop() {
         }
         gamePanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
         gamePanel.appendChild(thePaddle.element);
-        for (let i = 0; i < 1; i++) {
-            balls.push(new Ball());
-            servingBalls.push(balls[i]);
-            gamePanel.appendChild(balls[i].element);
-        }
-        for (let i = 1; i < 9; i++) {
-            for (let j = 0; j < 5; j++) {
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 6; j++) {
                 blocks.push(new Block(i, j));
                 gamePanel.appendChild(blocks[blocks.length - 1].element);
             }
         }
         document.body.appendChild(gamePanel);
-        setTimeout(() => { gamePanel.style.opacity = 1; }, 100);// wait 10ms otherwise the transition doesn't work
+        setTimeout(() => { gamePanel.style.opacity = 1; }, 1);// wait 10ms otherwise the transition doesn't work
+        setTimeout(() => {
+            for (let i = 0; i < 1; i++) {
+                balls.push(new Ball());
+                servingBalls.push(balls[i]);
+                gamePanel.appendChild(balls[i].element);
+            }
+        }, 1);
     } else {
         // run the game
         if (balls.length > 0) {

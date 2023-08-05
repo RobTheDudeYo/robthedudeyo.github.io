@@ -33,7 +33,7 @@ body {
     background-image: url("favicon.ico");
     background-size: cover;
     border-radius: 50%;
-    animation: rotate 1s linear infinite;
+    /* animation: rotate 1s linear infinite; */
     animation-play-state: running;
 }
 
@@ -50,7 +50,7 @@ body {
 #paddle {
     position: absolute;
     background-color: #5c86bd;
-    border-radius: 1%;
+    border-radius: 25%;
 }
 
 #block {
