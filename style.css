@@ -59,8 +59,8 @@ body {
     border-radius: 10%;
     box-sizing: border-box;
     border-style: inset;
-    border-color: #ff00f2;
-    background-image: linear-gradient(to bottom, #28dae0, #ff00f2);
+    border-color: #ff00ff;
+    background-image: linear-gradient(to bottom, #28dae0, #ff00ff);
     background-size: 100% 100%;
 }
 
