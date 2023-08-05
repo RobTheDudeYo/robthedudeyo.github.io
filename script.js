@@ -219,6 +219,11 @@ function startScreen() {
         if (balls.length > 0) {
             balls.forEach(ball => ball.element.remove());
         }
+        balls.length = 0;
+        if (blocks.length > 0) {
+            blocks.forEach(block => block.element.remove());
+        }
+        blocks.length = 0;
         // set up the start screen
         const startPanel = document.createElement('div');
         startPanel.id = 'startPanel';
@@ -254,7 +259,7 @@ function startScreen() {
     }
 }
 
-const thePaddle = new Paddle();
+let thePaddle = new Paddle();
 
 function gameLoop() {
     // if the game window isn't built yet, build it
@@ -275,6 +280,7 @@ function gameLoop() {
             gamePanel.style.top = (window.innerWidth - resolution) / 2 + 'px';
         }
         gamePanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
+        thePaddle = new Paddle();
         gamePanel.appendChild(thePaddle.element);
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 6; j++) {
@@ -315,8 +321,6 @@ function gameLoop() {
         }
         livesText.innerHTML = `Lives: ${lives}`;
         if (lives < 1) {
-            balls.length = 0;
-            blocks.length = 0;
             gameState = 'start';
         }
     }
@@ -441,7 +445,5 @@ if (window.innerWidth < window.innerHeight) {
         }
     });
 }
-
-
 
 requestAnimationFrame(mainLoop);
