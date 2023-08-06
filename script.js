@@ -10,7 +10,7 @@ const blocks = [];
 let score = 0;
 let lives = 2;
 let multiplier = 1.0;
-let gameState = 'end';
+let gameState = 'start';
 let deltaTime = Date.now();
 let lastTime = Date.now();
 
