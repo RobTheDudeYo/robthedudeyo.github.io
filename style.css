@@ -48,6 +48,7 @@ body {
     color: #f8f9fa;
     border-radius: 5%;
     transition: all 0.1s ease;
+    user-select: none;
 }
 
 #gamePanel {
@@ -112,11 +113,6 @@ body {
     border-color: #ff00ff;
     background-image: linear-gradient(to bottom, #28dae0, #ff00ff);
     background-size: 100% 100%;
-}
-
-#startButton {
-    position: absolute;
-    background-color: #5c86bd;
 }
 
 #gamePanel p {
