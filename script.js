@@ -3,17 +3,19 @@ const version = '0.1.0';
 const resolution = (window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth) * 0.90;
 const grain = resolution / 10000;
 
-let lives = 3;
 
 const balls = [];
 const blocks = [];
 
+let score = 0;
+let multiplier = 1.0;
 let gameState = 'start';
 let deltaTime = Date.now();
 let lastTime = Date.now();
 
 class Block {
     constructor(x, y, type) {
+        this.value = 50;
         this.element = document.createElement('div');
         this.x = x * (resolution / 10);
         this.y = y * (resolution / 30) + (resolution / 5);
@@ -59,7 +61,7 @@ class Ball {
             this.element.style.left = `${this.x}px`;
             this.element.style.top = `${this.y}px`;
 
-            // check for collisions
+            // check for wall collisions
             if ((this.x <= 0 && this.velocityX < 0) || (this.x >= (resolution - this.width) && this.velocityX > 0)) {
                 this.x = (this.x <= 0 ? 0 : resolution - this.width);
                 this.velocityX = -this.velocityX;
@@ -70,6 +72,7 @@ class Ball {
             } else if (this.y >= (resolution - this.height) && this.velocityY > 0) {
                 // the ball has hit the bottom of the screen
                 this.serve = true;
+                multiplier = 1.0;
                 lives--;
                 return;
             }
@@ -104,7 +107,6 @@ class Ball {
             const overlapTop = Math.abs(this.y + this.height - object.y);
             const overlapBottom = Math.abs(object.y + object.height - this.y);
 
-
             // Find the minimum overlap to determine the side
             const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
 
@@ -115,6 +117,8 @@ class Ball {
                 if (object instanceof Block) {
                     object.element.remove();
                     blocks.splice(blocks.indexOf(object), 1);
+                    score += object.value * multiplier;
+                    multiplier += 0.1;
                 }
                 this.velocityX = -this.velocityX;
                 this.x += this.velocityX * deltaTime;
@@ -126,6 +130,8 @@ class Ball {
                 if (object instanceof Block) {
                     object.element.remove();
                     blocks.splice(blocks.indexOf(object), 1);
+                    score += object.value * multiplier;
+                    multiplier += 0.1;
                 }
                 if (object instanceof Paddle) {
                     // Where the ball hits the paddle dictates how it will bounce off the paddle. If the ball hits the middle, it will bounce off at a sharp angle. If it hits the sides, it will bounce off at a 45 degree angle. And if it hits the very edges of the paddle, it will bounce off at a very shallow angle. https://strategywiki.org/wiki/Arkanoid/Gameplay
@@ -136,6 +142,7 @@ class Ball {
                     const bounceAngle = normalizedDistance * Math.PI / 3;
                     this.velocityX = this.speed * Math.sin(bounceAngle);
                     this.velocityY = -this.speed * Math.cos(bounceAngle);
+                    multiplier = 1.0;
                 } else {
                     this.velocityY = -this.velocityY;
                     this.y += this.velocityY * deltaTime;
@@ -201,12 +208,50 @@ function mainLoop() {
             actionButtonText.innerHTML = '';
         }
     } else if (gameState === 'end') {
-        actionButtonText.innerHTML = 'Restart';
+        actionButtonText.innerHTML = 'continue';
         endScreen();
     }
     deltaTime = Date.now() - lastTime;
     lastTime = Date.now();
     requestAnimationFrame(mainLoop);
+}
+
+function endScreen() {
+    // if the end screen isn't built yet, build it
+    if (!document.getElementById('endPanel')) {
+        if (document.getElementById('gamePanel')) {
+            setTimeout(() => { document.getElementById('gamePanel').remove(); }, 1);
+        }
+        if (balls.length > 0) {
+            balls.forEach(ball => ball.element.remove());
+        }
+        balls.length = 0;
+        if (blocks.length > 0) {
+            blocks.forEach(block => block.element.remove());
+        }
+        blocks.length = 0;
+        // set up the end screen
+        const endPanel = document.createElement('div');
+        endPanel.id = 'endPanel';
+        endPanel.className = 'panel';
+        endPanel.style.width = resolution + 'px';
+        endPanel.style.height = resolution + 'px';
+        if (window.innerHeight < window.innerWidth) {
+            endPanel.style.top = (window.innerHeight - resolution) / 2 + 'px';
+        } else {
+            endPanel.style.top = (window.innerWidth - resolution) / 2 + 'px';
+        }
+        endPanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
+
+        const scoreText = document.createElement('p');
+        scoreText.innerHTML = `Score: ${score}`;
+        scoreText.style.fontSize = grain * 1800 + 'px';
+        endPanel.appendChild(scoreText);
+
+
+        document.body.appendChild(endPanel);
+        setTimeout(() => { endPanel.style.opacity = 1; }, 1);
+    }
 }
 
 
@@ -292,8 +337,26 @@ function gameLoop() {
         const livesText = document.createElement('p');
         livesText.id = 'livesText';
         livesText.innerHTML = `Lives: ${lives}`;
-        livesText.style.fontSize = grain * 400 + 'px';
+        livesText.style.fontSize = grain * 350 + 'px';
+        livesText.style.left = grain * 100 + 'px';
+        livesText.style.bottom = grain * 50 + 'px';
         gamePanel.appendChild(livesText);
+
+        const scoreText = document.createElement('p');
+        scoreText.id = 'scoreText';
+        scoreText.innerHTML = `Score: ${score}`;
+        scoreText.style.fontSize = grain * 350 + 'px';
+        scoreText.style.left = grain * 100 + 'px';
+        scoreText.style.top = grain * 50 + 'px';
+        gamePanel.appendChild(scoreText);
+
+        const multiplierText = document.createElement('p');
+        multiplierText.id = 'multiplierText';
+        multiplierText.innerHTML = `Multiplier: ${multiplier}`;
+        multiplierText.style.fontSize = grain * 350 + 'px';
+        multiplierText.style.right = grain * 100 + 'px';
+        multiplierText.style.top = grain * 50 + 'px';
+        gamePanel.appendChild(multiplierText);
 
         document.body.appendChild(gamePanel);
         for (let i = 0; i < 1; i++) {
@@ -317,13 +380,17 @@ function gameLoop() {
         thePaddle.move(deltaTime);
         if (blocks.length < 1) {
             console.log('you win');
-            gameState = 'start';
+            gameState = 'end';
+            return;
         }
         if (lives < 0) {
-            gameState = 'start';
+            gameState = 'end';
             return;
         }
         livesText.innerHTML = `Extra Lives: ${lives}`;
+        scoreText.innerHTML = `Score: ${score}`;
+        multiplier = Math.round(multiplier * 10) / 10
+        multiplierText.innerHTML = `Multiplier: ${multiplier > 1.1 ? multiplier : 1}`;
     }
 }
 
