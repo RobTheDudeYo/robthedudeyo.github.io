@@ -244,26 +244,42 @@ function endScreen() {
         }
         endPanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
 
+        const endContainer = document.createElement('div');
+        endContainer.id = 'endContainer';
+        endContainer.style.width = resolution * 2 + 'px';
+        endContainer.style.height = resolution + 'px';
+        endPanel.appendChild(endContainer);
+
+        const spinner = document.createElement('div');
+        spinner.id = 'spinner';
+        spinner.style.width = resolution + 'px';
+        spinner.style.height = resolution + 'px';
+        endContainer.appendChild(spinner);
+
         const scoreText = document.createElement('p');
-        scoreText.id = 'scoreText';
+        scoreText.id = 'endText';
         scoreText.innerHTML = `Score: ${score}`;
         scoreText.style.fontSize = grain * 1000 + 'px';
-        scoreText.style.marginTop = grain * 1000 + 'px';
-        endPanel.appendChild(scoreText);
+        scoreText.style.marginTop = resolution * 0.25 + 'px';
+        scoreText.style.marginLeft = resolution / 2 + 'px';
+        endContainer.appendChild(scoreText);
 
         const bonusText = document.createElement('p');
-        bonusText.id = 'bonusText';
-        bonusText.innerHTML = `Bonus: ${lives * 1000}<br><small><small><small>(lives x 1000)</small></small></small>`;
+        bonusText.id = 'endText';
+        let bonus = lives > 0 ? lives * 1000 : 0
+        bonusText.innerHTML = `Bonus: ${bonus}<small><small><small> (lives x 1000)</small></small></small>`;
         bonusText.style.fontSize = grain * 500 + 'px';
-        bonusText.style.marginTop = grain * 1 + 'px';
-        endPanel.appendChild(bonusText);
+        bonusText.style.marginTop = resolution * 0.4 + 'px';
+        bonusText.style.marginLeft = resolution / 2 + 'px';
+        endContainer.appendChild(bonusText);
 
         const totalText = document.createElement('p');
-        totalText.id = 'scoreText';
-        totalText.innerHTML = `Total: ${score + (lives * 1000)}`;
-        totalText.style.fontSize = grain * 1800 + 'px';
-        totalText.style.marginTop = grain * 1000 + 'px';
-        endPanel.appendChild(totalText);
+        totalText.id = 'endText';
+        totalText.innerHTML = `Total: ${score + bonus}`;
+        totalText.style.fontSize = grain * 1500 + 'px';
+        totalText.style.marginTop = resolution * 0.50 + 'px';
+        totalText.style.marginLeft = resolution / 2 + 'px';
+        endContainer.appendChild(totalText);
 
 
         document.body.appendChild(endPanel);
@@ -275,8 +291,8 @@ function endScreen() {
 function startScreen() {
     // if the start screen isn't built yet, build it
     if (!document.getElementById('startPanel')) {
-        if (document.getElementById('gamePanel')) {
-            setTimeout(() => { document.getElementById('gamePanel').remove(); }, 1);
+        if (document.getElementById('endPanel')) {
+            setTimeout(() => { document.getElementById('endPanel').remove(); }, 1);
         }
         if (balls.length > 0) {
             balls.forEach(ball => ball.element.remove());
@@ -331,6 +347,7 @@ function gameLoop() {
             setTimeout(() => { document.getElementById('startPanel').remove(); }, 1);
         }
         lives = 2;
+        score = 0;
         const gamePanel = document.createElement('div');
         gamePanel.id = 'gamePanel';
         gamePanel.className = 'panel';
@@ -405,7 +422,7 @@ function gameLoop() {
             return;
         }
         livesText.innerHTML = `Extra Lives: ${lives}`;
-        scoreText.innerHTML = `Score: ${score}`;
+        scoreText.innerHTML = `Score: ${Math.floor(score)}`;
         multiplier = Math.round(multiplier * 10) / 10
         multiplierText.innerHTML = `Multiplier: ${multiplier > 1.1 ? multiplier : 1}`;
     }
@@ -423,19 +440,25 @@ document.addEventListener('keydown', (event) => {
         gameState = 'game';
     }
     else if (event.key === ' ') {
-        if (gameState === 'start') {
-            document.getElementById('startPanel').style.opacity = 0;
-            setTimeout(() => { gameState = 'game'; }, 500);
-            return;
-        }
-        let count = [];
-        for (let i = 0; i < balls.length; i++) {
-            if (balls[i].serve) {
-                count.push(balls[i]);
+        if (gameState === 'game') {
+
+            let count = [];
+            for (let i = 0; i < balls.length; i++) {
+                if (balls[i].serve) {
+                    count.push(balls[i]);
+                }
+            }
+            if (count.length > 0) {
+                count[0].serve = false;
             }
         }
-        if (count.length > 0) {
-            count[0].serve = false;
+        else if (gameState === 'start') {
+            gameState = 'game';
+            return;
+        }
+        else if (gameState === 'end') {
+            gameState = 'start';
+            return;
         }
     }
 });
@@ -512,18 +535,24 @@ if (window.innerWidth < window.innerHeight) {
     });
 
     actionButton.addEventListener("touchend", () => {
-        if (gameState === 'start') {
-            gameState = 'game';
-            return;
-        }
-        let count = [];
-        for (let i = 0; i < balls.length; i++) {
-            if (balls[i].serve) {
-                count.push(balls[i]);
+        if (gameState === 'game') {
+            let count = [];
+            for (let i = 0; i < balls.length; i++) {
+                if (balls[i].serve) {
+                    count.push(balls[i]);
+                }
+            }
+            if (count.length > 0) {
+                count[0].serve = false;
             }
         }
-        if (count.length > 0) {
-            count[0].serve = false;
+        else if (gameState === 'end') {
+            gameState = 'start';
+            return;
+        }
+        else if (gameState === 'start') {
+            gameState = 'game';
+            return;
         }
     });
 }
