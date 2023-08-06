@@ -34,6 +34,7 @@ body {
     position: absolute;
     transform: translate(-50%);
     color: #f8f9fa;
+    transition: all 1.5s ease;
 }
 
 @keyframes spinGradient {
@@ -78,8 +79,6 @@ body {
     background-image: url("favicon.ico");
     background-size: cover;
     border-radius: 50%;
-    /* animation: rotate 1s linear infinite; */
-    animation-play-state: running;
 }
 
 
@@ -107,17 +106,69 @@ body {
     position: absolute;
     background-color: #5c86bd;
     border-radius: 25%;
+    box-sizing: border-box;
+    border: 0.2rem outset #ff7eff;
 }
 
-#block {
+.block {
     position: absolute;
-    background-color: #28dae0;
     border-radius: 10%;
     box-sizing: border-box;
-    border-style: inset;
-    border-color: #ff00ff;
-    background-image: linear-gradient(to bottom, #28dae0, #ff00ff);
-    background-size: 100% 100%;
+    border: 0.2rem solid #ff7eff;
+    border-style: outset;
+    background-image: radial-gradient(#ff7eff, #6cd8d8);
+    animation: bounce 0.6s infinite alternate;
+}
+
+.block2 {
+    border: 0.2rem #7effff;
+    background-image: radial-gradient(#7effff, #7effa5);
+}
+
+.block3 {
+    border: 0.2rem #7effa5;
+    background-image: radial-gradient(#7effa5, #a57eff);
+}
+
+.block4 {
+    border: 0.2rem #a57eff;
+    background-image: radial-gradient(#a57eff, #ff7eff);
+}
+
+.block5 {
+    border: 0.2rem #ff7eff;
+    background-image: radial-gradient(#ff7eff, #7effa5);
+}
+
+.block6 {
+    border: 0.2rem #7effa5;
+    background-image: radial-gradient(#7effa5, #a57eff);
+}
+
+.block7 {
+    border: 0.2rem #a57eff;
+    background-image: radial-gradient(#a57eff, #7effa5);
+}
+
+.block8 {
+    background-color: #ff7eff;
+    border: 0.2rem #7effff;
+}
+
+.block9 {
+    background-color: #7effff;
+    border: 0.2rem #ff7eff;
+}
+
+/* Animation Keyframes */
+@keyframes bounce {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0.95);
+    }
 }
 
 #gamePanel p {

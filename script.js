@@ -1,4 +1,4 @@
-const version = '0.2.1';
+const version = '0.4.0';
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
@@ -9,9 +9,14 @@ const grain = resolution / 10000;
 const balls = [];
 const blocks = [];
 
+
+
+
 let score = 0;
 let lives = 2;
 let multiplier = 1.0;
+let level = 0;
+let blocksRemaining = 0;
 let gameState = 'start';
 let deltaTime = Date.now();
 let lastTime = Date.now();
@@ -24,13 +29,13 @@ class Block {
         this.width = resolution / 10;
         this.height = resolution / 20;
         this.x = x * (resolution / 10);
-        this.y = y * this.height + (resolution / 4);
-        this.element.id = 'block';
+        this.y = y * this.height + this.height;
+        this.type = type != null ? type : 0;
+        this.element.classList = `block block${type}`;
         this.element.style.width = this.width + 'px';
         this.element.style.height = this.height + 'px';
         this.element.style.left = this.x + 'px';
         this.element.style.top = this.y + 'px';
-        this.type = type != null ? type : 0;
     }
 
 }
@@ -119,8 +124,14 @@ class Ball {
                 minOverlap === overlapRight &&
                 this.velocityX < 0) {
                 if (object instanceof Block) {
-                    object.element.remove();
-                    blocks.splice(blocks.indexOf(object), 1);
+                    if (object.type > 1) {
+                        object.type--;
+                        object.element.classList = `block block${object.type}`;
+                    } else {
+                        object.element.remove();
+                        blocks.splice(blocks.indexOf(object), 1);
+                        blocksRemaining--;
+                    }
                     score += object.value * multiplier;
                     multiplier += 0.1;
                 }
@@ -131,9 +142,15 @@ class Ball {
                 this.velocityY > 0 ||
                 minOverlap === overlapBottom &&
                 this.velocityY < 0) {
-                if (object instanceof Block) {
-                    object.element.remove();
-                    blocks.splice(blocks.indexOf(object), 1);
+                if (object instanceof Block && object.type < 9) {
+                    if (object.type > 1) {
+                        object.type--;
+                        object.element.classList = `block block${object.type}`;
+                    } else {
+                        object.element.remove();
+                        blocks.splice(blocks.indexOf(object), 1);
+                        blocksRemaining--;
+                    }
                     score += object.value * multiplier;
                     multiplier += 0.1;
                 }
@@ -217,7 +234,13 @@ function mainLoop() {
     }
     deltaTime = Date.now() - lastTime;
     lastTime = Date.now();
-    requestAnimationFrame(mainLoop);
+    if (!nextLevel) {
+        requestAnimationFrame(mainLoop);
+    } else {
+        setTimeout(() => {
+            requestAnimationFrame(mainLoop);
+        }, 2000);
+    }
 }
 
 function endScreen() {
@@ -341,16 +364,37 @@ function startScreen() {
 }
 
 let thePaddle = new Paddle();
+let nextLevel = false;
 
 function gameLoop() {
     // if the game window isn't built yet, build it
-    if (!document.getElementById('gamePanel')) {
+    if (!document.getElementById('gamePanel') || nextLevel) {
+        if (!nextLevel) {
+            lives = 2;
+            score = 0;
+            level = 0;
+        }
+        nextLevel = false;
+        if (level > 9) {
+            gameState = 'end';
+            return;
+        }
         // setup
         if (document.getElementById('startPanel')) {
             setTimeout(() => { document.getElementById('startPanel').remove(); }, 1);
         }
-        lives = 2;
-        score = 0;
+        if (balls.length > 0) {
+            balls.forEach(ball => ball.element.remove());
+        }
+        balls.length = 0;
+        if (blocks.length > 0) {
+            blocks.forEach(block => block.element.remove());
+        }
+        blocks.length = 0;
+        if (document.getElementById('gamePanel')) {
+            setTimeout(() => { document.getElementById('gamePanel').remove(); }, 1);
+        }
+        blocksRemaining = 0;
         const gamePanel = document.createElement('div');
         gamePanel.id = 'gamePanel';
         gamePanel.className = 'panel';
@@ -364,13 +408,17 @@ function gameLoop() {
         gamePanel.style.left = (windowWidth - resolution) / 2 + 'px';
         thePaddle = new Paddle();
         gamePanel.appendChild(thePaddle.element);
-        for (let i = 0; i < 10; i++) {
-            for (let j = 0; j < 6; j++) {
-                blocks.push(new Block(i, j));
-                gamePanel.appendChild(blocks[blocks.length - 1].element);
+        for (let x = 0; x < levelMap[level].length; x++) {
+            for (let y = 0; y < levelMap[level][x].length; y++) {
+                if (levelMap[level][x][y]) {
+                    if (levelMap[level][x][y] < 9) {
+                        blocksRemaining++;
+                    }
+                    blocks.push(new Block(y, x, levelMap[level][x][y]));
+                    gamePanel.appendChild(blocks[blocks.length - 1].element);
+                }
             }
         }
-
         const livesText = document.createElement('p');
         livesText.id = 'livesText';
         livesText.innerHTML = `Lives: ${lives}`;
@@ -415,8 +463,20 @@ function gameLoop() {
             }
         }
         thePaddle.move(deltaTime);
-        if (blocks.length < 1) {
-            gameState = 'end';
+        if (blocksRemaining < 1) {
+            level++;
+            nextLevel = true;
+            let wellDone = document.createElement('p');
+            wellDone.id = 'endText';
+            wellDone.innerHTML = `Level ${level} Complete!`;
+            wellDone.style.fontSize = grain * 1500 + 'px';
+            wellDone.style.color = 'black';
+            wellDone.style.left = resolution / 2 + 'px';
+            wellDone.style.top = resolution / 5 + 'px';
+            gamePanel.appendChild(wellDone);
+            wellDone.style.opacity = 0;
+            setTimeout(() => { wellDone.style.opacity = 1; }, 1);
+            setTimeout(() => { wellDone.remove(); }, 2000);
             return;
         }
         if (lives < 0) {
