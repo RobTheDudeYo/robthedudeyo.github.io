@@ -1,6 +1,8 @@
 const version = '0.1.0';
 
-const resolution = (window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth) * 0.90;
+const windowHeight = window.innerHeight;
+const windowWidth = window.innerWidth;
+const resolution = (windowWidth > windowHeight ? windowHeight : windowWidth) * 0.90;
 const grain = resolution / 10000;
 
 
@@ -13,6 +15,7 @@ let multiplier = 1.0;
 let gameState = 'start';
 let deltaTime = Date.now();
 let lastTime = Date.now();
+
 
 class Block {
     constructor(x, y, type) {
@@ -237,12 +240,12 @@ function endScreen() {
         endPanel.className = 'panel';
         endPanel.style.width = resolution + 'px';
         endPanel.style.height = resolution + 'px';
-        if (window.innerHeight < window.innerWidth) {
-            endPanel.style.top = (window.innerHeight - resolution) / 2 + 'px';
+        if (windowHeight < windowWidth) {
+            endPanel.style.top = (windowHeight - resolution) / 2 + 'px';
         } else {
-            endPanel.style.top = (window.innerWidth - resolution) / 2 + 'px';
+            endPanel.style.top = (windowWidth - resolution) / 2 + 'px';
         }
-        endPanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
+        endPanel.style.left = (windowWidth - resolution) / 2 + 'px';
 
         const endContainer = document.createElement('div');
         endContainer.id = 'endContainer';
@@ -308,12 +311,12 @@ function startScreen() {
         startPanel.className = 'panel';
         startPanel.style.width = resolution + 'px';
         startPanel.style.height = resolution + 'px';
-        if (window.innerHeight < window.innerWidth) {
-            startPanel.style.top = (window.innerHeight - resolution) / 2 + 'px';
+        if (windowHeight < windowWidth) {
+            startPanel.style.top = (windowHeight - resolution) / 2 + 'px';
         } else {
-            startPanel.style.top = (window.innerWidth - resolution) / 2 + 'px';
+            startPanel.style.top = (windowWidth - resolution) / 2 + 'px';
         }
-        startPanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
+        startPanel.style.left = (windowWidth - resolution) / 2 + 'px';
 
         const titleText = document.createElement('p');
         titleText.id = 'titleText';
@@ -323,7 +326,7 @@ function startScreen() {
 
         const pressStart = document.createElement('p');
         pressStart.id = 'pressStart';
-        if (window.innerHeight > window.innerWidth) {
+        if (windowHeight > windowWidth) {
             pressStart.innerHTML = `Press Start<br><br>v${version}`;
         } else {
             pressStart.innerHTML = `Press Space<br><br>v${version}`;
@@ -353,12 +356,12 @@ function gameLoop() {
         gamePanel.className = 'panel';
         gamePanel.style.width = resolution + 'px';
         gamePanel.style.height = resolution + 'px';
-        if (window.innerHeight < window.innerWidth) {
-            gamePanel.style.top = (window.innerHeight - resolution) / 2 + 'px';
+        if (windowHeight < windowWidth) {
+            gamePanel.style.top = (windowHeight - resolution) / 2 + 'px';
         } else {
-            gamePanel.style.top = (window.innerWidth - resolution) / 2 + 'px';
+            gamePanel.style.top = (windowWidth - resolution) / 2 + 'px';
         }
-        gamePanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
+        gamePanel.style.left = (windowWidth - resolution) / 2 + 'px';
         thePaddle = new Paddle();
         gamePanel.appendChild(thePaddle.element);
         for (let i = 0; i < 10; i++) {
@@ -472,7 +475,7 @@ document.addEventListener('keyup', (event) => {
 });
 
 
-if (window.innerWidth < window.innerHeight) {
+if (windowWidth < windowHeight) {
     // controls for mobile
     const leftButton = document.createElement('div');
     leftButton.id = 'leftButton';
@@ -483,8 +486,8 @@ if (window.innerWidth < window.innerHeight) {
     leftButton.appendChild(leftButtonText);
     leftButton.style.width = resolution * 0.48 + 'px';
     leftButton.style.height = resolution / 4 + 'px';
-    leftButton.style.left = (window.innerWidth - resolution) - window.innerWidth * 0.05 + 'px';
-    leftButton.style.top = resolution + window.innerWidth * 0.1 + 'px';
+    leftButton.style.left = (windowWidth - resolution) - windowWidth * 0.05 + 'px';
+    leftButton.style.top = resolution + windowWidth * 0.1 + 'px';
     document.body.appendChild(leftButton);
 
     const rightButton = document.createElement('div');
@@ -496,8 +499,8 @@ if (window.innerWidth < window.innerHeight) {
     rightButton.appendChild(rightButtonText);
     rightButton.style.width = resolution * 0.48 + 'px';
     rightButton.style.height = resolution / 4 + 'px';
-    rightButton.style.left = (window.innerWidth - resolution * 0.48) - window.innerWidth * 0.05 + 'px';
-    rightButton.style.top = resolution + window.innerWidth * 0.1 + 'px';
+    rightButton.style.left = (windowWidth - resolution * 0.48) - windowWidth * 0.05 + 'px';
+    rightButton.style.top = resolution + windowWidth * 0.1 + 'px';
     document.body.appendChild(rightButton);
 
     const actionButton = document.createElement('div');
@@ -506,8 +509,8 @@ if (window.innerWidth < window.innerHeight) {
     actionButton.appendChild(actionButtonText);
     actionButton.style.width = resolution + 'px';
     actionButton.style.height = resolution / 4 + 'px';
-    actionButton.style.left = (window.innerWidth - resolution) / 2 + 'px';
-    actionButton.style.top = (resolution + resolution / 4) + window.innerWidth * 0.15 + 'px';
+    actionButton.style.left = (windowWidth - resolution) / 2 + 'px';
+    actionButton.style.top = (resolution + resolution / 4) + windowWidth * 0.15 + 'px';
     document.body.appendChild(actionButton);
 
     leftButton.addEventListener("touchstart", () => {
