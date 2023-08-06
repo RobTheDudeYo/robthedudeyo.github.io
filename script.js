@@ -113,26 +113,7 @@ class Ball {
             // Find the minimum overlap to determine the side
             const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
 
-            if (minOverlap === overlapLeft &&
-                this.velocityX > 0 ||
-                minOverlap === overlapRight &&
-                this.velocityX < 0) {
-                if (object instanceof Block && object.type < 9) {
-                    if (object.type > 1) {
-                        object.type--;
-                        object.element.classList = `block block${object.type}`;
-                    } else {
-                        object.element.remove();
-                        blocks.splice(blocks.indexOf(object), 1);
-                        blocksRemaining--;
-                    }
-                    score += object.value * multiplier;
-                    multiplier += 0.1;
-                }
-                this.velocityX = -this.velocityX;
-                this.x += this.velocityX * deltaTime;
-                return true;
-            } else if (minOverlap === overlapTop &&
+            if (minOverlap === overlapTop &&
                 this.velocityY > 0 ||
                 minOverlap === overlapBottom &&
                 this.velocityY < 0) {
@@ -163,6 +144,25 @@ class Ball {
                     this.y += this.velocityY * deltaTime;
                     return true;
                 }
+            } else if (minOverlap === overlapLeft &&
+                this.velocityX > 0 ||
+                minOverlap === overlapRight &&
+                this.velocityX < 0) {
+                if (object instanceof Block && object.type < 9) {
+                    if (object.type > 1) {
+                        object.type--;
+                        object.element.classList = `block block${object.type}`;
+                    } else {
+                        object.element.remove();
+                        blocks.splice(blocks.indexOf(object), 1);
+                        blocksRemaining--;
+                    }
+                    score += object.value * multiplier;
+                    multiplier += 0.1;
+                }
+                this.velocityX = -this.velocityX;
+                this.x += this.velocityX * deltaTime;
+                return true;
             }
         }
         return false;
