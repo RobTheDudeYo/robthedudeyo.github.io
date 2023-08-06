@@ -1,6 +1,7 @@
 body {
     background-color: #5c86bd;
-    overflow: hidden; /* Hide scrollbars */
+    overflow: hidden;
+    /* Hide scrollbars */
     text-align: center;
 }
 
@@ -22,14 +23,17 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(0deg, #01c1fc, #FFFFFF, #fc0101);
+    background: linear-gradient(0deg, rgba(255, 0, 0, 1), rgba(255, 0, 0, 0) 70.71%),
+        linear-gradient(90deg, rgba(0, 255, 0, 1), rgba(0, 255, 0, 0) 70.71%),
+        linear-gradient(180deg, rgba(0, 0, 255, 1), rgba(0, 0, 255, 0) 70.71%);
     border-radius: 50%;
-    animation: spinGradient 4s linear infinite;
+    animation: spinGradient 10s linear infinite;
 }
 
 #endText {
     position: absolute;
     transform: translate(-50%);
+    color: #f8f9fa;
 }
 
 @keyframes spinGradient {
