@@ -1,16 +1,12 @@
-const version = '0.4.0';
+const version = '0.4.1';
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
 const resolution = (windowWidth > windowHeight ? windowHeight : windowWidth) * 0.90;
 const grain = resolution / 10000;
 
-
 const balls = [];
 const blocks = [];
-
-
-
 
 let score = 0;
 let lives = 2;
@@ -20,7 +16,6 @@ let blocksRemaining = 0;
 let gameState = 'start';
 let deltaTime = Date.now();
 let lastTime = Date.now();
-
 
 class Block {
     constructor(x, y, type) {
@@ -39,7 +34,6 @@ class Block {
     }
 
 }
-
 
 class Ball {
     constructor(vX, vY, x, y) {
@@ -239,7 +233,7 @@ function mainLoop() {
     } else {
         setTimeout(() => {
             requestAnimationFrame(mainLoop);
-        }, 2000);
+        }, 1600);
     }
 }
 
@@ -343,19 +337,25 @@ function startScreen() {
 
         const titleText = document.createElement('p');
         titleText.id = 'titleText';
-        titleText.innerHTML = `Robsanoid `;
+        titleText.innerHTML = `Robsanoid`;
         titleText.style.fontSize = grain * 1800 + 'px';
+        titleText.style.marginTop = resolution * 0.25 + 'px';
+        titleText.style.marginLeft = resolution / 2 + 'px';
         startPanel.appendChild(titleText);
+        setTimeout(() => { titleText.style.opacity = 1; }, 1);
 
         const pressStart = document.createElement('p');
-        pressStart.id = 'pressStart';
+        pressStart.id = 'titleText';
         if (windowHeight > windowWidth) {
-            pressStart.innerHTML = `Press Start<br><br>v${version}`;
+            pressStart.innerHTML = `Press Start<br>v${version}`;
         } else {
-            pressStart.innerHTML = `Press Space<br><br>v${version}`;
+            pressStart.innerHTML = `Press Space<br>v${version}`;
         }
-        pressStart.style.fontSize = grain * 1000 + 'px';
+        pressStart.style.fontSize = grain * 750 + 'px';
+        pressStart.style.marginTop = resolution * 0.65 + 'px';
+        pressStart.style.marginLeft = resolution / 2 + 'px';
         startPanel.appendChild(pressStart);
+        setTimeout(() => { pressStart.style.opacity = 1; }, 1);
 
         document.body.appendChild(startPanel);
         // wait 1ms otherwise the transition doesn't work
