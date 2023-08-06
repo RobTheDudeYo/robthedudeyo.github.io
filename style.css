@@ -28,6 +28,15 @@ body {
     color: #004181
 }
 
+#endPanel {
+    color: #001224
+}
+
+#endPanel p {
+    text-align: center;
+    margin: 0;
+}
+
 #ball {
     position: absolute;
     background-image: url("favicon.ico");

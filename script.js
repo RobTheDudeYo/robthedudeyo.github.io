@@ -8,8 +8,9 @@ const balls = [];
 const blocks = [];
 
 let score = 0;
+let lives = 2;
 let multiplier = 1.0;
-let gameState = 'start';
+let gameState = 'end';
 let deltaTime = Date.now();
 let lastTime = Date.now();
 
@@ -244,9 +245,25 @@ function endScreen() {
         endPanel.style.left = (window.innerWidth - resolution) / 2 + 'px';
 
         const scoreText = document.createElement('p');
+        scoreText.id = 'scoreText';
         scoreText.innerHTML = `Score: ${score}`;
-        scoreText.style.fontSize = grain * 1800 + 'px';
+        scoreText.style.fontSize = grain * 1000 + 'px';
+        scoreText.style.marginTop = grain * 1000 + 'px';
         endPanel.appendChild(scoreText);
+
+        const bonusText = document.createElement('p');
+        bonusText.id = 'bonusText';
+        bonusText.innerHTML = `Bonus: ${lives * 1000}<br><small><small><small>(lives x 1000)</small></small></small>`;
+        bonusText.style.fontSize = grain * 500 + 'px';
+        bonusText.style.marginTop = grain * 1 + 'px';
+        endPanel.appendChild(bonusText);
+
+        const totalText = document.createElement('p');
+        totalText.id = 'scoreText';
+        totalText.innerHTML = `Total: ${score + (lives * 1000)}`;
+        totalText.style.fontSize = grain * 1800 + 'px';
+        totalText.style.marginTop = grain * 1000 + 'px';
+        endPanel.appendChild(totalText);
 
 
         document.body.appendChild(endPanel);
