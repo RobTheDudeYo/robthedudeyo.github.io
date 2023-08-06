@@ -41,8 +41,8 @@ class Ball {
         this.element = document.createElement('div');
         this.element.id = 'ball';
         this.speed = grain * 5;
-        this.width = grain * 300;
-        this.height = grain * 300;
+        this.width = grain * 225;
+        this.height = grain * 225;
         this.element.style.width = this.width + 'px';
         this.element.style.height = this.height + 'px';
         this.serve = true;
@@ -117,7 +117,7 @@ class Ball {
                 this.velocityX > 0 ||
                 minOverlap === overlapRight &&
                 this.velocityX < 0) {
-                if (object instanceof Block) {
+                if (object instanceof Block && object.type < 9) {
                     if (object.type > 1) {
                         object.type--;
                         object.element.classList = `block block${object.type}`;
@@ -487,7 +487,7 @@ function gameLoop() {
         scoreText.innerHTML = `Score: ${Math.floor(score)}`;
         multiplier = Math.round(multiplier * 10) / 10
         multiplierText.innerHTML = `Multiplier: ${multiplier > 1.1 ? multiplier : 1}`;
-        gamePanel.style.backgroundImage = `linear-gradient(0deg, rgba(255, 0, 0, ${multiplier - 1.2}), rgba(255, 0, 0, 0) 70.71%), linear-gradient(90deg, rgba(0, 255, 0, ${multiplier - 1.2}), rgba(0, 255, 0, 0) 70.71%), linear-gradient(180deg, rgba(0, 0, 255, ${multiplier - 1.2}), rgba(0, 0, 255, 0) 70.71%)`;
+        gamePanel.style.backgroundImage = `linear-gradient(0deg, rgba(255, 0, 0, ${multiplier - 1.2}), rgba(${multiplier - 1.2}, 0, 0, 0) 70.71%), linear-gradient(90deg, rgba(0, 255, 0, ${multiplier - 1.2}), rgba(0, ${multiplier - 1.2}, 0, 0) 70.71%), linear-gradient(180deg, rgba(0, 0, 255, ${multiplier - 1.2}), rgba(0, 0, ${multiplier - 1.2}, 0) 70.71%)`;
     }
 }
 
