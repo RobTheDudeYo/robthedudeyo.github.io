@@ -21,11 +21,11 @@ class Block {
     constructor(x, y, type) {
         this.value = 50;
         this.element = document.createElement('div');
-        this.x = x * (resolution / 10);
-        this.y = y * (resolution / 30) + (resolution / 5);
-        this.element.id = 'block';
         this.width = resolution / 10;
-        this.height = resolution / 30;
+        this.height = resolution / 20;
+        this.x = x * (resolution / 10);
+        this.y = y * this.height + (resolution / 4);
+        this.element.id = 'block';
         this.element.style.width = this.width + 'px';
         this.element.style.height = this.height + 'px';
         this.element.style.left = this.x + 'px';
@@ -416,7 +416,6 @@ function gameLoop() {
         }
         thePaddle.move(deltaTime);
         if (blocks.length < 1) {
-            console.log('you win');
             gameState = 'end';
             return;
         }
@@ -428,6 +427,7 @@ function gameLoop() {
         scoreText.innerHTML = `Score: ${Math.floor(score)}`;
         multiplier = Math.round(multiplier * 10) / 10
         multiplierText.innerHTML = `Multiplier: ${multiplier > 1.1 ? multiplier : 1}`;
+        gamePanel.style.backgroundImage = `linear-gradient(0deg, rgba(255, 0, 0, ${multiplier - 1.2}), rgba(255, 0, 0, 0) 70.71%), linear-gradient(90deg, rgba(0, 255, 0, ${multiplier - 1.2}), rgba(0, 255, 0, 0) 70.71%), linear-gradient(180deg, rgba(0, 0, 255, ${multiplier - 1.2}), rgba(0, 0, 255, 0) 70.71%)`;
     }
 }
 
