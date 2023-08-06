@@ -64,7 +64,8 @@ body {
 }
 
 #endPanel {
-    color: #001224
+    color: #001224;
+    user-select: none;
 }
 
 #endPanel p {
