@@ -249,7 +249,7 @@ function endScreen() {
 
         const endContainer = document.createElement('div');
         endContainer.id = 'endContainer';
-        endContainer.style.width = resolution * 2 + 'px';
+        endContainer.style.width = resolution + 'px';
         endContainer.style.height = resolution + 'px';
         endPanel.appendChild(endContainer);
 
@@ -261,9 +261,9 @@ function endScreen() {
 
         const scoreText = document.createElement('p');
         scoreText.id = 'endText';
-        scoreText.innerHTML = `Score: ${score}`;
-        scoreText.style.fontSize = grain * 1000 + 'px';
-        scoreText.style.marginTop = resolution * 0.25 + 'px';
+        scoreText.innerHTML = `Blocks: ${score}`;
+        scoreText.style.fontSize = grain * 500 + 'px';
+        scoreText.style.marginTop = resolution * 0.30 + 'px';
         scoreText.style.marginLeft = resolution / 2 + 'px';
         endContainer.appendChild(scoreText);
 
@@ -272,15 +272,15 @@ function endScreen() {
         let bonus = lives > 0 ? lives * 1000 : 0
         bonusText.innerHTML = `Bonus: ${bonus}<small><small><small> (lives x 1000)</small></small></small>`;
         bonusText.style.fontSize = grain * 500 + 'px';
-        bonusText.style.marginTop = resolution * 0.4 + 'px';
+        bonusText.style.marginTop = resolution * 0.25 + 'px';
         bonusText.style.marginLeft = resolution / 2 + 'px';
         endContainer.appendChild(bonusText);
 
         const totalText = document.createElement('p');
         totalText.id = 'endText';
-        totalText.innerHTML = `Total: ${score + bonus}`;
-        totalText.style.fontSize = grain * 1500 + 'px';
-        totalText.style.marginTop = resolution * 0.50 + 'px';
+        totalText.innerHTML = `<small><small><small><small><small><small>Total:</small></small></small></small></small></small><br>${score + bonus}`;
+        totalText.style.fontSize = grain * 2500 + 'px';
+        totalText.style.marginTop = resolution * 0.20 + 'px';
         totalText.style.marginLeft = resolution / 2 + 'px';
         endContainer.appendChild(totalText);
 
