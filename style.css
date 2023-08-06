@@ -12,6 +12,36 @@ body {
     opacity: 0;
 }
 
+#endContainer {
+    position: relative;
+}
+
+#spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(0deg, #01c1fc, #FFFFFF, #fc0101);
+    border-radius: 50%;
+    animation: spinGradient 4s linear infinite;
+}
+
+#endText {
+    position: absolute;
+    transform: translate(-50%);
+}
+
+@keyframes spinGradient {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 .button {
     position: absolute;
     background-color: #004181;
@@ -44,6 +74,17 @@ body {
     border-radius: 50%;
     /* animation: rotate 1s linear infinite; */
     animation-play-state: running;
+}
+
+
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 @keyframes rotate {
