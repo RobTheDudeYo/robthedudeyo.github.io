@@ -14,6 +14,7 @@ let multiplier = 1.0;
 let level = 0;
 let blocksRemaining = 0;
 let gameState = 'start';
+collision = false;
 let deltaTime = Date.now();
 let lastTime = Date.now();
 
@@ -116,7 +117,9 @@ class Ball {
             if (minOverlap === overlapTop &&
                 this.velocityY > 0 ||
                 minOverlap === overlapBottom &&
-                this.velocityY < 0) {
+                this.velocityY < 0 &&
+                !collision) {
+                    console.log('top or bottom');
                 if (object instanceof Block && object.type < 9) {
                     if (object.type > 1) {
                         object.type--;
@@ -140,17 +143,15 @@ class Ball {
                     multiplier = 1.0;
                 }
                 this.velocityY = -this.velocityY;
-                if (this.velocityY > 0) {
-                    this.y += (this.velocityY * 2) * deltaTime;
-                } else {
-                    this.y -= (this.velocityY * 2) * deltaTime;
-                }
+                collision = true;
                 return true;
 
             } else if (minOverlap === overlapLeft &&
                 this.velocityX > 0 ||
                 minOverlap === overlapRight &&
-                this.velocityX < 0) {
+                this.velocityX < 0 &&
+                !collision) {
+                    console.log('left or right');
                 if (object instanceof Block && object.type < 9) {
                     if (object.type > 1) {
                         object.type--;
@@ -165,9 +166,11 @@ class Ball {
                 }
                 this.velocityX = -this.velocityX;
                 this.x += this.velocityX * deltaTime;
+                collision = true;
                 return true;
             }
         }
+        collision = false;
         return false;
     }
 }
