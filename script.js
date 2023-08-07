@@ -386,6 +386,7 @@ function gameLoop() {
         }
         multiplier = 1;
         nextLevel = false;
+        thePaddle = null;
         // setup
         if (document.getElementById('startPanel')) {
             setTimeout(() => { document.getElementById('startPanel').remove(); }, 1);
