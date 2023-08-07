@@ -119,7 +119,6 @@ class Ball {
                 minOverlap === overlapBottom &&
                 this.velocityY < 0 &&
                 !collision) {
-                    console.log('top or bottom');
                 if (object instanceof Block && object.type < 9) {
                     if (object.type > 1) {
                         object.type--;
@@ -151,7 +150,6 @@ class Ball {
                 minOverlap === overlapRight &&
                 this.velocityX < 0 &&
                 !collision) {
-                    console.log('left or right');
                 if (object instanceof Block && object.type < 9) {
                     if (object.type > 1) {
                         object.type--;
@@ -403,7 +401,7 @@ function gameLoop() {
             setTimeout(() => { document.getElementById('gamePanel').remove(); }, 1);
         }
         blocksRemaining = 0;
-        const gamePanel = document.createElement('div');
+        let gamePanel = document.createElement('div');
         gamePanel.id = 'gamePanel';
         gamePanel.className = 'panel';
         gamePanel.style.width = resolution + 'px';
@@ -486,16 +484,16 @@ function gameLoop() {
             setTimeout(() => { wellDone.style.opacity = 1; }, 1);
             setTimeout(() => { wellDone.remove(); }, 2000);
             return;
-        }
-        if (lives < 0) {
+        } else if (lives < 0) {
             gameState = 'end';
             return;
+        } else {
+            livesText.innerHTML = `Extra Lives: ${lives}`;
+            scoreText.innerHTML = `Score: ${Math.floor(score)}`;
+            multiplier = Math.round(multiplier * 10) / 10
+            multiplierText.innerHTML = `Multiplier: ${multiplier > 1.1 ? multiplier : 1}`;
+            gamePanel.style.backgroundImage = `linear-gradient(0deg, rgba(255, 0, 0, ${multiplier - 1.2}), rgba(${multiplier - 1.2}, 0, 0, 0) 70.71%), linear-gradient(90deg, rgba(0, 255, 0, ${multiplier - 1.2}), rgba(0, ${multiplier - 1.2}, 0, 0) 70.71%), linear-gradient(180deg, rgba(0, 0, 255, ${multiplier - 1.2}), rgba(0, 0, ${multiplier - 1.2}, 0) 70.71%)`;
         }
-        livesText.innerHTML = `Extra Lives: ${lives}`;
-        scoreText.innerHTML = `Score: ${Math.floor(score)}`;
-        multiplier = Math.round(multiplier * 10) / 10
-        multiplierText.innerHTML = `Multiplier: ${multiplier > 1.1 ? multiplier : 1}`;
-        gamePanel.style.backgroundImage = `linear-gradient(0deg, rgba(255, 0, 0, ${multiplier - 1.2}), rgba(${multiplier - 1.2}, 0, 0, 0) 70.71%), linear-gradient(90deg, rgba(0, 255, 0, ${multiplier - 1.2}), rgba(0, ${multiplier - 1.2}, 0, 0) 70.71%), linear-gradient(180deg, rgba(0, 0, 255, ${multiplier - 1.2}), rgba(0, 0, ${multiplier - 1.2}, 0) 70.71%)`;
     }
 }
 

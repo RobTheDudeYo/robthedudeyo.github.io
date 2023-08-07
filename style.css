@@ -92,6 +92,83 @@ body {
         0 0 0.5rem 0.1rem #ff7eff;
 }
 
+#paddle {
+    position: absolute;
+    background-color: #5c86bd;
+    border-radius: 50% 50% 0 0;
+    background-image: radial-gradient(#6cd8d8 50%, #ff7eff);
+}
+
+.block {
+    position: absolute;
+    border-radius: 10%;
+    box-sizing: border-box;
+    border: 0.2rem solid #ff7eff;
+    border-style: solid none solid none;
+    background-image: radial-gradient(#ff7eff, #6cd8d8);
+    animation: borders 0.6s infinite alternate;
+}
+
+.block2 {
+    border-color:  #7effff;
+    background-image: radial-gradient(#7effff, #7effa5);
+}
+
+.block3 {
+    border-color: #7effa5;
+    background-image: radial-gradient(#7effa5, #a57eff);
+}
+
+.block4 {
+    border-color: #a57eff;
+    background-image: radial-gradient(#a57eff, #ff7eff);
+}
+
+.block5 {
+    border-color: #ff7eff;
+    background-image: radial-gradient(#ff7eff, #7effa5);
+}
+
+.block6 {
+    border-color: #7effa5;
+    background-image: radial-gradient(#7effa5, #a57eff);
+}
+
+.block7 {
+    border-color: #a57eff;
+    background-image: radial-gradient(#a57eff, #7effa5);
+}
+
+.block8 {
+    background-color: #ff7eff;
+    border-color: #7effff;
+}
+
+.block9 {
+    background-color: beige;
+    border-color: rgb(179, 141, 141);
+    animation: none;
+    background-image: none;
+}
+
+#gamePanel p {
+    position: absolute;
+    margin: 0;
+    pointer-events: none;
+    user-select: none;
+}
+
+
+/* Animation Keyframes */
+@keyframes bounce {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0.95);
+    }
+}
 
 @keyframes fade {
     0% {
@@ -113,79 +190,12 @@ body {
     }
 }
 
-#paddle {
-    position: absolute;
-    background-color: #5c86bd;
-    border-radius: 50% 50% 0 0;
-    background-image: radial-gradient(#6cd8d8 50%, #ff7eff);
-}
-
-.block {
-    position: absolute;
-    border-radius: 10%;
-    box-sizing: border-box;
-    border: 0.2rem solid #ff7eff;
-    border-style: outset;
-    background-image: radial-gradient(#ff7eff, #6cd8d8);
-    animation: bounce 0.6s infinite alternate;
-}
-
-.block2 {
-    border: 0.2rem #7effff;
-    background-image: radial-gradient(#7effff, #7effa5);
-}
-
-.block3 {
-    border: 0.2rem #7effa5;
-    background-image: radial-gradient(#7effa5, #a57eff);
-}
-
-.block4 {
-    border: 0.2rem #a57eff;
-    background-image: radial-gradient(#a57eff, #ff7eff);
-}
-
-.block5 {
-    border: 0.2rem #ff7eff;
-    background-image: radial-gradient(#ff7eff, #7effa5);
-}
-
-.block6 {
-    border: 0.2rem #7effa5;
-    background-image: radial-gradient(#7effa5, #a57eff);
-}
-
-.block7 {
-    border: 0.2rem #a57eff;
-    background-image: radial-gradient(#a57eff, #7effa5);
-}
-
-.block8 {
-    background-color: #ff7eff;
-    border: 0.2rem #7effff;
-}
-
-.block9 {
-    background-color: beige;
-    border: 0.2rem solid rgb(179, 141, 141);
-    animation: none;
-    background-image: none;
-}
-
-/* Animation Keyframes */
-@keyframes bounce {
+@keyframes borders {
     0% {
-        transform: scale(1);
+        border-width: 0.2rem;
     }
 
     100% {
-        transform: scale(0.95);
+        border-width: 0.4rem;
     }
-}
-
-#gamePanel p {
-    position: absolute;
-    margin: 0;
-    pointer-events: none;
-    user-select: none;
 }
