@@ -129,7 +129,7 @@ class Ball {
                     score += object.value * multiplier;
                     multiplier += 0.1;
                 }
-                if (object instanceof Paddle) {
+                else if (object instanceof Paddle) {
                     // Where the ball hits the paddle dictates how it will bounce off the paddle. If the ball hits the middle, it will bounce off at a sharp angle. If it hits the sides, it will bounce off at a 45 degree angle. And if it hits the very edges of the paddle, it will bounce off at a very shallow angle. https://strategywiki.org/wiki/Arkanoid/Gameplay
                     const paddleCenter = object.x + object.width / 2;
                     const ballCenter = this.x + this.width / 2;
@@ -137,13 +137,16 @@ class Ball {
                     const normalizedDistance = distanceFromCenter / (object.width / 2);
                     const bounceAngle = normalizedDistance * Math.PI / 3;
                     this.velocityX = this.speed * Math.sin(bounceAngle);
-                    this.velocityY = -this.speed * Math.cos(bounceAngle);
                     multiplier = 1.0;
-                } else {
-                    this.velocityY = -this.velocityY;
-                    this.y += this.velocityY * deltaTime;
-                    return true;
                 }
+                this.velocityY = -this.velocityY;
+                if (this.velocityY > 0) {
+                    this.y += (this.velocityY * 2) * deltaTime;
+                } else {
+                    this.y -= (this.velocityY * 2) * deltaTime;
+                }
+                return true;
+
             } else if (minOverlap === overlapLeft &&
                 this.velocityX > 0 ||
                 minOverlap === overlapRight &&
@@ -369,16 +372,17 @@ let nextLevel = false;
 function gameLoop() {
     // if the game window isn't built yet, build it
     if (!document.getElementById('gamePanel') || nextLevel) {
+        if (level > 9) {
+            gameState = 'end';
+            return;
+        }
         if (!nextLevel) {
             lives = 2;
             score = 0;
             level = 0;
         }
+        multiplier = 1;
         nextLevel = false;
-        if (level > 9) {
-            gameState = 'end';
-            return;
-        }
         // setup
         if (document.getElementById('startPanel')) {
             setTimeout(() => { document.getElementById('startPanel').remove(); }, 1);
