@@ -382,6 +382,7 @@ function gameLoop() {
             score = 0;
             level = 0;
         }
+        currentDirection = 0;
         multiplier = 1;
         nextLevel = false;
         thePaddle = null;
@@ -500,9 +501,9 @@ function gameLoop() {
 // Add constrols for desktop
 let currentDirection = 0;
 document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft') {
+    if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') {
         currentDirection = -1;
-    } else if (event.key === 'ArrowRight') {
+    } else if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') {
         currentDirection = 1;
     }
     else if (event.key === 'Enter' && gameState === 'start') {
@@ -533,9 +534,9 @@ document.addEventListener('keydown', (event) => {
 });
 
 document.addEventListener('keyup', (event) => {
-    if (event.key === 'ArrowLeft' && currentDirection === -1) {
+    if ((event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') && currentDirection === -1) {
         currentDirection = 0;
-    } else if (event.key === 'ArrowRight' && currentDirection === 1) {
+    } else if ((event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') && currentDirection === 1) {
         currentDirection = 0;
     }
 });
@@ -580,27 +581,19 @@ if (windowWidth < windowHeight) {
     document.body.appendChild(actionButton);
 
     leftButton.addEventListener("touchstart", () => {
-        if (currentDirection === 0) {
             currentDirection = -1;
-        }
     });
 
     leftButton.addEventListener("touchend", () => {
-        if (currentDirection === -1) {
             currentDirection = 0;
-        }
     });
 
     rightButton.addEventListener("touchstart", () => {
-        if (currentDirection === 0) {
             currentDirection = 1;
-        }
     });
 
     rightButton.addEventListener("touchend", () => {
-        if (currentDirection === 1) {
             currentDirection = 0;
-        }
     });
 
     actionButton.addEventListener("touchend", () => {
