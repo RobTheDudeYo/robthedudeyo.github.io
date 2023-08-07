@@ -426,7 +426,7 @@ function gameLoop() {
                 }
             }
         }
-        const livesText = document.createElement('p');
+        let livesText = document.createElement('p');
         livesText.id = 'livesText';
         livesText.innerHTML = `Lives: ${lives}`;
         livesText.style.fontSize = grain * 350 + 'px';
@@ -434,7 +434,7 @@ function gameLoop() {
         livesText.style.bottom = grain * 50 + 'px';
         gamePanel.appendChild(livesText);
 
-        const scoreText = document.createElement('p');
+        let scoreText = document.createElement('p');
         scoreText.id = 'scoreText';
         scoreText.innerHTML = `Score: ${score}`;
         scoreText.style.fontSize = grain * 350 + 'px';
@@ -442,7 +442,7 @@ function gameLoop() {
         scoreText.style.top = grain * 50 + 'px';
         gamePanel.appendChild(scoreText);
 
-        const multiplierText = document.createElement('p');
+        let multiplierText = document.createElement('p');
         multiplierText.id = 'multiplierText';
         multiplierText.innerHTML = `Multiplier: ${multiplier}`;
         multiplierText.style.fontSize = grain * 350 + 'px';
