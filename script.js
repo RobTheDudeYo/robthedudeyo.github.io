@@ -1,4 +1,4 @@
-const version = '0.5.1';
+const version = '0.5.3';
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
