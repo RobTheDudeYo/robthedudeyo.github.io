@@ -2,7 +2,7 @@
 
 
 .gamePanel {
-    --resolution: calc(100vh * 0.9);
+    --resolution: calc(min(100vh, 100vw) * 0.9);
     position: absolute;
     background-color: #fff;
     border-radius: 5%;
@@ -14,13 +14,9 @@
 
 .block {
     position: absolute;
-    background-color: #b78cf7;
-    
-    position: absolute;
     border-radius: 10%;
     box-sizing: border-box;
-    border: 0.2vw solid #ff7eff;
-    border-style: solid none solid none;
+    border: calc(var(--resolution) * 0.003) solid #ff7eff;
     background-image: radial-gradient(#ff7eff, #6cd8d8);
 }
 

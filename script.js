@@ -3,8 +3,10 @@
 function main() {
     let container = document.querySelector(".gamePanel");
     const game = new Game(container);
-    game.populateBlocks(level[0]);
+    game.updateBlocks(levels[8]);
 }
+
+
 
 class Game {
     constructor(container) {
@@ -17,7 +19,7 @@ class Game {
         this.blocks = [[], [], [], [], [], [], [], [], [], []];
     }
 
-    populateBlocks(level) {
+    updateBlocks(level) {
         for (let x = 0; x < 10; x++) {
             for (let y = 0; y < 16; y++) {
                 this.blocks[x].push(new Block(this.resolution, x, y, level[y][x]));
