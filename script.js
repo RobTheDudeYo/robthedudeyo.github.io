@@ -386,7 +386,7 @@ function gameLoop() {
         multiplier = 1;
         nextLevel = false;
         thePaddle = null;
-        // setup
+        // breakdown
         if (document.getElementById('startPanel')) {
             setTimeout(() => { document.getElementById('startPanel').remove(); }, 1);
         }
@@ -402,6 +402,7 @@ function gameLoop() {
             setTimeout(() => { document.getElementById('gamePanel').remove(); }, 1);
         }
         blocksRemaining = 0;
+        // setup
         let gamePanel = document.createElement('div');
         gamePanel.id = 'gamePanel';
         gamePanel.className = 'panel';
@@ -456,6 +457,7 @@ function gameLoop() {
             gamePanel.appendChild(balls[i].element);
         }
         setTimeout(() => { gamePanel.style.opacity = 1; }, 1);// wait 10ms otherwise the transition doesn't work
+        return;
     } else {
         // run the game
         if (balls.length > 0) {
@@ -581,19 +583,19 @@ if (windowWidth < windowHeight) {
     document.body.appendChild(actionButton);
 
     leftButton.addEventListener("touchstart", () => {
-            currentDirection = -1;
+        currentDirection = -1;
     });
 
     leftButton.addEventListener("touchend", () => {
-            currentDirection = 0;
+        currentDirection = 0;
     });
 
     rightButton.addEventListener("touchstart", () => {
-            currentDirection = 1;
+        currentDirection = 1;
     });
 
     rightButton.addEventListener("touchend", () => {
-            currentDirection = 0;
+        currentDirection = 0;
     });
 
     actionButton.addEventListener("touchend", () => {
