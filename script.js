@@ -22,6 +22,7 @@ class Game {
     }
 
     cycleLevels() {
+        // for demonstration purposes
         this.loadLevel(this.levels[this.currentLevel]);
         setTimeout(() => {
             this.clearLevel();
@@ -32,8 +33,6 @@ class Game {
             this.cycleLevels();
         }, 1000);
     }
-
-
 
     loadLevel(level) {
         for (let x = 0; x < 10; x++) {
