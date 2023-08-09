@@ -3,7 +3,7 @@
 function main() {
     let container = document.querySelector(".gamePanel");
     const game = new Game(container, levels);
-    game.cycleLevels();
+    game.run();
 }
 
 // Y is the row, X is the column!
@@ -18,7 +18,11 @@ class Game {
         this.balls = [new Ball(this.resolution, this.container)];
         this.blocks = [[], [], [], [], [], [], [], [], [], []];
         this.levels = levels;
-        this.currentLevel = 0;
+        this.currentLevel = 3;
+    }
+
+    run() {
+        this.loadLevel(this.levels[this.currentLevel]);
     }
 
     cycleLevels() {
@@ -87,7 +91,7 @@ class Ball {
 class Block {
     constructor(resolution, x, y, type, panel) {
         this.width = resolution / 10;
-        this.height = resolution / 30;
+        this.height = resolution / 25;
         this.x = x * this.width
         this.y = (y * this.height) + this.height;
         this.type = type;
