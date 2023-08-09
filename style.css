@@ -1,6 +1,3 @@
-
-
-
 .gamePanel {
     --resolution: min(100vh, 100vw);
     position: absolute;
@@ -12,6 +9,18 @@
     left: calc(50vw - min(100vh, 100vw) * 0.45);
 }
 
+.paddle {
+    position: absolute;
+    background-color: #ff7eff;
+    border-radius: calc(var(--resolution) * 0.0075);
+}
+
+.ball {
+    position: absolute;
+    background-color: #ff7eff;
+    border-radius: calc(var(--resolution) * 0.0075);
+}
+
 .block {
     position: absolute;
     border-radius: calc(var(--resolution) * 0.0075);
@@ -20,44 +29,56 @@
     background-image: radial-gradient(#ff7eff, #6cd8d8);
 }
 
-.block.block2 {
+.block.b0 {
+    /* empty space */
+    visibility: hidden;
+}
+
+.block.b1 {
+    border-color: #ff7eff;
+    background-image: radial-gradient(#ff7eff, #7effff);
+}
+
+.block.b2 {
     border-color: #7effff;
     background-image: radial-gradient(#7effff, #7effa5);
 }
 
-.block.block3 {
+.block.b3 {
     border-color: #7effa5;
     background-image: radial-gradient(#7effa5, #a57eff);
 }
 
-.block.block4 {
+.block.b4 {
     border-color: #a57eff;
     background-image: radial-gradient(#a57eff, #ff7eff);
 }
 
-.block.block5 {
+.block.b5 {
     border-color: #ff7eff;
     background-image: radial-gradient(#ff7eff, #7effa5);
 }
 
-.block.block6 {
+.block.b6 {
     border-color: #7effa5;
     background-image: radial-gradient(#7effa5, #a57eff);
 }
 
-.block.block7 {
+.block.b7 {
     border-color: #a57eff;
     background-image: radial-gradient(#a57eff, #7effa5);
 }
 
-.block.block8 {
+.block.b8 {
     background-color: #ff7eff;
     border-color: #7effff;
 }
 
-.block.block9 {
+.block.b9 {
+    /* unbreakable blocks */
+    border-radius: 0;
     background-color: beige;
-    border-color: rgb(179, 141, 141);
+    border: none;
     animation: none;
     background-image: none;
 }
