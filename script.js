@@ -17,13 +17,11 @@ function run() {
 document.addEventListener("keydown", (e) => {
     if (e.key == "ArrowLeft" || e.key.toLowerCase() == "a") {
         if (game.paddle.direction > -1) {
-            console.log("left");
             game.paddle.direction = -1;
         }
     }
     if (e.key == "ArrowRight" || e.key.toLowerCase() == "d") {
         if (game.paddle.direction < 1) {
-            console.log("right");
             game.paddle.direction = 1;
         }
     }
@@ -31,13 +29,11 @@ document.addEventListener("keydown", (e) => {
 document.addEventListener("keyup", (e) => {
     if (e.key == "ArrowLeft" || e.key.toLowerCase() == "a") {
         if (game.paddle.direction == -1) {
-            console.log("left up");
             game.paddle.direction = 0;
         }
     }
     if (e.key == "ArrowRight" || e.key.toLowerCase() == "d") {
         if (game.paddle.direction == 1) {
-            console.log("right up");
             game.paddle.direction = 0;
         }
     }

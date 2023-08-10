@@ -12,10 +12,11 @@
 .paddle {
     position: absolute;
     background-color: #ff7eff;
-    border-radius: calc(var(--resolution) * 0.0075) calc(var(--resolution) * 0.0075) calc(var(--resolution) * 0.1) calc(var(--resolution) * 0.1);
+    border-radius: 0 0 calc(var(--resolution) * 0.1) calc(var(--resolution) * 0.1);
 }
 
 .ball {
+    z-index: 1;
     position: absolute;
     background-color: #ff7eff;
     border-radius: calc(var(--resolution) * 0.0075);
