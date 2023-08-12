@@ -16,6 +16,8 @@
 }
 
 .ball {
+    background-image: url(favicon.ico);
+    background-size: contain;
     z-index: 1;
     position: absolute;
     background-color: #ff7eff;
