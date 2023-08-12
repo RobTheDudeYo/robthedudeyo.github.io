@@ -57,6 +57,31 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
+// touch buttons
+// document.querySelector(".left").addEventListener("touchstart", (e) => {
+//     if (game.paddle.direction > -1) {
+//         game.paddle.direction = -1;
+//     }
+// });
+// document.querySelector(".left").addEventListener("touchend", (e) => {
+//     if (game.paddle.direction == -1) {
+//         game.paddle.direction = 0;
+//     }
+// });
+// document.querySelector(".right").addEventListener("touchstart", (e) => {
+//     if (game.paddle.direction < 1) {
+//         game.paddle.direction = 1;
+//     }
+// });
+// document.querySelector(".right").addEventListener("touchend", (e) => {
+//     if (game.paddle.direction == 1) {
+//         game.paddle.direction = 0;
+//     }
+// });
+// document.querySelector(".action").addEventListener("touchstart", (e) => {
+//     game.serveBall();
+// });
+
 
 
 

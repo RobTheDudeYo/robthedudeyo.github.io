@@ -125,7 +125,7 @@ class Ball {
         this.x = otherBall ? otherBall.x : paddle.x;
         this.y = otherBall ? otherBall.y : paddle.y - this.height;
         this.speed = otherBall ? otherBall.speed : resolution * 0.00025;
-        this.velocity = otherBall ? { x: otherBall.velocity.x * 0.9, y: otherBall.velocity.y * 0.9 } : { x: 0, y: 0 };
+        this.velocity = otherBall ? { x: -otherBall.velocity.x * 0.9, y: -otherBall.velocity.y * 0.9 } : { x: 0, y: 0 };
         this.serving = serving ? serving : false;
         this.element = document.createElement("div");
         this.element.classList = "ball";
@@ -204,8 +204,16 @@ class Ball {
         let gridY = (Math.floor((this.y + (this.width / 2)) / (this.resolution / 25))) - 1;
 
         let hit = false;
+        // first check current grid location, just in case we missed it otherwise
+        if (gridY < 16) {
+            if (blocks[gridX][gridY].type > 0) {
+                this.velocity.x *= -1;
+                hit = true;
+            }
+        }
+
         // check left
-        if (gridY > 0 && gridY < 15 && gridX > 0) {
+        if (gridY > 0 && gridY < 15 && gridX > 0 && !hit) {
             if (blocks[gridX - 1][gridY].type > 0 && this.x < blocks[gridX - 1][gridY].x + blocks[gridX - 1][gridY].width && this.velocity.x < 0) {
                 this.velocity.x *= -1;
                 this.x += this.velocity.x;
