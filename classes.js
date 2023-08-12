@@ -19,6 +19,16 @@ class Game {
         this.lastTime = Date.now();
     }
 
+    serveBall() {
+        if (this.balls[0]) {
+            for (let i = 0; i < this.balls.length; i++) {
+                if (this.balls[i].serve()) {
+                    return;
+                };
+            }
+        }
+    }
+
     initialise() {
         // initial setup
         this.loadLevel(this.levels[this.currentLevel - 1]);
@@ -35,6 +45,15 @@ class Game {
         this.paddle.move(this.deltaTime);
         for (let i = 0; i < this.balls.length; i++) {
             this.balls[i].move(this.paddle, this.blocks, this.deltaTime)
+        }
+        for (let i = 0; i < this.balls.length; i++) {
+            if (this.balls[i].y > this.resolution) {
+                this.balls[i].element.remove();
+                this.balls.splice(i, 1);
+            }
+        }
+        if (this.balls.length == 0) {
+            this.balls.push(new Ball(this.resolution, this.container, this.paddle));
         }
     }
 
@@ -99,15 +118,15 @@ class Paddle {
 }
 
 class Ball {
-    constructor(resolution, panel) {
+    constructor(resolution, panel, paddle) {
         this.resolution = resolution;
         this.width = resolution / 50;
         this.height = resolution / 50;
-        this.x = (resolution / 2) - (this.width / 2);
-        this.y = resolution - this.height - (resolution / 5);
+        this.x = paddle ? paddle.x : (resolution / 2) - (this.width / 2);
+        this.y = paddle ? paddle.y : resolution - this.height - (resolution / 5);
         this.speed = resolution * 0.00025;
-        this.velocity = { x: -this.speed, y: -this.speed };
-        this.serving = false;
+        this.velocity = { x: 0, y: 0 };
+        this.serving = true;
         this.element = document.createElement("div");
         this.element.classList = "ball";
         this.element.style.width = this.width + "px";
@@ -117,7 +136,17 @@ class Ball {
         panel.appendChild(this.element);
     }
 
+    serve() {
+        if (this.serving) {
+            this.serving = false;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     move(paddle, blocks, deltaTime) {
+        this.collisionCheck(paddle, blocks);
         if (!this.serving) {
             this.x += this.velocity.x * deltaTime;
             this.y += this.velocity.y * deltaTime;
@@ -125,18 +154,25 @@ class Ball {
                 this.x = this.x < 0 ? 0 : this.resolution - this.width;
                 this.velocity.x *= -1;
             }
-            if (this.y < 0 && this.velocity.y < 0 || this.y > (this.resolution * 0.925) - this.height && this.velocity.y > 0) {
+            if (this.y < 0 && this.velocity.y < 0) {
                 this.y = this.y < 0 ? 0 : (this.resolution * 0.925) - this.height;
                 this.velocity.y *= -1;
             }
-            this.collisionCheck(paddle, blocks);
             this.element.style.left = this.x + "px";
             this.element.style.top = this.y + "px";
         } else {
-            this.x = paddle.x + (paddle.width / 2) - (this.width / 2);
-            this.y = paddle.y - this.height;
+            if (this.x < paddle.x + this.width) {
+                this.x = paddle.x + this.width;
+            }
+            else if (this.x > paddle.x + paddle.width - (this.width * 2)) {
+                this.x = paddle.x + paddle.width - (this.width * 2);
+            }
+            this.y = paddle.y - this.height * 0.95;
             this.element.style.left = this.x + "px";
             this.element.style.top = this.y + "px";
+            this.speed = this.resolution * 0.0005;
+            this.velocity.y = -this.speed * 0.75;
+            this.velocity.x = this.speed * (this.x - (paddle.x + (paddle.width / 2))) / (paddle.width / 2);
         }
     }
 

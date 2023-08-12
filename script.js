@@ -41,6 +41,13 @@ document.addEventListener("keyup", (e) => {
     }
 });
 
+// ball controls
+document.addEventListener("keydown", (e) => {
+    if (e.key == " ") {
+        game.serveBall();
+    }
+});
+
 
 
 
