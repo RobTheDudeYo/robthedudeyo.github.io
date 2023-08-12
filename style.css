@@ -11,6 +11,7 @@
 
 .paddle {
     position: absolute;
+    z-index: 2;
     background-color: #ff7eff;
     border-radius: 0 0 calc(var(--resolution) * 0.1) calc(var(--resolution) * 0.1);
 }

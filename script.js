@@ -14,6 +14,8 @@ function run() {
     requestAnimationFrame(run);
 }
 
+
+// paddle controls
 document.addEventListener("keydown", (e) => {
     if (e.key == "ArrowLeft" || e.key.toLowerCase() == "a") {
         if (game.paddle.direction > -1) {
@@ -38,6 +40,10 @@ document.addEventListener("keyup", (e) => {
         }
     }
 });
+
+
+
+
 
 setup();
 requestAnimationFrame(run);

@@ -9,12 +9,12 @@ class Game {
         this.container = container;
         this.resolution = container.getBoundingClientRect().width < container.getBoundingClientRect().height ? container.getBoundingClientRect().width : container.getBoundingClientRect().height;
         this.container.style.width = this.resolution + "px";
-        this.container.style.height = this.resolution + "px";
+        this.container.style.height = this.resolution * 0.925 + "px";
         this.paddle = new Paddle(this.resolution, this.container);
         this.balls = [new Ball(this.resolution, this.container)];
         this.blocks = [[], [], [], [], [], [], [], [], [], []];
         this.levels = levels;
-        this.currentLevel = 1;
+        this.currentLevel = 9;
         this.deltaTime = 0;
         this.lastTime = Date.now();
     }
@@ -105,7 +105,9 @@ class Ball {
         this.height = resolution / 50;
         this.x = (resolution / 2) - (this.width / 2);
         this.y = resolution - this.height - (resolution / 5);
-        this.velocity = { x: -resolution * 0.0001, y: -resolution * 0.0004 };
+        this.speed = resolution * 0.00025;
+        this.velocity = { x: -this.speed, y: -this.speed };
+        this.serving = false;
         this.element = document.createElement("div");
         this.element.classList = "ball";
         this.element.style.width = this.width + "px";
@@ -116,28 +118,44 @@ class Ball {
     }
 
     move(paddle, blocks, deltaTime) {
-        this.x += this.velocity.x * deltaTime;
-        this.y += this.velocity.y * deltaTime;
-        if (this.x < 0 && this.velocity.x < 0 || this.x > this.resolution - this.width && this.velocity.x > 0) {
-            this.x = this.x < 0 ? 0 : this.resolution - this.width;
-            this.velocity.x *= -1;
+        if (!this.serving) {
+            this.x += this.velocity.x * deltaTime;
+            this.y += this.velocity.y * deltaTime;
+            if (this.x < 0 && this.velocity.x < 0 || this.x > this.resolution - this.width && this.velocity.x > 0) {
+                this.x = this.x < 0 ? 0 : this.resolution - this.width;
+                this.velocity.x *= -1;
+            }
+            if (this.y < 0 && this.velocity.y < 0 || this.y > (this.resolution * 0.925) - this.height && this.velocity.y > 0) {
+                this.y = this.y < 0 ? 0 : (this.resolution * 0.925) - this.height;
+                this.velocity.y *= -1;
+            }
+            this.collisionCheck(paddle, blocks);
+            this.element.style.left = this.x + "px";
+            this.element.style.top = this.y + "px";
+        } else {
+            this.x = paddle.x + (paddle.width / 2) - (this.width / 2);
+            this.y = paddle.y - this.height;
+            this.element.style.left = this.x + "px";
+            this.element.style.top = this.y + "px";
         }
-        if (this.y < 0 && this.velocity.y < 0 || this.y > this.resolution - this.height && this.velocity.y > 0) {
-            this.y = this.y < 0 ? 0 : this.resolution - this.height;
-            this.velocity.y *= -1;
-        }
-        this.collisionCheck(paddle, blocks);
-        this.element.style.left = this.x + "px";
-        this.element.style.top = this.y + "px";
     }
 
-    collisionCheck(paddle, blocks) {
 
+    collisionCheck(paddle, blocks) {
         // paddle collision
         if (this.y > paddle.y - this.height && this.y < paddle.y && this.x > paddle.x - this.width && this.x < paddle.x + paddle.width && this.velocity.y > 0) {
-            this.velocity.y *= -1;
-            this.y += this.velocity.y;
-            this.velocity.y *= 1.01;
+            // Where the ball hits the paddle dictates how it will bounce off the paddle. If the ball hits the middle, it will bounce off at a sharp angle. If it hits the sides, it will bounce off at a 45 degree angle. And if it hits the very edges of the paddle, it will bounce off at a very shallow angle. https://strategywiki.org/wiki/Arkanoid/Gameplay
+            this.speed += this.resolution * 0.0001;
+            if (this.speed > this.resolution * 0.0005) {
+                this.speed = this.resolution * 0.0005;
+            }
+            let paddleCenter = paddle.x + (paddle.width / 2);
+            let ballCenter = this.x + (this.width / 2);
+            let distance = ballCenter - paddleCenter;
+            let maxDistance = paddle.width / 2;
+            let angle = (distance / maxDistance) * 45;
+            this.velocity.x = Math.sin(angle * (Math.PI / 180)) * this.speed;
+            this.velocity.y = -Math.cos(angle * (Math.PI / 180)) * this.speed;
             return;
         }
 
@@ -147,36 +165,33 @@ class Ball {
 
         let hit = false;
         // check left
-        if (gridY < 15 && gridX > 0) {
+        if (gridY > 0 && gridY < 15 && gridX > 0) {
             if (blocks[gridX - 1][gridY].type > 0 && this.x < blocks[gridX - 1][gridY].x + blocks[gridX - 1][gridY].width && this.velocity.x < 0) {
                 this.velocity.x *= -1;
                 this.x += this.velocity.x;
                 hit = true;
-                console.log("hit left")
                 if (blocks[gridX - 1][gridY].type < 9) {
                     blocks[gridX - 1][gridY].changeType(blocks[gridX - 1][gridY].type - 1);
                 }
             }
         }
         // check right
-        if (gridX < 9 && gridY < 15) {
+        if (gridX < 9 && gridY > 0 && gridY < 15) {
             if (blocks[gridX + 1][gridY].type > 0 && this.x + this.width > blocks[gridX + 1][gridY].x && this.velocity.x > 0) {
                 this.velocity.x *= -1;
                 this.x += this.velocity.x;
                 hit = true;
-                console.log("hit right")
                 if (blocks[gridX + 1][gridY].type < 9) {
                     blocks[gridX + 1][gridY].changeType(blocks[gridX + 1][gridY].type - 1);
                 }
             }
         }
         // check above
-        if (gridY < 16) {
+        if (gridY > 0 && gridY < 17) {
             if (blocks[gridX][gridY - 1].type > 0 && this.y < blocks[gridX][gridY - 1].y + blocks[gridX][gridY - 1].height && this.velocity.y < 0) {
                 this.velocity.y *= -1;
                 this.y += this.velocity.y;
                 hit = true;
-                console.log("hit above")
                 if (blocks[gridX][gridY - 1].type < 9) {
                     blocks[gridX][gridY - 1].changeType(blocks[gridX][gridY - 1].type - 1);
                 }
@@ -188,37 +203,33 @@ class Ball {
                 this.velocity.y *= -1;
                 this.y += this.velocity.y;
                 hit = true;
-                console.log("hit below")
                 if (blocks[gridX][gridY + 1].type < 9) {
                     blocks[gridX][gridY + 1].changeType(blocks[gridX][gridY + 1].type - 1);
                 }
             }
         }
-
-        if (hit === false) {
+        if (!hit) {
             // check top left
-            if (gridX > 0 && gridY > 0 && gridY < 16) {
+            if (gridX > 0 && gridY > 1 && gridY < 16) {
                 if (blocks[gridX - 1][gridY - 1].type > 0 && this.x < blocks[gridX - 1][gridY - 1].x + blocks[gridX - 1][gridY - 1].width && this.y < blocks[gridX - 1][gridY - 1].y + blocks[gridX - 1][gridY - 1].height && this.velocity.x < 0 && this.velocity.y < 0) {
-                    this.velocity.x *= -1;
-                    this.velocity.y *= -1;
-                    this.x += this.velocity.x;
-                    this.y += this.velocity.y;
-                    hit = true;
-                    console.log("hit top left")
+                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
+                        this.velocity.x *= -1;
+                    } else {
+                        this.velocity.y *= -1;
+                    }
                     if (blocks[gridX - 1][gridY - 1].type < 9) {
                         blocks[gridX - 1][gridY - 1].changeType(blocks[gridX - 1][gridY - 1].type - 1);
                     }
                 }
             }
             // check top right
-            if (gridX < 9 && gridY > 0 && gridY < 16) {
+            if (gridX < 9 && gridY > 1 && gridY < 16) {
                 if (blocks[gridX + 1][gridY - 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY - 1].x && this.y < blocks[gridX + 1][gridY - 1].y + blocks[gridX + 1][gridY - 1].height && this.velocity.x > 0 && this.velocity.y < 0) {
-                    this.velocity.x *= -1;
-                    this.velocity.y *= -1;
-                    this.x += this.velocity.x;
-                    this.y += this.velocity.y;
-                    hit = true;
-                    console.log("hit top right")
+                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
+                        this.velocity.x *= -1;
+                    } else {
+                        this.velocity.y *= -1;
+                    }
                     if (blocks[gridX + 1][gridY - 1].type < 9) {
                         blocks[gridX + 1][gridY - 1].changeType(blocks[gridX + 1][gridY - 1].type - 1);
                     }
@@ -227,12 +238,11 @@ class Ball {
             // check bottom left
             if (gridX > 0 && gridY < 14) {
                 if (blocks[gridX - 1][gridY + 1].type > 0 && this.x < blocks[gridX - 1][gridY + 1].x + blocks[gridX - 1][gridY + 1].width && this.y + this.height > blocks[gridX - 1][gridY + 1].y && this.velocity.x < 0 && this.velocity.y > 0) {
-                    this.velocity.x *= -1;
-                    this.velocity.y *= -1;
-                    this.x += this.velocity.x;
-                    this.y += this.velocity.y;
-                    hit = true;
-                    console.log("hit bottom left")
+                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
+                        this.velocity.x *= -1;
+                    } else {
+                        this.velocity.y *= -1;
+                    }
                     if (blocks[gridX - 1][gridY + 1].type < 9) {
                         blocks[gridX - 1][gridY + 1].changeType(blocks[gridX - 1][gridY + 1].type - 1);
                     }
@@ -241,19 +251,17 @@ class Ball {
             // check bottom right
             if (gridX < 9 && gridY < 14) {
                 if (blocks[gridX + 1][gridY + 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY + 1].x && this.y + this.height > blocks[gridX + 1][gridY + 1].y && this.velocity.x > 0 && this.velocity.y > 0) {
-                    this.velocity.x *= -1;
-                    this.velocity.y *= -1;
-                    this.x += this.velocity.x;
-                    this.y += this.velocity.y;
-                    hit = true;
-                    console.log("hit bottom right")
+                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
+                        this.velocity.x *= -1;
+                    } else {
+                        this.velocity.y *= -1;
+                    }
                     if (blocks[gridX + 1][gridY + 1].type < 9) {
                         blocks[gridX + 1][gridY + 1].changeType(blocks[gridX + 1][gridY + 1].type - 1);
                     }
                 }
             }
         }
-
     }
 }
 
