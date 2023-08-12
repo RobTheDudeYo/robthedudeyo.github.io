@@ -170,7 +170,6 @@ class Ball {
             this.y = paddle.y - this.height * 0.95;
             this.element.style.left = this.x + "px";
             this.element.style.top = this.y + "px";
-            this.speed = this.resolution * 0.0005;
             this.velocity.y = -this.speed * 0.75;
             this.velocity.x = this.speed * (this.x - (paddle.x + (paddle.width / 2))) / (paddle.width / 2);
         }
