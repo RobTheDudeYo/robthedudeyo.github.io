@@ -11,10 +11,10 @@ class Game {
         this.container.style.width = this.resolution + "px";
         this.container.style.height = this.resolution * 0.925 + "px";
         this.paddle = new Paddle(this.resolution, this.container);
-        this.balls = [new Ball(this.resolution, this.container)];
+        this.balls = [new Ball(this.resolution, this.container, this.paddle, true)];
         this.blocks = [[], [], [], [], [], [], [], [], [], []];
         this.levels = levels;
-        this.currentLevel = 9;
+        this.currentLevel = 11;
         this.deltaTime = 0;
         this.lastTime = Date.now();
     }
@@ -53,7 +53,7 @@ class Game {
             }
         }
         if (this.balls.length == 0) {
-            this.balls.push(new Ball(this.resolution, this.container, this.paddle));
+            this.balls.push(new Ball(this.resolution, this.container, this.paddle, true));
         }
     }
 
@@ -73,7 +73,7 @@ class Game {
     loadLevel(level) {
         for (let y = 0; y < 16; y++) {
             for (let x = 0; x < 10; x++) {
-                this.blocks[x][y] = new Block(this.resolution, x, y, level[y][x], this.container);
+                this.blocks[x][y] = new Block(this.resolution, x, y, level[y][x], this.container, this.balls, this.paddle);
             }
         }
     }
@@ -118,15 +118,15 @@ class Paddle {
 }
 
 class Ball {
-    constructor(resolution, panel, paddle) {
+    constructor(resolution, panel, paddle, serving, otherBall) {
         this.resolution = resolution;
         this.width = resolution / 50;
         this.height = resolution / 50;
-        this.x = paddle ? paddle.x : (resolution / 2) - (this.width / 2);
-        this.y = paddle ? paddle.y : resolution - this.height - (resolution / 5);
-        this.speed = resolution * 0.00025;
-        this.velocity = { x: 0, y: 0 };
-        this.serving = true;
+        this.x = otherBall ? otherBall.x : paddle.x;
+        this.y = otherBall ? otherBall.y : paddle.y - this.height;
+        this.speed = otherBall ? otherBall.speed : resolution * 0.00025;
+        this.velocity = otherBall ? { x: otherBall.velocity.x * 0.9, y: otherBall.velocity.y * 0.9 } : { x: 0, y: 0 };
+        this.serving = serving ? serving : false;
         this.element = document.createElement("div");
         this.element.classList = "ball";
         this.element.style.width = this.width + "px";
@@ -175,22 +175,27 @@ class Ball {
         }
     }
 
+    adjustedSpeed(paddle) {
+        this.speed += this.resolution * 0.00005;
+        if (this.speed > this.resolution * 0.0005) {
+            this.speed = this.resolution * 0.0005;
+        }
+        let paddleCenter = paddle.x + (paddle.width / 2);
+        let ballCenter = this.x + (this.width / 2);
+        let distance = ballCenter - paddleCenter;
+        let maxDistance = paddle.width / 2;
+        let angle = (distance / maxDistance) * 45;
+        this.velocity.x = Math.sin(angle * (Math.PI / 180)) * this.speed;
+        this.velocity.y = -Math.cos(angle * (Math.PI / 180)) * this.speed;
+        return this.speed;
+    }
+
 
     collisionCheck(paddle, blocks) {
         // paddle collision
         if (this.y > paddle.y - this.height && this.y < paddle.y && this.x > paddle.x - this.width && this.x < paddle.x + paddle.width && this.velocity.y > 0) {
             // Where the ball hits the paddle dictates how it will bounce off the paddle. If the ball hits the middle, it will bounce off at a sharp angle. If it hits the sides, it will bounce off at a 45 degree angle. And if it hits the very edges of the paddle, it will bounce off at a very shallow angle. https://strategywiki.org/wiki/Arkanoid/Gameplay
-            this.speed += this.resolution * 0.0001;
-            if (this.speed > this.resolution * 0.0005) {
-                this.speed = this.resolution * 0.0005;
-            }
-            let paddleCenter = paddle.x + (paddle.width / 2);
-            let ballCenter = this.x + (this.width / 2);
-            let distance = ballCenter - paddleCenter;
-            let maxDistance = paddle.width / 2;
-            let angle = (distance / maxDistance) * 45;
-            this.velocity.x = Math.sin(angle * (Math.PI / 180)) * this.speed;
-            this.velocity.y = -Math.cos(angle * (Math.PI / 180)) * this.speed;
+            this.speed = this.adjustedSpeed(paddle)
             return;
         }
 
@@ -206,7 +211,7 @@ class Ball {
                 this.x += this.velocity.x;
                 hit = true;
                 if (blocks[gridX - 1][gridY].type < 9) {
-                    blocks[gridX - 1][gridY].changeType(blocks[gridX - 1][gridY].type - 1);
+                    blocks[gridX - 1][gridY].hit(this);
                 }
             }
         }
@@ -217,7 +222,7 @@ class Ball {
                 this.x += this.velocity.x;
                 hit = true;
                 if (blocks[gridX + 1][gridY].type < 9) {
-                    blocks[gridX + 1][gridY].changeType(blocks[gridX + 1][gridY].type - 1);
+                    blocks[gridX + 1][gridY].hit(this);
                 }
             }
         }
@@ -228,7 +233,7 @@ class Ball {
                 this.y += this.velocity.y;
                 hit = true;
                 if (blocks[gridX][gridY - 1].type < 9) {
-                    blocks[gridX][gridY - 1].changeType(blocks[gridX][gridY - 1].type - 1);
+                    blocks[gridX][gridY - 1].hit(this);
                 }
             }
         }
@@ -239,7 +244,7 @@ class Ball {
                 this.y += this.velocity.y;
                 hit = true;
                 if (blocks[gridX][gridY + 1].type < 9) {
-                    blocks[gridX][gridY + 1].changeType(blocks[gridX][gridY + 1].type - 1);
+                    blocks[gridX][gridY + 1].hit(this);
                 }
             }
         }
@@ -253,7 +258,7 @@ class Ball {
                         this.velocity.y *= -1;
                     }
                     if (blocks[gridX - 1][gridY - 1].type < 9) {
-                        blocks[gridX - 1][gridY - 1].changeType(blocks[gridX - 1][gridY - 1].type - 1);
+                        blocks[gridX - 1][gridY - 1].hit(this);
                     }
                 }
             }
@@ -266,7 +271,7 @@ class Ball {
                         this.velocity.y *= -1;
                     }
                     if (blocks[gridX + 1][gridY - 1].type < 9) {
-                        blocks[gridX + 1][gridY - 1].changeType(blocks[gridX + 1][gridY - 1].type - 1);
+                        blocks[gridX + 1][gridY - 1].hit(this);
                     }
                 }
             }
@@ -279,12 +284,12 @@ class Ball {
                         this.velocity.y *= -1;
                     }
                     if (blocks[gridX - 1][gridY + 1].type < 9) {
-                        blocks[gridX - 1][gridY + 1].changeType(blocks[gridX - 1][gridY + 1].type - 1);
+                        blocks[gridX - 1][gridY + 1].hit(this);
                     }
                 }
             }
             // check bottom right
-            if (gridX < 9 && gridY < 14) {
+            if (gridX < 9 && gridY < 15) {
                 if (blocks[gridX + 1][gridY + 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY + 1].x && this.y + this.height > blocks[gridX + 1][gridY + 1].y && this.velocity.x > 0 && this.velocity.y > 0) {
                     if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
                         this.velocity.x *= -1;
@@ -292,7 +297,7 @@ class Ball {
                         this.velocity.y *= -1;
                     }
                     if (blocks[gridX + 1][gridY + 1].type < 9) {
-                        blocks[gridX + 1][gridY + 1].changeType(blocks[gridX + 1][gridY + 1].type - 1);
+                        blocks[gridX + 1][gridY + 1].hit(this);
                     }
                 }
             }
@@ -302,12 +307,16 @@ class Ball {
 
 
 class Block {
-    constructor(resolution, x, y, type, panel) {
+    constructor(resolution, x, y, type, panel, balls, paddle) {
+        this.resolution = resolution;
         this.width = resolution / 10;
         this.height = resolution / 25;
         this.x = x * this.width
         this.y = (y * this.height) + this.height;
         this.type = type;
+        this.balls = balls;
+        this.panel = panel;
+        this.paddle = paddle;
         this.element = document.createElement("div");
         this.element.classList = `block b${type}`;
         this.element.style.width = this.width + "px";
@@ -317,11 +326,17 @@ class Block {
         panel.appendChild(this.element);
     }
 
-    changeType(type) {
-        if (type < 0) {
+    hit(ball) {
+        this.type--;
+        if (this.type < 0) {
             type = 0;
         }
-        this.type = type;
-        this.element.classList = `block b${type}`;
+        if (this.type == 1) {
+            this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball));
+            this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball));
+        }
+        this.element.classList = `block b${this.type}`;
     }
 }
+
+
