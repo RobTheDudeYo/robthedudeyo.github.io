@@ -96,7 +96,7 @@ class Paddle {
         this.x = (this.resolution / 2) - (this.width / 2);
         this.y = this.resolution * 0.85;
         this.direction = 0;
-        this.speed = this.resolution * 0.0005;
+        this.speed = this.resolution * 0.0004;
         this.element = document.createElement("div");
         this.element.classList = "paddle";
         this.element.style.width = this.width + "px";
