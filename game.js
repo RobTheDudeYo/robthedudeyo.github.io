@@ -38,7 +38,7 @@ class Game {
 
     markServingBall() {
         if (this.balls[0]) {
-            let marker = 0;
+            let marker = null;
             for (let i = 0; i < this.balls.length; i++) {
                 if (this.balls[i].serving) {
                     this.balls[i].element.classList.add("serving");
@@ -46,16 +46,34 @@ class Game {
                     break;
                 };
             }
-            if (this.balls[marker + 1]) {
+            if (marker != null) {
+                if (marker > 0) {
+                for (let i = 0; i < marker; i++) {
+                    this.balls[i].element.classList.remove("serving");
+                }
                 for (let i = marker + 1; i < this.balls.length; i++) {
                     this.balls[i].element.classList.remove("serving");
                 }
+            } else {
+                for (let i = 1; i < this.balls.length; i++) {
+                    this.balls[i].element.classList.remove("serving");
+                }
+            }
             }
         }
     }
 
+    countLooseBalls() {
+        let count = 0;
+        for (let i = 0; i < this.balls.length; i++) {
+            if (this.balls[i].serving == false) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     run() {
-        this.paddle.move(this.deltaTime);
         for (let i = 0; i < this.balls.length; i++) {
             this.balls[i].move(this.paddle, this.blocks, this.deltaTime, this)
         }
@@ -72,27 +90,41 @@ class Game {
                 game.container.remove();
                 return "end";
             }
+            this.multiplier = 1;
             this.balls.push(new Ball(this.resolution, this.container, this.paddle, true));
+        } else if (this.countLooseBalls() == 0) {
+            this.multiplier = 1;
         }
 
         if (this.currentLevelBlocks < 1) {
             this.currentLevel++;
             if (this.currentLevel > this.levels.length - 1) {
-                this.currentLevel = 1;
+                game.container.remove();
+                return "end";
             }
             this.clearLevel();
             this.loadLevel(this.levels[this.currentLevel - 1]);
             this.balls.push(new Ball(this.resolution, this.container, this.paddle, true));
         }
         this.hud.update(this.score, this.lives, this.multiplier, this.sticky);
+        this.paddle.move(this.deltaTime);
         return "game";
+    }
+
+    loadTestLevel() {
+        this.loadLevel(this.levels[1 - 1]);
+        this.balls[0].serving = true;
+        this.balls[0].x = (this.resolution * 0.5) - (this.balls[0].width * 0.6);
+        this.balls[0].y = this.resolution * 0.7;
+        this.balls[0].velocity.y = -0.1;
+        this.balls[0].velocity.x = 0;
     }
 
     loadLevel(level) {
         for (let y = 0; y < 16; y++) {
             for (let x = 0; x < 10; x++) {
                 this.blocks[x][y] = new Block(this.resolution, x, y, level[y][x], this.container, this.balls, this.paddle);
-                if (level[y][x] > 0 && level[y][x] < 9) {
+                if (level[y][x] > 0 && level[y][x] < 8) {
                     this.currentLevelBlocks++;
                 }
             }
@@ -223,6 +255,7 @@ class Ball {
         this.velocity.y = Math.sin(angle) * this.speed;
     }
 
+
     collisionCheck(paddle, blocks, game) {
         // paddle collision
         if (this.y > paddle.y - this.height && this.y < paddle.y && this.x > paddle.x - this.width && this.x < paddle.x + paddle.width && this.velocity.y > 0) {
@@ -234,10 +267,10 @@ class Ball {
                 }
                 return;
             }
-            this.adjustedSpeed(paddle)
-            if (game.balls.length < 2) {
+            if (game.countLooseBalls() == 1) {
                 game.multiplier = 1;
             }
+            this.adjustedSpeed(paddle);
             return;
         }
 
@@ -301,7 +334,7 @@ class Ball {
         if (!hit) {
             // check top left
             if (gridX > 0 && gridY > 1 && gridY < 16) {
-                if (blocks[gridX - 1][gridY - 1].type > 0 && this.x < blocks[gridX - 1][gridY - 1].x + blocks[gridX - 1][gridY - 1].width && this.y < blocks[gridX - 1][gridY - 1].y + blocks[gridX - 1][gridY - 1].height && this.velocity.x < 0 && this.velocity.y < 0) {
+                if (blocks[gridX - 1][gridY - 1].type > 0 && this.x < blocks[gridX - 1][gridY - 1].x + blocks[gridX - 1][gridY - 1].width && this.y < blocks[gridX - 1][gridY - 1].y + blocks[gridX - 1][gridY - 1].height && this.velocity.y < 0) {
                     if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
                         this.velocity.x *= -1;
                     } else {
@@ -314,7 +347,7 @@ class Ball {
             }
             // check top right
             if (gridX < 9 && gridY > 1 && gridY < 16) {
-                if (blocks[gridX + 1][gridY - 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY - 1].x && this.y < blocks[gridX + 1][gridY - 1].y + blocks[gridX + 1][gridY - 1].height && this.velocity.x > 0 && this.velocity.y < 0) {
+                if (blocks[gridX + 1][gridY - 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY - 1].x && this.y < blocks[gridX + 1][gridY - 1].y + blocks[gridX + 1][gridY - 1].height && this.velocity.y < 0) {
                     if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
                         this.velocity.x *= -1;
                     } else {
@@ -327,7 +360,7 @@ class Ball {
             }
             // check bottom left
             if (gridX > 0 && gridY < 14) {
-                if (blocks[gridX - 1][gridY + 1].type > 0 && this.x < blocks[gridX - 1][gridY + 1].x + blocks[gridX - 1][gridY + 1].width && this.y + this.height > blocks[gridX - 1][gridY + 1].y && this.velocity.x < 0 && this.velocity.y > 0) {
+                if (blocks[gridX - 1][gridY + 1].type > 0 && this.x < blocks[gridX - 1][gridY + 1].x + blocks[gridX - 1][gridY + 1].width && this.y + this.height > blocks[gridX - 1][gridY + 1].y && this.velocity.y > 0) {
                     if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
                         this.velocity.x *= -1;
                     } else {
@@ -340,7 +373,7 @@ class Ball {
             }
             // check bottom right
             if (gridX < 9 && gridY < 15) {
-                if (blocks[gridX + 1][gridY + 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY + 1].x && this.y + this.height > blocks[gridX + 1][gridY + 1].y && this.velocity.x > 0 && this.velocity.y > 0) {
+                if (blocks[gridX + 1][gridY + 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY + 1].x && this.y + this.height > blocks[gridX + 1][gridY + 1].y && this.velocity.y > 0) {
                     if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
                         this.velocity.x *= -1;
                     } else {
@@ -364,7 +397,7 @@ class Block {
         this.x = x * this.width
         this.y = (y * this.height) + this.height;
         this.type = type;
-        this.subtype = type == 1 ? 2 : 0;
+        this.subtype = type == 1 ? 1 : 0;
         this.balls = balls;
         this.panel = panel;
         this.paddle = paddle;
@@ -380,8 +413,8 @@ class Block {
     hit(ball, game) {
         ball.speedIncrease();
         game.score += (game.multiplier * game.currentLevel) * 10;
-        game.multiplier += 0.1;
-        game.multiplier = Math.round(game.multiplier * 100) / 100;
+        game.multiplier *= 1.02;
+        game.multiplier = Math.floor(game.multiplier * 1000) / 1000;
 
         // 1 - normal block
         // 2 - double points
@@ -403,7 +436,7 @@ class Block {
             }
         } else if (this.type == 2) {
             // double points
-            game.multiplier *= 2;
+            game.multiplier += 1;
             game.multiplier = Math.round(game.multiplier * 100) / 100;
             game.currentLevelBlocks -= 1;
             this.type = 0;
@@ -416,6 +449,15 @@ class Block {
             // multiball
             this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball, { x: -1, y: 1 }));
             this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball, { x: 1, y: -1 }));
+            game.currentLevelBlocks -= 1;
+            this.type = 0;
+        } else if (this.type == 5) {
+            game.currentLevelBlocks -= 1;
+            this.type = 0;
+        } else if (this.type == 6) {
+            game.currentLevelBlocks -= 1;
+            this.type = 0;
+        } else if (this.type == 7) {
             game.currentLevelBlocks -= 1;
             this.type = 0;
         }
