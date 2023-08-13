@@ -9,6 +9,26 @@
     left: calc(50vw - min(100vh, 100vw) * 0.45);
 }
 
+.interface {
+    position: absolute;
+    line-height: 1;
+    left: calc(var(--resolution) * 0.025);
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    z-index: 4;
+    font-size: calc(var(--resolution) * 0.035);
+    color: #ffffff;
+    text-shadow: 0 0 0.1em #000;
+}
+
+.interface.score {
+    top: calc(var(--resolution) * 0.85);
+}
+
+.interface.multiplier {
+    top: calc(var(--resolution) * 0.8);
+    color: #ff7eff;
+}
+
 .fps {
     position: absolute;
     bottom: 0;

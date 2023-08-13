@@ -14,7 +14,7 @@ class Game {
         this.balls = [new Ball(this.resolution, this.container, this.paddle, true)];
         this.blocks = [[], [], [], [], [], [], [], [], [], []];
         this.levels = levels;
-        this.currentLevel = 11;
+        this.currentLevel = 1;
         this.currentLevelBlocks = 0;
         this.score = 0;
         this.multiplier = 1;
@@ -22,8 +22,9 @@ class Game {
         this.sticky = 0;
         this.deltaTime = 0;
         this.lastTime = Date.now();
-        this.loadLevel(this.levels[this.currentLevel - 1]);
+        this.hud = new interfaceAndHUD(this.resolution, this.container, this);
     }
+
 
     serveBall() {
         if (this.balls[0]) {
@@ -83,6 +84,7 @@ class Game {
             this.loadLevel(this.levels[this.currentLevel - 1]);
             this.balls.push(new Ball(this.resolution, this.container, this.paddle, true));
         }
+        this.hud.update(this.score, this.lives, this.multiplier, this.sticky);
         return "game";
     }
 
@@ -422,3 +424,28 @@ class Block {
 }
 
 
+class interfaceAndHUD {
+    constructor(resolution, panel, game) {
+        this.resolution = resolution;
+        this.panel = panel;
+        this.game = game;
+        this.score = document.createElement("div");
+        this.score.classList = "interface score";
+        this.score.innerHTML = "Score: " + this.game.score;
+        this.panel.appendChild(this.score);
+        this.multiplier = document.createElement("div");
+        this.multiplier.classList = "interface multiplier";
+        this.multiplier.innerHTML = "Multiplier: " + this.game.multiplier;
+        this.panel.appendChild(this.multiplier);
+    }
+
+    update() {
+        this.score.innerHTML = "Score: " + this.game.score.toFixed(0);
+        if (this.game.multiplier > 1.1) {
+            this.multiplier.innerHTML = (this.game.multiplier).toFixed(1) + "X";
+        } else {
+            this.multiplier.innerHTML = "";
+        }
+        // this.sticky.innerHTML = "Sticky: " + this.game.sticky;
+    }
+}
