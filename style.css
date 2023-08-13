@@ -61,6 +61,7 @@
 
 .ball.serving {
     background-image: none;
+    z-index: 2;
 }
 
 .block {
