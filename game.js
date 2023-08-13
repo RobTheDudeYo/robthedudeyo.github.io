@@ -417,7 +417,7 @@ class Block {
 
     hit(ball, game) {
         ball.speedIncrease();
-        game.score += (game.multiplier * game.currentLevel) * 10;
+        game.score += (game.multiplier * game.currentLevel) * 100;
         game.multiplier *= 1.02;
         game.multiplier = Math.floor(game.multiplier * 1000) / 1000;
 
