@@ -166,6 +166,7 @@ class Ball {
             }
             this.element.style.left = this.x + "px";
             this.element.style.top = this.y + "px";
+            this.collisionCheck(paddle, blocks, game);
         } else {
             this.x = paddle.x + this.paddleLock;
             this.y = paddle.y - this.height * 0.95;
@@ -174,7 +175,6 @@ class Ball {
             this.velocity.y = -this.speed * 0.75;
             this.velocity.x = this.speed * (this.x - (paddle.x + (paddle.width / 2))) / (paddle.width / 2);
         }
-        this.collisionCheck(paddle, blocks, game);
     }
 
     adjustedSpeed(paddle) {
