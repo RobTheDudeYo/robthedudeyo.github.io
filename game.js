@@ -124,14 +124,14 @@ class Paddle {
 }
 
 class Ball {
-    constructor(resolution, panel, paddle, serving, otherBall) {
+    constructor(resolution, panel, paddle, serving, otherBall, direction) {
         this.resolution = resolution;
         this.width = resolution / 50;
         this.height = resolution / 50;
         this.x = otherBall ? otherBall.x : paddle.x;
         this.y = otherBall ? otherBall.y : paddle.y - this.height;
         this.speed = otherBall ? otherBall.speed : resolution * 0.00025;
-        this.velocity = otherBall ? { x: -otherBall.velocity.x * 0.9, y: -otherBall.velocity.y * 0.9 } : { x: 0, y: 0 };
+        this.velocity = otherBall ? { x: otherBall.velocity.x * direction.x, y: otherBall.velocity.y * direction.y } : { x: 0, y: 0 };
         this.serving = serving ? serving : false;
         this.paddleLock = (paddle.width / 2) + resolution * 0.03;
         this.element = document.createElement("div");
@@ -385,8 +385,8 @@ class Block {
             this.type = 0;
         } else if (this.type == 8) {
             // multiball
-            this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball));
-            this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball));
+            this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball, { x: -1, y: 1 }));
+            this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball, { x: 1, y: -1 }));
             game.currentLevelBlocks -= 1;
             this.type = 0;
         } else if (this.type > 3 && this.type < 8) {
