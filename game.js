@@ -14,13 +14,15 @@ class Game {
         this.balls = [new Ball(this.resolution, this.container, this.paddle, true)];
         this.blocks = [[], [], [], [], [], [], [], [], [], []];
         this.levels = levels;
-        this.currentLevel = 1;
+        this.currentLevel = 11;
         this.currentLevelBlocks = 0;
         this.score = 0;
         this.multiplier = 1;
         this.lives = 2;
+        this.sticky = 0;
         this.deltaTime = 0;
         this.lastTime = Date.now();
+        this.loadLevel(this.levels[this.currentLevel - 1]);
     }
 
     serveBall() {
@@ -31,12 +33,6 @@ class Game {
                 };
             }
         }
-    }
-
-    initialise() {
-        // initial setup
-        this.loadLevel(this.levels[this.currentLevel - 1]);
-        // this.cycleLevels();
     }
 
     run() {
@@ -51,6 +47,11 @@ class Game {
             }
         }
         if (this.balls.length == 0) {
+            this.lives--;
+            if (this.lives < 0) {
+                game.container.remove();
+                return "end";
+            }
             this.balls.push(new Ball(this.resolution, this.container, this.paddle, true));
         }
 
@@ -63,19 +64,7 @@ class Game {
             this.loadLevel(this.levels[this.currentLevel - 1]);
             this.balls.push(new Ball(this.resolution, this.container, this.paddle, true));
         }
-    }
-
-    cycleLevels() {
-        // for demonstration purposes
-        this.loadLevel(this.levels[this.currentLevel]);
-        this.currentLevel++;
-        if (this.currentLevel > this.levels.length - 1) {
-            this.currentLevel = 0;
-        }
-        setTimeout(() => {
-            this.clearLevel();
-            this.cycleLevels();
-        }, 1000);
+        return "game";
     }
 
     loadLevel(level) {
@@ -101,6 +90,7 @@ class Game {
             }
         }
         this.currentLevelBlocks = 0;
+        this.sticky = 0;
     }
 }
 
@@ -112,7 +102,7 @@ class Paddle {
         this.x = (this.resolution / 2) - (this.width / 2);
         this.y = this.resolution * 0.75;
         this.direction = 0;
-        this.speed = this.resolution * 0.0004;
+        this.speed = this.resolution * 0.00045;
         this.element = document.createElement("div");
         this.element.classList = "paddle";
         this.element.style.width = this.width + "px";
@@ -143,6 +133,7 @@ class Ball {
         this.speed = otherBall ? otherBall.speed : resolution * 0.00025;
         this.velocity = otherBall ? { x: -otherBall.velocity.x * 0.9, y: -otherBall.velocity.y * 0.9 } : { x: 0, y: 0 };
         this.serving = serving ? serving : false;
+        this.paddleLock = (paddle.width / 2) + resolution * 0.03;
         this.element = document.createElement("div");
         this.element.classList = "ball";
         this.element.style.width = this.width + "px";
@@ -176,12 +167,7 @@ class Ball {
             this.element.style.left = this.x + "px";
             this.element.style.top = this.y + "px";
         } else {
-            if (this.x < paddle.x + this.width) {
-                this.x = paddle.x + this.width;
-            }
-            else if (this.x > paddle.x + paddle.width - (this.width * 2)) {
-                this.x = paddle.x + paddle.width - (this.width * 2);
-            }
+            this.x = paddle.x + this.paddleLock;
             this.y = paddle.y - this.height * 0.95;
             this.element.style.left = this.x + "px";
             this.element.style.top = this.y + "px";
@@ -191,27 +177,42 @@ class Ball {
         this.collisionCheck(paddle, blocks, game);
     }
 
-    adjustedSpeed(object) {
+    adjustedSpeed(paddle) {
         this.speed += this.resolution * 0.00001;
         if (this.speed > this.resolution * 0.0005) {
             this.speed = this.resolution * 0.0005;
         }
-        let objectCenter = object.x + (object.width / 2);
+        let paddleCenter = paddle.x + (paddle.width / 2);
         let ballCenter = this.x + (this.width / 2);
-        let distance = ballCenter - objectCenter;
-        let maxDistance = object.width / 2;
+        let distance = ballCenter - paddleCenter;
+        let maxDistance = paddle.width / 2;
         let angle = (distance / maxDistance) * 50;
         this.velocity.x = Math.sin(angle * (Math.PI / 180)) * this.speed;
         this.velocity.y = -Math.cos(angle * (Math.PI / 180)) * this.speed;
-        return this.speed;
     }
 
+    speedIncrease() {
+        this.speed += this.resolution * 0.00001;
+        if (this.speed > this.resolution * 0.0005) {
+            this.speed = this.resolution * 0.0005;
+        }
+        let angle = Math.atan2(this.velocity.y, this.velocity.x);
+        this.velocity.x = Math.cos(angle) * this.speed;
+        this.velocity.y = Math.sin(angle) * this.speed;
+    }
 
     collisionCheck(paddle, blocks, game) {
         // paddle collision
         if (this.y > paddle.y - this.height && this.y < paddle.y && this.x > paddle.x - this.width && this.x < paddle.x + paddle.width && this.velocity.y > 0) {
-            // Where the ball hits the paddle dictates how it will bounce off the paddle. If the ball hits the middle, it will bounce off at a sharp angle. If it hits the sides, it will bounce off at a 45 degree angle. And if it hits the very edges of the paddle, it will bounce off at a very shallow angle. https://strategywiki.org/wiki/Arkanoid/Gameplay
-            this.speed = this.adjustedSpeed(paddle)
+            if (game.sticky) {
+                this.paddleLock = this.x - paddle.x;
+                this.serving = true;
+                if (game.sticky > 0) {
+                    game.sticky--;
+                }
+                return;
+            }
+            this.adjustedSpeed(paddle)
             if (game.balls.length < 2) {
                 game.multiplier = 1;
             }
@@ -354,22 +355,32 @@ class Block {
     }
 
     hit(ball, game) {
-
+        ball.speedIncrease();
         game.score += (game.multiplier * game.currentLevel) * 10;
         game.multiplier += 0.1;
         game.multiplier = Math.round(game.multiplier * 100) / 100;
+        // 1 - normal block
+        // 2 - double points
+        // 3 - sticky
+        // 4 - slow
+        // 5 - fast
+        // 6 - wide
+        // 7 - narrow
+        // 8 - multiball
+        // 9 - unbreakable
         if (this.type == 1) {
             // normal block
             game.currentLevelBlocks -= 1;
             this.type = 0;
         } else if (this.type == 2) {
             // double points
-            game.multiplier += 1;
+            game.multiplier *= 2;
             game.multiplier = Math.round(game.multiplier * 100) / 100;
-            this.type = 1;
+            game.currentLevelBlocks -= 1;
+            this.type = 0;
         } else if (this.type == 3) {
-            // guns
-            game.guns = true;
+            // sticky
+            game.sticky += 3;
             game.currentLevelBlocks -= 1;
             this.type = 0;
         } else if (this.type == 8) {
@@ -378,6 +389,8 @@ class Block {
             this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball));
             game.currentLevelBlocks -= 1;
             this.type = 0;
+        } else if (this.type > 3 && this.type < 8) {
+            this.type--;
         }
         this.element.classList = `block b${this.type}`;
     }
