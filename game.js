@@ -22,7 +22,12 @@ class Game {
         this.sticky = 0;
         this.deltaTime = 0;
         this.lastTime = Date.now();
+
         this.hud = new interfaceAndHUD(this.resolution, this.container, this);
+    }
+
+    initialiseLevel(level) {
+        this.loadLevel(this.levels[level - 1]);
     }
 
 
