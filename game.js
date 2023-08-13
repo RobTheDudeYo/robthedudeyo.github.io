@@ -35,6 +35,24 @@ class Game {
         }
     }
 
+    markServingBall() {
+        if (this.balls[0]) {
+            let marker = 0;
+            for (let i = 0; i < this.balls.length; i++) {
+                if (this.balls[i].serving) {
+                    this.balls[i].element.classList.add("serving");
+                    marker = i;
+                    break;
+                };
+            }
+            if (this.balls[marker + 1]) {
+                for (let i = marker + 1; i < this.balls.length; i++) {
+                    this.balls[i].element.classList.remove("serving");
+                }
+            }
+        }
+    }
+
     run() {
         this.paddle.move(this.deltaTime);
         for (let i = 0; i < this.balls.length; i++) {
@@ -46,6 +64,7 @@ class Game {
                 this.balls.splice(i, 1);
             }
         }
+        this.markServingBall();
         if (this.balls.length == 0) {
             this.lives--;
             if (this.lives < 0) {
@@ -124,15 +143,15 @@ class Paddle {
 }
 
 class Ball {
-    constructor(resolution, panel, paddle, serving, otherBall, direction) {
+    constructor(resolution, panel, paddle, serving, parentBall, direction) {
         this.resolution = resolution;
         this.width = resolution / 50;
         this.height = resolution / 50;
-        this.x = otherBall ? otherBall.x : paddle.x;
-        this.y = otherBall ? otherBall.y : paddle.y - this.height;
-        this.speed = otherBall ? otherBall.speed : resolution * 0.00025;
-        this.velocity = otherBall ? { x: otherBall.velocity.x * direction.x, y: otherBall.velocity.y * direction.y } : { x: 0, y: 0 };
-        this.serving = serving ? serving : false;
+        this.x = parentBall ? parentBall.x : paddle.x;
+        this.y = parentBall ? parentBall.y : paddle.y - this.height;
+        this.speed = parentBall ? parentBall.speed : resolution * 0.00025;
+        this.velocity = parentBall ? { x: parentBall.velocity.x * direction.x, y: parentBall.velocity.y * direction.y } : { x: 0, y: 0 };
+        this.serving = serving ? true : false;
         this.paddleLock = (paddle.width / 2) + resolution * 0.03;
         this.element = document.createElement("div");
         this.element.classList = "ball";
@@ -146,6 +165,7 @@ class Ball {
     serve() {
         if (this.serving) {
             this.serving = false;
+            this.element.classList.remove("serving");
             return true;
         } else {
             return false;
@@ -225,7 +245,7 @@ class Ball {
 
         let hit = false;
         // first check current grid location, just in case we missed it otherwise
-        if (gridY < 16) {
+        if (gridY > 0 && gridY < 16) {
             if (blocks[gridX][gridY].type > 0) {
                 this.velocity.x *= -1;
                 hit = true;
@@ -342,11 +362,12 @@ class Block {
         this.x = x * this.width
         this.y = (y * this.height) + this.height;
         this.type = type;
+        this.subtype = type == 1 ? 2 : 0;
         this.balls = balls;
         this.panel = panel;
         this.paddle = paddle;
         this.element = document.createElement("div");
-        this.element.classList = `block b${type}`;
+        this.element.classList = `block b${type + this.subtype}`;
         this.element.style.width = this.width + "px";
         this.element.style.height = this.height + "px";
         this.element.style.left = this.x + "px";
@@ -359,19 +380,25 @@ class Block {
         game.score += (game.multiplier * game.currentLevel) * 10;
         game.multiplier += 0.1;
         game.multiplier = Math.round(game.multiplier * 100) / 100;
+
         // 1 - normal block
         // 2 - double points
         // 3 - sticky
-        // 4 - slow
+        // 4 - multiball
         // 5 - fast
         // 6 - wide
         // 7 - narrow
-        // 8 - multiball
+        // 8 - slow
         // 9 - unbreakable
+
         if (this.type == 1) {
             // normal block
-            game.currentLevelBlocks -= 1;
-            this.type = 0;
+            this.subtype--;
+            if (this.subtype < 0) {
+                game.currentLevelBlocks--;
+                this.type = 0;
+                this.subtype = 0;
+            }
         } else if (this.type == 2) {
             // double points
             game.multiplier *= 2;
@@ -383,16 +410,14 @@ class Block {
             game.sticky += 3;
             game.currentLevelBlocks -= 1;
             this.type = 0;
-        } else if (this.type == 8) {
+        } else if (this.type == 4) {
             // multiball
             this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball, { x: -1, y: 1 }));
             this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball, { x: 1, y: -1 }));
             game.currentLevelBlocks -= 1;
             this.type = 0;
-        } else if (this.type > 3 && this.type < 8) {
-            this.type--;
         }
-        this.element.classList = `block b${this.type}`;
+        this.element.classList = `block b${this.type + this.subtype}`;
     }
 }
 

@@ -39,6 +39,10 @@
     border-radius: calc(var(--resolution) * 0.0075);
 }
 
+.ball.serving {
+    background-image: none;
+}
+
 .block {
     position: absolute;
     border-radius: calc(var(--resolution) * 0.0075);
