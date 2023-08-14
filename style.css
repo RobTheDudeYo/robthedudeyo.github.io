@@ -29,6 +29,29 @@
     color: #ff7eff;
 }
 
+.floatingText {
+    position: absolute;
+    color: #ff7eff;
+    transform: translate(-50%, -50%);
+    animation: floatingText 1s linear;
+}
+
+@keyframes floatingText {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        opacity: 0.9;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(3);
+    }
+}
+
 .fps {
     position: absolute;
     bottom: 0;

@@ -41,6 +41,18 @@ class Game {
         }
     }
 
+    floatingText(target, number) {
+        let text = document.createElement("div");
+        text.classList.add("floatingText");
+        text.innerHTML = number;
+        text.style.left = (target.x + target.width / 2) + "px";
+        text.style.top = (target.y + target.height / 2) + "px";
+        this.container.appendChild(text);
+        setTimeout(() => {
+            text.remove();
+        }, 1000);
+    }
+
     markServingBall() {
         if (this.balls[0]) {
             let marker = null;
@@ -416,6 +428,7 @@ class Block {
         ball.speedIncrease();
         if (this.type != 9) {
             game.score += (game.multiplier * game.currentLevel) * 100;
+            game.floatingText(this, Math.floor((game.multiplier * game.currentLevel) * 100))
         }
         game.multiplier *= 1.025;
         game.multiplier = Math.floor(game.multiplier * 1000) / 1000;
