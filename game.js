@@ -12,7 +12,7 @@ class Game {
         this.container.style.height = this.resolution + "px";
         this.paddle = new Paddle(this.resolution, this.container);
         this.balls = [new Ball(this.resolution, this.container, this.paddle, true)];
-        this.blocks = [[], [], [], [], [], [], [], [], [], [], []];
+        this.blocks = Array.from({ length: 11 }, () => []);
         this.levels = levels;
         this.currentLevel = 1;
         this.currentLevelBlocks = 0;
@@ -116,9 +116,8 @@ class Game {
 
         if (this.currentLevelBlocks < 1) {
             this.currentLevel++;
-            if (this.currentLevel > this.levels.length - 1) {
-                game.container.remove();
-                return "end";
+            if (this.currentLevel > 11) {
+                this.currentLevel = 1;
             }
             this.clearLevel();
             this.loadLevel(this.levels[this.currentLevel - 1]);
