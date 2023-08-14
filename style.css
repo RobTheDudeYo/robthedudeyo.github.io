@@ -12,23 +12,35 @@
 .interface {
     position: absolute;
     line-height: 1;
-    left: calc(var(--resolution) * 0.025);
-    /* background-color: rgba(0, 0, 0, 0.5); */
     z-index: 4;
     font-size: calc(var(--resolution) * 0.035);
-    color: #ffffff;
-    text-shadow: 0 0 0.1em #000;
+    text-shadow: #000 0 0 calc(var(--resolution) * 0.003);
+    color: #fdc1fd;
+    font-weight: bold;
+}
+
+.interface.panel {
+    background-color: rgba(0, 0, 0, 0.1);
+    top: calc(var(--resolution) * 0.725);
+    width: calc(var(--resolution) * 0.95);
+    height: calc(var(--resolution) * 0.175);
 }
 
 .interface.score {
-    top: calc(var(--resolution) * 0.85);
+    top: calc(var(--resolution) * 0.125);
+    left: calc(var(--resolution) * 0.025);
 }
 
 .interface.multiplier {
     position: absolute;
-    top: calc(var(--resolution) * -0.5);
+    top: calc(var(--resolution) * 0.09);
+    left: calc(var(--resolution) * 0.025);
+}
+
+.interface.level {
+    top: calc(var(--resolution) * 0.125);
     left: calc(var(--resolution) * 0.5);
-    color: #ff7eff;
+    transform: translate(-100%, 0);
 }
 
 .floatingText {
@@ -70,7 +82,7 @@
 .paddle {
     position: absolute;
     z-index: 2;
-    background-color: #ff7eff;
+    background-color: #90e1e7;
     /* border-radius: calc(var(--resolution) * 0.1); */
     border-radius: 0 0 calc(var(--resolution) * 0.1) calc(var(--resolution) * 0.1);
 }

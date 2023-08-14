@@ -442,17 +442,30 @@ class Block {
 
 
 class interfaceAndHUD {
-    constructor(resolution, panel, game) {
+    constructor(resolution, game) {
         this.resolution = resolution;
-        this.panel = panel;
+        this.game = game;
+        this.panel = document.createElement("div");
+        this.panel.classList = "interface panel";
+        this.game.container.appendChild(this.panel);
         this.game = game;
         this.score = document.createElement("div");
         this.score.classList = "interface score";
         this.score.innerHTML = "Score: " + this.game.score;
         this.panel.appendChild(this.score);
+        this.multiplier = document.createElement("div");
+        this.multiplier.classList = "interface multiplier";
+        this.multiplier.innerHTML = "X " + this.game.multiplier;
+        this.panel.appendChild(this.multiplier);
+        this.level = document.createElement("div");
+        this.level.classList = "interface level";
+        this.level.innerHTML = "Level: " + this.game.currentLevel;
+        this.panel.appendChild(this.level);
     }
 
     update() {
-        this.score.innerHTML = `Score: ${this.game.score.toFixed(0)}${this.game.multiplier > 1.1 ? `<div class="interface multiplier"> X ` + (this.game.multiplier).toFixed(1) + "</div>" : ""}`;
+        this.score.innerHTML = `Score: ${(this.game.score * 10).toFixed(0)}`;
+        this.multiplier.innerHTML = `X ${this.game.multiplier.toFixed(2)}`;
+        this.level.innerHTML = `Level: ${this.game.currentLevel}`;
     }
 }
