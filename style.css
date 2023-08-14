@@ -70,6 +70,7 @@
     box-sizing: border-box;
     border: calc(var(--resolution) * 0.003) solid #ff7eff;
     background-image: radial-gradient(#ff7eff, #6cd8d8);
+    transition: all 75ms linear;
 }
 
 .block.b0 {

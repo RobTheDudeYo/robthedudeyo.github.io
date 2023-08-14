@@ -53,17 +53,17 @@ class Game {
             }
             if (marker != null) {
                 if (marker > 0) {
-                for (let i = 0; i < marker; i++) {
-                    this.balls[i].element.classList.remove("serving");
+                    for (let i = 0; i < marker; i++) {
+                        this.balls[i].element.classList.remove("serving");
+                    }
+                    for (let i = marker + 1; i < this.balls.length; i++) {
+                        this.balls[i].element.classList.remove("serving");
+                    }
+                } else {
+                    for (let i = 1; i < this.balls.length; i++) {
+                        this.balls[i].element.classList.remove("serving");
+                    }
                 }
-                for (let i = marker + 1; i < this.balls.length; i++) {
-                    this.balls[i].element.classList.remove("serving");
-                }
-            } else {
-                for (let i = 1; i < this.balls.length; i++) {
-                    this.balls[i].element.classList.remove("serving");
-                }
-            }
             }
         }
     }
@@ -128,11 +128,14 @@ class Game {
     loadLevel(level) {
         for (let y = 0; y < 16; y++) {
             for (let x = 0; x < 10; x++) {
+                if (level[y][x] == 1) {
+                    level[y][x] += 9;
+                }
                 this.blocks[x][y] = new Block(this.resolution, x, y, level[y][x], this.container, this.balls, this.paddle);
-                if (level[y][x] > 0 && level[y][x] < 8) {
+                if ((level[y][x] > 0 && level[y][x] < 8) || level[y][x] > 9) {
                     this.currentLevelBlocks++;
                 }
-            }
+            } // constructor(resolution, x, y, type, panel, balls, paddle)
         }
     }
 
@@ -279,16 +282,20 @@ class Ball {
             return;
         }
 
-        // this current grid location
+        // this current grid location, so it doesn't have to loop through all the blocks
+        // instead it just looks in the spaces around the ball
         let gridX = (Math.floor((this.x + (this.width / 2)) / (this.resolution / 10)));
         let gridY = (Math.floor((this.y + (this.width / 2)) / (this.resolution / 25))) - 1;
+
 
         let hit = false;
         // first check current grid location, just in case we missed it otherwise
         if (gridY > 0 && gridY < 16) {
-            if (blocks[gridX][gridY].type > 0) {
-                this.velocity.x *= -1;
+            if ((blocks[gridX][gridY].type > 0 && blocks[gridX][gridY].type < 8) || blocks[gridX][gridY].type > 9) {
+                    this.velocity.x *= -1;
+                    this.velocity.y *= -1;
                 hit = true;
+                blocks[gridX][gridY].hit(this, game);
             }
         }
 
@@ -298,95 +305,85 @@ class Ball {
                 this.velocity.x *= -1;
                 this.x += this.velocity.x;
                 hit = true;
-                if (blocks[gridX - 1][gridY].type < 9) {
-                    blocks[gridX - 1][gridY].hit(this, game);
-                }
+                blocks[gridX - 1][gridY].hit(this, game);
             }
         }
         // check right
-        if (gridX < 9 && gridY > 0 && gridY < 15) {
+        if (gridX < 9 && gridY > 0 && gridY < 15 && !hit) {
             if (blocks[gridX + 1][gridY].type > 0 && this.x + this.width > blocks[gridX + 1][gridY].x && this.velocity.x > 0) {
                 this.velocity.x *= -1;
                 this.x += this.velocity.x;
                 hit = true;
-                if (blocks[gridX + 1][gridY].type < 9) {
-                    blocks[gridX + 1][gridY].hit(this, game);
-                }
+                blocks[gridX + 1][gridY].hit(this, game);
             }
         }
         // check above
-        if (gridY > 0 && gridY < 17) {
+        if (gridY > 0 && gridY < 17 && !hit) {
             if (blocks[gridX][gridY - 1].type > 0 && this.y < blocks[gridX][gridY - 1].y + blocks[gridX][gridY - 1].height && this.velocity.y < 0) {
                 this.velocity.y *= -1;
                 this.y += this.velocity.y;
                 hit = true;
-                if (blocks[gridX][gridY - 1].type < 9) {
-                    blocks[gridX][gridY - 1].hit(this, game);
-                }
+                blocks[gridX][gridY - 1].hit(this, game);
             }
         }
         // check below
-        if (gridY < 15) {
-            if (blocks[gridX][gridY + 1].type > 0 && this.y + this.height > blocks[gridX][gridY + 1].y && this.velocity.y > 0) {
+        if (gridY < 15 && !hit) {
+            if (blocks[gridX][gridY + 1].type > 0 &&
+                this.y + this.height * 1.1 > blocks[gridX][gridY + 1].y &&
+                this.velocity.y > 0) {
                 this.velocity.y *= -1;
                 this.y += this.velocity.y;
                 hit = true;
-                if (blocks[gridX][gridY + 1].type < 9) {
-                    blocks[gridX][gridY + 1].hit(this, game);
-                }
+                blocks[gridX][gridY + 1].hit(this, game);
             }
         }
         if (!hit) {
             // check top left
             if (gridX > 0 && gridY > 1 && gridY < 16) {
-                if (blocks[gridX - 1][gridY - 1].type > 0 && this.x < blocks[gridX - 1][gridY - 1].x + blocks[gridX - 1][gridY - 1].width && this.y < blocks[gridX - 1][gridY - 1].y + blocks[gridX - 1][gridY - 1].height && this.velocity.y < 0) {
-                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
+                if (blocks[gridX - 1][gridY - 1].type > 0 && this.x < blocks[gridX - 1][gridY - 1].x + blocks[gridX - 1][gridY - 1].width && this.y < blocks[gridX - 1][gridY - 1].y + blocks[gridX - 1][gridY - 1].height) {
+                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y) * 0.5) {
                         this.velocity.x *= -1;
                     } else {
                         this.velocity.y *= -1;
                     }
-                    if (blocks[gridX - 1][gridY - 1].type < 9) {
-                        blocks[gridX - 1][gridY - 1].hit(this, game);
-                    }
+                    hit = true;
+                    blocks[gridX - 1][gridY - 1].hit(this, game);
                 }
             }
             // check top right
-            if (gridX < 9 && gridY > 1 && gridY < 16) {
-                if (blocks[gridX + 1][gridY - 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY - 1].x && this.y < blocks[gridX + 1][gridY - 1].y + blocks[gridX + 1][gridY - 1].height && this.velocity.y < 0) {
-                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
+            if (gridX < 9 && gridY > 1 && gridY < 16 && !hit) {
+                if (blocks[gridX + 1][gridY - 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY - 1].x && this.y < blocks[gridX + 1][gridY - 1].y + blocks[gridX + 1][gridY - 1].height) {
+                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y) * 0.5) {
                         this.velocity.x *= -1;
                     } else {
                         this.velocity.y *= -1;
                     }
-                    if (blocks[gridX + 1][gridY - 1].type < 9) {
-                        blocks[gridX + 1][gridY - 1].hit(this, game);
-                    }
+                    hit = true;
+                    blocks[gridX + 1][gridY - 1].hit(this, game);
                 }
             }
             // check bottom left
-            if (gridX > 0 && gridY < 14) {
-                if (blocks[gridX - 1][gridY + 1].type > 0 && this.x < blocks[gridX - 1][gridY + 1].x + blocks[gridX - 1][gridY + 1].width && this.y + this.height > blocks[gridX - 1][gridY + 1].y && this.velocity.y > 0) {
-                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
+            if (gridX > 0 && gridY < 14 && !hit) {
+                if (blocks[gridX - 1][gridY + 1].type > 0 && this.x < blocks[gridX - 1][gridY + 1].x + blocks[gridX - 1][gridY + 1].width && this.y + this.height > blocks[gridX - 1][gridY + 1].y) {
+                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y) * 0.5) {
                         this.velocity.x *= -1;
                     } else {
                         this.velocity.y *= -1;
                     }
-                    if (blocks[gridX - 1][gridY + 1].type < 9) {
-                        blocks[gridX - 1][gridY + 1].hit(this, game);
-                    }
+                    hit = true;
+                    blocks[gridX - 1][gridY + 1].hit(this, game);
                 }
             }
             // check bottom right
-            if (gridX < 9 && gridY < 15) {
-                if (blocks[gridX + 1][gridY + 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY + 1].x && this.y + this.height > blocks[gridX + 1][gridY + 1].y && this.velocity.y > 0) {
-                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
+            if (gridX < 9 && gridY < 15 && !hit) {
+                if (blocks[gridX + 1][gridY + 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY + 1].x && this.y + this.height > blocks[gridX + 1][gridY + 1].y) {
+                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y) * 0.5) {
                         this.velocity.x *= -1;
                     } else {
                         this.velocity.y *= -1;
                     }
-                    if (blocks[gridX + 1][gridY + 1].type < 9) {
-                        blocks[gridX + 1][gridY + 1].hit(this, game);
-                    }
+                    hit = true;
+                    blocks[gridX + 1][gridY + 1].hit(this, game);
                 }
             }
         }
@@ -402,7 +399,7 @@ class Block {
         this.x = x * this.width
         this.y = (y * this.height) + this.height;
         this.type = type;
-        this.subtype = type == 1 ? 1 : 0;
+        this.subtype = type == 10 ? 1 : 0;
         this.balls = balls;
         this.panel = panel;
         this.paddle = paddle;
@@ -417,10 +414,11 @@ class Block {
 
     hit(ball, game) {
         ball.speedIncrease();
-        game.score += (game.multiplier * game.currentLevel) * 100;
-        game.multiplier *= 1.02;
+        if (this.type != 9) {
+            game.score += (game.multiplier * game.currentLevel) * 100;
+        }
+        game.multiplier *= 1.025;
         game.multiplier = Math.floor(game.multiplier * 1000) / 1000;
-
         // 1 - normal block
         // 2 - double points
         // 3 - sticky
@@ -431,10 +429,10 @@ class Block {
         // 8 - slow
         // 9 - unbreakable
 
-        if (this.type == 1) {
+        if (this.type == 10) {
             // normal block
             this.subtype--;
-            if (this.subtype < 0) {
+            if (this.subtype < 1) {
                 game.currentLevelBlocks--;
                 this.type = 0;
                 this.subtype = 0;
