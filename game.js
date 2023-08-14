@@ -292,8 +292,8 @@ class Ball {
         // first check current grid location, just in case we missed it otherwise
         if (gridY > 0 && gridY < 16) {
             if ((blocks[gridX][gridY].type > 0 && blocks[gridX][gridY].type < 8) || blocks[gridX][gridY].type > 9) {
-                    this.velocity.x *= -1;
-                    this.velocity.y *= -1;
+                this.velocity.x *= -1;
+                this.velocity.y *= -1;
                 hit = true;
                 blocks[gridX][gridY].hit(this, game);
             }
@@ -478,19 +478,9 @@ class interfaceAndHUD {
         this.score.classList = "interface score";
         this.score.innerHTML = "Score: " + this.game.score;
         this.panel.appendChild(this.score);
-        this.multiplier = document.createElement("div");
-        this.multiplier.classList = "interface multiplier";
-        this.multiplier.innerHTML = "Multiplier: " + this.game.multiplier;
-        this.panel.appendChild(this.multiplier);
     }
 
     update() {
-        this.score.innerHTML = "Score: " + this.game.score.toFixed(0);
-        if (this.game.multiplier > 1.1) {
-            this.multiplier.innerHTML = (this.game.multiplier).toFixed(1) + "X";
-        } else {
-            this.multiplier.innerHTML = "";
-        }
-        // this.sticky.innerHTML = "Sticky: " + this.game.sticky;
+        this.score.innerHTML = `Score: ${this.game.score.toFixed(0)}${this.game.multiplier > 1.1 ? "<strong class='interface multiplier'> X" + (this.game.multiplier).toFixed(1) + "</strong>" : ""}`;
     }
 }
