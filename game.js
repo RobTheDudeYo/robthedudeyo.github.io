@@ -12,7 +12,7 @@ class Game {
         this.container.style.height = this.resolution + "px";
         this.paddle = new Paddle(this.resolution, this.container);
         this.balls = [new Ball(this.resolution, this.container, this.paddle, true)];
-        this.blocks = [[], [], [], [], [], [], [], [], [], []];
+        this.blocks = [[], [], [], [], [], [], [], [], [], [], []];
         this.levels = levels;
         this.currentLevel = 1;
         this.currentLevelBlocks = 0;
@@ -139,7 +139,7 @@ class Game {
 
     loadLevel(level) {
         for (let y = 0; y < 16; y++) {
-            for (let x = 0; x < 10; x++) {
+            for (let x = 0; x < 11; x++) {
                 if (level[y][x] == 1) {
                     level[y][x] += 9;
                 }
@@ -156,7 +156,7 @@ class Game {
             this.balls[i].element.remove();
         }
         this.balls = [];
-        for (let x = 0; x < 10; x++) {
+        for (let x = 0; x < 11; x++) {
             for (let y = 0; y < 16; y++) {
                 this.blocks[x][y].element.remove();
                 this.blocks[x][y] = null;
@@ -274,7 +274,7 @@ class Ball {
 
         // this current grid location, so it doesn't have to loop through all the blocks
         // instead it just looks in the spaces around the ball
-        let gridX = (Math.floor((this.x + (this.width / 2)) / (this.resolution / 10)));
+        let gridX = (Math.floor((this.x + (this.width / 2)) / (this.resolution / 11)));
         let gridY = (Math.floor((this.y + (this.width / 2)) / (this.resolution / 25))) - 1;
 
 
@@ -365,7 +365,7 @@ class Ball {
 class Block {
     constructor(resolution, x, y, type, panel, balls, paddle) {
         this.resolution = resolution;
-        this.width = resolution / 10;
+        this.width = resolution / 11;
         this.height = resolution / 25;
         this.x = x * this.width
         this.y = (y * this.height) + this.height;
