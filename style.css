@@ -83,7 +83,6 @@
     position: absolute;
     z-index: 2;
     background-color: #90e1e7;
-    /* border-radius: calc(var(--resolution) * 0.1); */
     border-radius: 0 0 calc(var(--resolution) * 0.1) calc(var(--resolution) * 0.1);
 }
 
@@ -124,7 +123,7 @@
     box-sizing: border-box;
     border: calc(var(--resolution) * 0.003) solid #ff7eff;
     background-image: radial-gradient(#ff7eff, #6cd8d8);
-    transition: all 100ms linear;
+    transition: all 150ms linear;
 }
 
 .block.b0 {
