@@ -85,8 +85,25 @@
 }
 
 .ball.serving {
-    background-image: none;
     z-index: 2;
+    animation: serving 1s ease infinite;
+}
+
+@keyframes serving {
+
+    /* lol it does little hops :) */
+    0%,
+    70%,
+    100% {
+        transform: translate(0%, -20%);
+    }
+
+    10%,
+    60%,
+    80%,
+    90% {
+        transform: translate(0%, 0%)
+    }
 }
 
 .block {
