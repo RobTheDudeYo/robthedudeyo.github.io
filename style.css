@@ -95,13 +95,15 @@
     box-sizing: border-box;
     border: calc(var(--resolution) * 0.003) solid #ff7eff;
     background-image: radial-gradient(#ff7eff, #6cd8d8);
-    transition: all 75ms linear;
+    transition: all 100ms linear;
 }
 
 .block.b0 {
-    /* empty space */
-    visibility: hidden;
+    transform: scale(0);
+
 }
+
+
 
 .block.b1 {
     border-color: #ff7eff;
