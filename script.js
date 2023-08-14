@@ -8,7 +8,7 @@ const fps = document.querySelector(".fps");
 let fpses = [];
 let gamestate = "game"
 
-game.initialiseLevel(1);
+game.initialiseLevel(11);
 
 function run() {
     if (gamestate == "game") {

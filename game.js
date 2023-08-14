@@ -23,10 +23,11 @@ class Game {
         this.deltaTime = 0;
         this.lastTime = Date.now();
 
-        this.hud = new interfaceAndHUD(this.resolution, this.container, this);
+        this.hud = new interfaceAndHUD(this.resolution, this);
     }
 
     initialiseLevel(level) {
+        this.currentLevel = level;
         this.loadLevel(this.levels[level - 1]);
     }
 
@@ -126,15 +127,6 @@ class Game {
         this.hud.update(this.score, this.lives, this.multiplier, this.sticky);
         this.paddle.move(this.deltaTime);
         return "game";
-    }
-
-    loadTestLevel() {
-        this.loadLevel(this.levels[1 - 1]);
-        this.balls[0].serving = true;
-        this.balls[0].x = (this.resolution * 0.5) - (this.balls[0].width * 0.6);
-        this.balls[0].y = this.resolution * 0.7;
-        this.balls[0].velocity.y = -0.1;
-        this.balls[0].velocity.x = 0;
     }
 
     loadLevel(level) {
@@ -303,7 +295,7 @@ class Ball {
             }
         }
         // check right
-        if (gridX < 9 && gridY > 0 && gridY < 15 && !hit) {
+        if (gridX < 10 && gridY > 0 && gridY < 15 && !hit) {
             if (blocks[gridX + 1][gridY].type > 0 && this.x + this.width > blocks[gridX + 1][gridY].x && this.velocity.x > 0) {
                 this.velocity.x *= -1;
                 this.x += this.velocity.x;
