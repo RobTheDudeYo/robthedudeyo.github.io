@@ -228,19 +228,7 @@ class Ball {
 
     move(paddle, blocks, deltaTime, game) {
         if (!this.serving) {
-            this.x += this.velocity.x * deltaTime;
-            this.y += this.velocity.y * deltaTime;
-            if (this.x < 0 && this.velocity.x < 0 || this.x > this.resolution - this.width && this.velocity.x > 0) {
-                this.x = this.x < 0 ? 0 : this.resolution - this.width;
-                this.velocity.x *= -1;
-            }
-            if (this.y < 0 && this.velocity.y < 0) {
-                this.y = this.y < 0 ? 0 : (this.resolution * 0.925) - this.height;
-                this.velocity.y *= -1;
-            }
-            this.element.style.left = this.x + "px";
-            this.element.style.top = this.y + "px";
-            this.collisionCheck(paddle, blocks, game);
+            this.collisionCheck(paddle, blocks, game, deltaTime);
         } else {
             this.x = paddle.x + this.paddleLock;
             this.y = paddle.y - this.height * 0.95;
@@ -251,32 +239,22 @@ class Ball {
         }
     }
 
-    adjustedSpeed(paddle) {
-        this.speed += this.resolution * 0.00001;
-        if (this.speed > this.resolution * 0.0005) {
-            this.speed = this.resolution * 0.0005;
+
+
+    collisionCheck(paddle, blocks, game, deltaTime) {
+        this.x += this.velocity.x * deltaTime;
+        this.y += this.velocity.y * deltaTime;
+        if (this.x < 0 && this.velocity.x < 0 || this.x > this.resolution - this.width && this.velocity.x > 0) {
+            this.velocity.x *= -1;
+            this.x += (this.velocity.x * deltaTime) / 2;
+            this.y += (this.velocity.y * deltaTime) / 2;
         }
-        let paddleCenter = paddle.x + (paddle.width / 2);
-        let ballCenter = this.x + (this.width / 2);
-        let distance = ballCenter - paddleCenter;
-        let maxDistance = paddle.width / 2;
-        let angle = (distance / maxDistance) * 50;
-        this.velocity.x = Math.sin(angle * (Math.PI / 180)) * this.speed;
-        this.velocity.y = -Math.cos(angle * (Math.PI / 180)) * this.speed;
-    }
-
-    speedIncrease() {
-        this.speed += this.resolution * 0.00001;
-        if (this.speed > this.resolution * 0.0005) {
-            this.speed = this.resolution * 0.0005;
+        if (this.y < 0 && this.velocity.y < 0) {
+            this.y = this.y < 0 ? paddle.y : (this.resolution * 0.925) - this.height;
         }
-        let angle = Math.atan2(this.velocity.y, this.velocity.x);
-        this.velocity.x = Math.cos(angle) * this.speed;
-        this.velocity.y = Math.sin(angle) * this.speed;
-    }
+        this.element.style.left = this.x + "px";
+        this.element.style.top = this.y + "px";
 
-
-    collisionCheck(paddle, blocks, game) {
         // paddle collision
         if (this.y > paddle.y - this.height && this.y < paddle.y && this.x > paddle.x - this.width && this.x < paddle.x + paddle.width && this.velocity.y > 0) {
             if (game.sticky) {
@@ -304,10 +282,13 @@ class Ball {
         // first check current grid location, just in case we missed it otherwise
         if (gridY > 0 && gridY < 16) {
             if ((blocks[gridX][gridY].type > 0 && blocks[gridX][gridY].type < 8) || blocks[gridX][gridY].type > 9) {
+                console.log("boop")
                 this.velocity.x *= -1;
                 this.velocity.y *= -1;
-                hit = true;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
                 blocks[gridX][gridY].hit(this, game);
+                return;
             }
         }
 
@@ -316,8 +297,9 @@ class Ball {
             if (blocks[gridX - 1][gridY].type > 0 && this.x < blocks[gridX - 1][gridY].x + blocks[gridX - 1][gridY].width && this.velocity.x < 0) {
                 this.velocity.x *= -1;
                 this.x += this.velocity.x;
-                hit = true;
+                this.y += this.velocity.y;
                 blocks[gridX - 1][gridY].hit(this, game);
+                return;
             }
         }
         // check right
@@ -325,8 +307,9 @@ class Ball {
             if (blocks[gridX + 1][gridY].type > 0 && this.x + this.width > blocks[gridX + 1][gridY].x && this.velocity.x > 0) {
                 this.velocity.x *= -1;
                 this.x += this.velocity.x;
-                hit = true;
+                this.y += this.velocity.y;
                 blocks[gridX + 1][gridY].hit(this, game);
+                return;
             }
         }
         // check above
@@ -334,8 +317,9 @@ class Ball {
             if (blocks[gridX][gridY - 1].type > 0 && this.y < blocks[gridX][gridY - 1].y + blocks[gridX][gridY - 1].height && this.velocity.y < 0) {
                 this.velocity.y *= -1;
                 this.y += this.velocity.y;
-                hit = true;
+                this.x += this.velocity.x;
                 blocks[gridX][gridY - 1].hit(this, game);
+                return;
             }
         }
         // check below
@@ -345,60 +329,35 @@ class Ball {
                 this.velocity.y > 0) {
                 this.velocity.y *= -1;
                 this.y += this.velocity.y;
-                hit = true;
+                this.x += this.velocity.x;
                 blocks[gridX][gridY + 1].hit(this, game);
+                return;
             }
         }
-        if (!hit) {
-            // check top left
-            if (gridX > 0 && gridY > 1 && gridY < 16) {
-                if (blocks[gridX - 1][gridY - 1].type > 0 && this.x < blocks[gridX - 1][gridY - 1].x + blocks[gridX - 1][gridY - 1].width && this.y < blocks[gridX - 1][gridY - 1].y + blocks[gridX - 1][gridY - 1].height) {
-                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y) * 0.5) {
-                        this.velocity.x *= -1;
-                    } else {
-                        this.velocity.y *= -1;
-                    }
-                    hit = true;
-                    blocks[gridX - 1][gridY - 1].hit(this, game);
-                }
-            }
-            // check top right
-            if (gridX < 9 && gridY > 1 && gridY < 16 && !hit) {
-                if (blocks[gridX + 1][gridY - 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY - 1].x && this.y < blocks[gridX + 1][gridY - 1].y + blocks[gridX + 1][gridY - 1].height) {
-                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y) * 0.5) {
-                        this.velocity.x *= -1;
-                    } else {
-                        this.velocity.y *= -1;
-                    }
-                    hit = true;
-                    blocks[gridX + 1][gridY - 1].hit(this, game);
-                }
-            }
-            // check bottom left
-            if (gridX > 0 && gridY < 14 && !hit) {
-                if (blocks[gridX - 1][gridY + 1].type > 0 && this.x < blocks[gridX - 1][gridY + 1].x + blocks[gridX - 1][gridY + 1].width && this.y + this.height > blocks[gridX - 1][gridY + 1].y) {
-                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y) * 0.5) {
-                        this.velocity.x *= -1;
-                    } else {
-                        this.velocity.y *= -1;
-                    }
-                    hit = true;
-                    blocks[gridX - 1][gridY + 1].hit(this, game);
-                }
-            }
-            // check bottom right
-            if (gridX < 9 && gridY < 15 && !hit) {
-                if (blocks[gridX + 1][gridY + 1].type > 0 && this.x + this.width > blocks[gridX + 1][gridY + 1].x && this.y + this.height > blocks[gridX + 1][gridY + 1].y) {
-                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y) * 0.5) {
-                        this.velocity.x *= -1;
-                    } else {
-                        this.velocity.y *= -1;
-                    }
-                    hit = true;
-                    blocks[gridX + 1][gridY + 1].hit(this, game);
-                }
-            }
+    }
+
+    adjustedSpeed(paddle) {
+        this.speed += this.resolution * 0.00001;
+        if (this.speed > this.resolution * 0.0005) {
+            this.speed = this.resolution * 0.0005;
         }
+        let paddleCenter = paddle.x + (paddle.width / 2);
+        let ballCenter = this.x + (this.width / 2);
+        let distance = ballCenter - paddleCenter;
+        let maxDistance = paddle.width / 2;
+        let angle = (distance / maxDistance) * 50;
+        this.velocity.x = Math.sin(angle * (Math.PI / 180)) * this.speed;
+        this.velocity.y = -Math.cos(angle * (Math.PI / 180)) * this.speed;
+    }
+
+    speedIncrease() {
+        this.speed += this.resolution * 0.00001;
+        if (this.speed > this.resolution * 0.0005) {
+            this.speed = this.resolution * 0.0005;
+        }
+        let angle = Math.atan2(this.velocity.y, this.velocity.x);
+        this.velocity.x = Math.cos(angle) * this.speed;
+        this.velocity.y = Math.sin(angle) * this.speed;
     }
 }
 
@@ -494,6 +453,6 @@ class interfaceAndHUD {
     }
 
     update() {
-        this.score.innerHTML = `Score: ${this.game.score.toFixed(0)}${this.game.multiplier > 1.1 ? "<strong class='interface multiplier'> X" + (this.game.multiplier).toFixed(1) + "</strong>" : ""}`;
+        this.score.innerHTML = `Score: ${this.game.score.toFixed(0)}${this.game.multiplier > 1.1 ? `<div class="interface multiplier"> X ` + (this.game.multiplier).toFixed(1) + "</div>" : ""}`;
     }
 }

@@ -25,7 +25,9 @@
 }
 
 .interface.multiplier {
-    top: calc(var(--resolution) * 0.8);
+    position: absolute;
+    top: calc(var(--resolution) * -0.5);
+    left: calc(var(--resolution) * 0.5);
     color: #ff7eff;
 }
 
