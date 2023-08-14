@@ -386,11 +386,11 @@ class Block {
     hit(ball, game) {
         ball.speedIncrease();
         if (this.type != 9) {
-            game.score += (game.multiplier * game.currentLevel) * 100;
-            game.floatingText(this, Math.floor((game.multiplier * game.currentLevel) * 100))
+            game.score += (game.multiplier + game.currentLevel) * 10;
+            game.floatingText(this, Math.floor((game.multiplier + game.currentLevel) * 10) * 10)
+            game.multiplier += 0.1;
+            game.multiplier = Math.round(game.multiplier * 100) / 100;
         }
-        game.multiplier *= 1.025;
-        game.multiplier = Math.floor(game.multiplier * 1000) / 1000;
         // 1 - normal block
         // 2 - double points
         // 3 - sticky
