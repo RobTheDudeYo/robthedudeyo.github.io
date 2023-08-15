@@ -376,9 +376,9 @@ class Block {
 
     hit(ball, game) {
         ball.speedIncrease();
+        let score = (game.multiplier + game.currentLevel) * 10
         if (this.type != 9) {
-            game.score += (game.multiplier + game.currentLevel) * 10;
-            game.floatingText(this, Math.floor((game.multiplier + game.currentLevel) * 10) * 10)
+            game.score += score;
             game.multiplier += 0.1;
             game.multiplier = Math.round(game.multiplier * 100) / 100;
         }
@@ -394,6 +394,7 @@ class Block {
 
         if (this.type == 10) {
             // normal block
+            game.floatingText(this, score * 10)
             this.subtype--;
             if (this.subtype < 1) {
                 game.currentLevelBlocks--;
@@ -408,11 +409,13 @@ class Block {
             this.type = 0;
         } else if (this.type == 3) {
             // sticky
+            game.floatingText(this, "Sticky!");
             game.sticky += 3;
             game.currentLevelBlocks -= 1;
             this.type = 0;
         } else if (this.type == 4) {
             // multiball
+            game.floatingText(this, "MultiBall!");
             this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball, { x: -1, y: 1 }));
             this.balls.push(new Ball(this.resolution, this.panel, this.paddle, false, ball, { x: 1, y: -1 }));
             game.currentLevelBlocks -= 1;
