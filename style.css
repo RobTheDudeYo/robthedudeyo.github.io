@@ -46,6 +46,7 @@
 .floatingText {
     position: absolute;
     color: #ff7eff;
+    font-size: calc(var(--resolution) * 0.0175);
     transform: translate(-50%, -50%);
     animation: floatingText 1s linear;
 }
