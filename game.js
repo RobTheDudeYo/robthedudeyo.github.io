@@ -239,7 +239,10 @@ class Ball {
         if (this.y + this.height < 0 && this.smasher) {
             this.element.remove();
             game.balls.splice(game.balls.indexOf(this), 1);
-            game.balls.push(new Ball(this.resolution, game.container, game.paddle, true));
+            if (game.balls.length < 1 && game.lives > 0) {
+                game.lives--;
+                game.balls.push(new Ball(this.resolution, game.container, game.paddle, true));
+            }
             return;
         }
 
@@ -510,5 +513,16 @@ class interfaceAndHUD {
         this.score.innerHTML = `Score: ${(this.game.score * 10).toFixed(0)}`;
         this.multiplier.innerHTML = `X ${this.game.multiplier.toFixed(2)}`;
         this.level.innerHTML = `Level: ${this.game.currentLevel}`;
+        this.lives.innerHTML = `Balls: ${this.game.lives + this.countBalls()}`;
+    }
+
+    countBalls() {
+        let count = 0;
+        for (let i = 0; i < this.game.balls.length; i++) {
+            if (!this.game.balls[i].smasher) {
+                count++;
+            }
+        }
+        return count > 0 ? count - 1 : 0;
     }
 }
