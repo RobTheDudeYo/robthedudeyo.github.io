@@ -283,24 +283,22 @@ class Ball {
         let gridY = (Math.floor((this.y + (this.width / 2)) / (this.resolution / 25))) - 1;
 
 
-        // first check current grid location, just in case we missed it otherwise
+
+        // check current grid location, just in case we missed it otherwise
+        // I originally had it reverse the velocity, but it didn't look good
         if (gridY > 0 && gridY < 16) {
-            if ((blocks[gridX][gridY].type > 0 && blocks[gridX][gridY].type < 8) || blocks[gridX][gridY].type > 9) {
-                console.log("this is less than ideal 1")
-                if (!this.smasher) {
-                    this.velocity.x *= -1;
-                    this.velocity.y *= -1;
-                    this.x += this.velocity.x;
-                    this.y += this.velocity.y;
-                }
+            if (blocks[gridX][gridY].type != 9 && blocks[gridX][gridY].type != 0) {
+                console.log("current grid location had a block in it")
                 blocks[gridX][gridY].hit(this, game);
                 return;
             }
         }
 
+
         // check left
-        if (gridY > 0 && gridY < 15 && gridX > 0) {
+        if (gridY > 0 && gridY < 16 && gridX > 0) {
             if (blocks[gridX - 1][gridY].type > 0 && this.x < blocks[gridX - 1][gridY].x + blocks[gridX - 1][gridY].width && this.velocity.x < 0) {
+                console.log("left")
                 if (!this.smasher) {
                     this.velocity.x *= -1;
                     this.x += this.velocity.x;
@@ -311,8 +309,9 @@ class Ball {
             }
         }
         // check right
-        if (gridX < 10 && gridY > 0 && gridY < 15) {
+        if (gridX < 10 && gridY > 0 && gridY < 16) {
             if (blocks[gridX + 1][gridY].type > 0 && this.x + this.width > blocks[gridX + 1][gridY].x && this.velocity.x > 0) {
+                console.log("right")
                 if (!this.smasher) {
                     this.velocity.x *= -1;
                     this.x += this.velocity.x;
@@ -325,6 +324,7 @@ class Ball {
         // check above
         if (gridY > 0 && gridY < 17) {
             if (blocks[gridX][gridY - 1].type > 0 && this.y < blocks[gridX][gridY - 1].y + blocks[gridX][gridY - 1].height && this.velocity.y < 0) {
+                console.log("above")
                 if (!this.smasher) {
                     this.velocity.y *= -1;
                     this.y += this.velocity.y;
@@ -339,12 +339,83 @@ class Ball {
             if (blocks[gridX][gridY + 1].type > 0 &&
                 this.y + this.height * 1.1 > blocks[gridX][gridY + 1].y &&
                 this.velocity.y > 0) {
+                console.log("below")
                 if (!this.smasher) {
                     this.velocity.y *= -1;
                     this.y += this.velocity.y;
                     this.x += this.velocity.x;
                 }
                 blocks[gridX][gridY + 1].hit(this, game);
+                return;
+            }
+        }
+
+        // check top left
+        if (gridX > 0 && gridY > 0 && gridY < 15 && (this.velocity.x < 0 && this.velocity.y < 0)) {
+
+            if (blocks[gridX - 1][gridY - 1].type != 9 &&
+                blocks[gridX - 1][gridY - 1].type != 0 &&
+                this.x < blocks[gridX - 1][gridY - 1].x + blocks[gridX - 1][gridY - 1].width &&
+                this.y < blocks[gridX - 1][gridY - 1].y + blocks[gridX - 1][gridY - 1].height) {
+                console.log("top left")
+                if (!this.smasher) {
+                    this.velocity.y *= -1;
+                    this.velocity.x *= -1;
+                    this.y += this.velocity.y;
+                    this.x += this.velocity.x;
+                }
+                blocks[gridX - 1][gridY - 1].hit(this, game);
+                return;
+            }
+        }
+        // check top right
+        if (gridX < 10 && gridY > 0 && gridY < 15 && (this.velocity.x > 0 && this.velocity.y < 0)) {
+            if (blocks[gridX + 1][gridY - 1].type != 9 &&
+                blocks[gridX + 1][gridY - 1].type != 0 &&
+                this.x + this.width > blocks[gridX + 1][gridY - 1].x &&
+                this.y < blocks[gridX + 1][gridY - 1].y + blocks[gridX + 1][gridY - 1].height) {
+                console.log("top right")
+                if (!this.smasher) {
+                    this.velocity.y *= -1;
+                    this.velocity.x *= -1;
+                    this.y += this.velocity.y;
+                    this.x += this.velocity.x;
+                }
+                blocks[gridX + 1][gridY - 1].hit(this, game);
+                return;
+            }
+        }
+        // check bottom left
+        if (gridX > 0 && gridY > 0 && gridY < 15 && (this.velocity.x < 0 && this.velocity.y > 0)) {
+            if (blocks[gridX - 1][gridY + 1].type != 9 &&
+                blocks[gridX - 1][gridY + 1].type != 0 &&
+                this.x < blocks[gridX - 1][gridY + 1].x + blocks[gridX - 1][gridY + 1].width &&
+                this.y + this.height > blocks[gridX - 1][gridY + 1].y) {
+                console.log("bottom left")
+                if (!this.smasher) {
+                    this.velocity.y *= -1;
+                    this.velocity.x *= -1;
+                    this.y += this.velocity.y;
+                    this.x += this.velocity.x;
+                }
+                blocks[gridX - 1][gridY + 1].hit(this, game);
+                return;
+            }
+        }
+        // check bottom right
+        if (gridX < 10 && gridY > 0 && gridY < 15 && (this.velocity.x > 0 && this.velocity.y > 0)) {
+            if (blocks[gridX + 1][gridY + 1].type != 9 &&
+                blocks[gridX + 1][gridY + 1].type != 0 &&
+                this.x + this.width > blocks[gridX + 1][gridY + 1].x &&
+                this.y + this.height > blocks[gridX + 1][gridY + 1].y) {
+                console.log("bottom right")
+                if (!this.smasher) {
+                    this.velocity.y *= -1;
+                    this.velocity.x *= -1;
+                    this.y += this.velocity.y;
+                    this.x += this.velocity.x;
+                }
+                blocks[gridX + 1][gridY + 1].hit(this, game);
                 return;
             }
         }
@@ -448,6 +519,7 @@ class Block {
             ball.paddleLock = 1;
             ball.speed = game.resolution * 0.0004;
             ball.smasher = true;
+            ball.element.classList.add("smasher");
             game.currentLevelBlocks -= 1;
             this.type = 0;
         } else if (this.type == 6) {
