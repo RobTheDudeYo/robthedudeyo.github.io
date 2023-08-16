@@ -507,6 +507,10 @@ class interfaceAndHUD {
         this.level.classList = "interface level";
         this.level.innerHTML = "Level: " + this.game.currentLevel;
         this.panel.appendChild(this.level);
+        this.lives = document.createElement("div");
+        this.lives.classList = "interface lives";
+        this.lives.innerHTML = "Balls: " + this.game.lives;
+        this.panel.appendChild(this.lives);
     }
 
     update() {
