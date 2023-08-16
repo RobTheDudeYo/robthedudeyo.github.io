@@ -101,6 +101,30 @@
     animation: serving 1s ease infinite;
 }
 
+.ball.smasher {
+    z-index: 2;
+    scale: 1.2;
+    background-image: none;
+    background-color: #ffcf0d;
+    box-shadow: 0 0 calc(var(--resolution) * 0.0075) rgba(255, 85, 0, 1);
+    animation: glow 0.5s linear infinite alternate;
+}
+
+.ball.smasher.serving {
+    animation: serving 1s ease infinite, glow 0.5s linear infinite alternate;
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 calc(var(--resolution) * 0.0075) rgba(255, 85, 0, 1);
+    }
+
+    100% {
+        box-shadow: 0 0 calc(var(--resolution) * 0.0075) rgba(255, 85, 0, 0.2);
+    }
+
+}
+
 @keyframes serving {
 
     /* lol it does little hops :) */
