@@ -1,18 +1,18 @@
 
 
-let container = document.querySelector(".gamePanel");
+const container = document.querySelector(".gamePanel");
 const game = new Game(container, levels);
 
 const fps = document.querySelector(".fps");
 
 let fpses = [];
-let gamestate = "game"
+let gameState = "game"
 
 game.initialiseLevel(11);
 
 function run() {
-    if (gamestate == "game") {
-        gamestate = game.run();
+    if (gameState == "game") {
+        gameState = game.run();
     }
     game.deltaTime = Date.now() - game.lastTime;
     game.lastTime = Date.now();
@@ -26,7 +26,7 @@ function run() {
 }
 
 
-// paddle controls
+// keyboard controls
 document.addEventListener("keydown", (e) => {
     if (e.key == "ArrowLeft" || e.key.toLowerCase() == "a") {
         if (game.paddle.direction > -1) {
@@ -51,38 +51,53 @@ document.addEventListener("keyup", (e) => {
         }
     }
 });
-
-// ball controls
 document.addEventListener("keydown", (e) => {
     if (e.key == " ") {
         game.serveBall();
     }
 });
 
+
+
 // touch buttons
-// document.querySelector(".left").addEventListener("touchstart", (e) => {
-//     if (game.paddle.direction > -1) {
-//         game.paddle.direction = -1;
-//     }
-// });
-// document.querySelector(".left").addEventListener("touchend", (e) => {
-//     if (game.paddle.direction == -1) {
-//         game.paddle.direction = 0;
-//     }
-// });
-// document.querySelector(".right").addEventListener("touchstart", (e) => {
-//     if (game.paddle.direction < 1) {
-//         game.paddle.direction = 1;
-//     }
-// });
-// document.querySelector(".right").addEventListener("touchend", (e) => {
-//     if (game.paddle.direction == 1) {
-//         game.paddle.direction = 0;
-//     }
-// });
-// document.querySelector(".action").addEventListener("touchstart", (e) => {
-//     game.serveBall();
-// });
+const buttonContainer = document.createElement("div");
+buttonContainer.classList.add("buttonContainer");
+document.body.appendChild(buttonContainer);
+const leftButton = document.createElement("div");
+leftButton.className = "controlButton left";
+buttonContainer.appendChild(leftButton);
+const rightButton = document.createElement("div");
+rightButton.className = "controlButton right";
+buttonContainer.appendChild(rightButton);
+const actionButton = document.createElement("div");
+actionButton.className = "controlButton action";
+buttonContainer.appendChild(actionButton);
+
+
+// touch button controls
+document.querySelector(".left").addEventListener("touchstart", (e) => {
+    if (game.paddle.direction > -1) {
+        game.paddle.direction = -1;
+    }
+});
+document.querySelector(".left").addEventListener("touchend", (e) => {
+    if (game.paddle.direction == -1) {
+        game.paddle.direction = 0;
+    }
+});
+document.querySelector(".right").addEventListener("touchstart", (e) => {
+    if (game.paddle.direction < 1) {
+        game.paddle.direction = 1;
+    }
+});
+document.querySelector(".right").addEventListener("touchend", (e) => {
+    if (game.paddle.direction == 1) {
+        game.paddle.direction = 0;
+    }
+});
+document.querySelector(".action").addEventListener("touchstart", (e) => {
+    game.serveBall();
+});
 
 
 

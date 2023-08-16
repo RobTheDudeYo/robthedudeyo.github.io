@@ -1,9 +1,5 @@
 
 
-
-
-// Y is the row, X is the column!
-
 class Game {
     constructor(container, levels) {
         this.container = container;
@@ -602,3 +598,4 @@ class interfaceAndHUD {
         return count > 0 ? count - 1 : 0;
     }
 }
+

@@ -228,3 +228,28 @@ body {
             #b78cf7);
     font-family: system-ui;
 }
+
+.buttonContainer {
+    background-color: red;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 5;
+    width: var(--resolution + 500);
+    height: var(--resolution + 500);
+}
+
+.controlButton {
+}
+
+.controlButton.left {
+    
+}
+
+.controlButton.right {
+    
+}
+
+.controlButton.action {
+    
+}
