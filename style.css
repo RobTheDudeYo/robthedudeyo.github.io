@@ -48,7 +48,7 @@
     color: #ff7eff;
     font-size: calc(var(--resolution) * 0.0175);
     transform: translate(-50%, -50%);
-    animation: floatingText 1s linear;
+    animation: floatingText 1s ease-in-out;
 }
 
 @keyframes floatingText {
@@ -63,7 +63,7 @@
 
     100% {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(3);
+        transform: translate(-50%, -50%) scale(2);
     }
 }
 
