@@ -244,19 +244,26 @@ class Ball {
 
         this.x += this.velocity.x * deltaTime;
         this.y += this.velocity.y * deltaTime;
+        // wall collision
         if (this.x < 0 && this.velocity.x < 0 || this.x > this.resolution - this.width && this.velocity.x > 0) {
             this.velocity.x *= -1;
             this.x += (this.velocity.x * deltaTime) / 2;
             this.y += (this.velocity.y * deltaTime) / 2;
         }
+        // if we collide with the ceiling we've gone too far, reset to the bottom
+        // hacky fix for a bug where the ball would get stuck in the ceiling
         if (this.y < 0 && this.velocity.y < 0 && !this.smasher) {
             this.y = this.y < 0 ? paddle.y : (this.resolution * 0.925) - this.height;
+            if (this.velocity.y > 0) {
+                this.velocity.y *= -1;
+            }
         }
+
         this.element.style.left = this.x + "px";
         this.element.style.top = this.y + "px";
 
         // paddle collision
-        if (this.y + this.height > paddle.y && this.y + this.height / 2 < paddle.y && this.x > paddle.x && this.x < paddle.x + paddle.width && this.velocity.y > 0) {
+        if (this.y + this.height > paddle.y && this.y + this.height / 2 < paddle.y && this.x + this.width > paddle.x && this.x < paddle.x + paddle.width && this.velocity.y > 0) {
             if (game.sticky) {
                 this.paddleLock = ((this.x + (this.width / 2)) - (paddle.x + (paddle.width / 2))) / (paddle.width / 2);
                 this.serving = true;
