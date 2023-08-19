@@ -242,6 +242,7 @@ body {
 
 .buttonContainer {
     user-select: none;
+    -webkit-user-select: none;
     position: absolute;
     bottom: 0;
     top: calc(var(--resolution) * 1.01);
