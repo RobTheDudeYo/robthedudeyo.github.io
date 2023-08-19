@@ -92,8 +92,8 @@ body {
     right: 0;
     color: #fff;
     background-color: #000;
-    padding: calc(var(--resolution) * 0.005);
-    font-size: calc(var(--resolution) * 0.05);
+    padding: calc(var(--resolution) * 0.001);
+    font-size: calc(var(--resolution) * 0.04);
     font-weight: bold;
     z-index: 3;
 }
@@ -233,7 +233,7 @@ body {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: calc(100vh - var(--resolution));
+    height: calc(100vh - (var(--resolution) * 1.1));
 }
 
 .controlButton {
@@ -245,7 +245,7 @@ body {
     justify-content: center;
     align-items: center;
     font-size: calc(var(--resolution) * 0.2);
-    height: 100%;
+    height: 40%;
 }
 
 .controlButton.left {

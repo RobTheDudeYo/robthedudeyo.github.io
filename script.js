@@ -67,14 +67,17 @@ document.addEventListener("keydown", (e) => {
 const buttonContainer = document.createElement("div");
 buttonContainer.classList.add("buttonContainer");
 document.body.appendChild(buttonContainer);
+
 const leftButton = document.createElement("div");
 leftButton.className = "controlButton left";
 leftButton.innerHTML = "&larr;";
 buttonContainer.appendChild(leftButton);
+
 const actionButton = document.createElement("div");
 actionButton.className = "controlButton action";
-actionButton.innerHTML = "&uarr;";
+actionButton.innerHTML = "&#x1F3AF;";
 buttonContainer.appendChild(actionButton);
+
 const rightButton = document.createElement("div");
 rightButton.className = "controlButton right";
 rightButton.innerHTML = "&rarr;";
