@@ -103,11 +103,12 @@ body {
 .fps {
     position: absolute;
     bottom: 0;
-    right: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
     color: #fff;
     background-color: #000;
     padding: calc(var(--resolution) * 0.001);
-    font-size: calc(var(--resolution) * 0.04);
+    font-size: calc(var(--resolution) * 0.03);
     font-weight: bold;
     z-index: 3;
 }
@@ -241,45 +242,41 @@ body {
 
 .buttonContainer {
     user-select: none;
-    cursor: none;
-    background-color: hsl(0, 0%, 0%, 0.1);
     position: absolute;
     bottom: 0;
+    top: calc(var(--resolution) * 1.01);
     left: 0;
     width: 100%;
     height: calc(100vh - (var(--resolution) * 1.1));
 }
 
 .controlButton {
+    border-radius: 10%;
     position: absolute;
     background-color: #6cd8d8;
     color: #fff;
-    /* align content center */
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: calc(var(--resolution) * 0.2);
-    height: 40%;
+    height: 80%;
 }
 
 .controlButton.left {
-    /* background-color: #ff0000; */
-    left: 0;
+    left: 2.5%;
     top: 0;
     width: 30%;
 }
 
 .controlButton.action {
-    /* background-color: #00b7ff; */
     left: 35%;
     top: 0;
     width: 30%;
 }
 
 .controlButton.right {
-    /* background-color: #00ff15; */
     top: 0;
-    left: 70%;
+    left: 67.5%;
     width: 30%;
 }
 
