@@ -577,7 +577,7 @@ class interfaceAndHUD {
         this.score.innerHTML = `Score: ${(this.game.score * 10).toFixed(0)}`;
         this.multiplier.innerHTML = `X ${this.game.multiplier.toFixed(2)}`;
         this.level.innerHTML = `Level: ${this.game.currentLevel}`;
-        this.lives.innerHTML = `Balls: ${this.game.lives + this.countBalls()}`;
+        this.lives.innerHTML = `<img class="livesBall"></img>x${this.game.lives + this.countBalls()}`;
     }
 
     countBalls() {
