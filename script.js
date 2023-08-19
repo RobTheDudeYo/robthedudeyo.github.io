@@ -1,26 +1,30 @@
 
 
-const container = document.querySelector(".gamePanel");
-const game = new Game(container, levels);
-
 const fps = document.querySelector(".fps");
 
 let fpses = [];
-let gameState = "game"
+let gameState = "game";
+let game;
+let container;
 
-game.initialiseLevel(11);
+// game.initialiseLevel(11);
 
 function run() {
     if (gameState == "game") {
+        if (!game) {
+            container = document.querySelector(".gamePanel");
+            game = new Game(container, levels);
+            game.initialiseLevel(11);
+        }
         gameState = game.run();
+        game.deltaTime = Date.now() - game.lastTime;
+        game.lastTime = Date.now();
+        fpses.push(1000 / game.deltaTime);
+        if (fpses.length > 10) {
+            fpses.shift();
+        }
+        fps.innerHTML = Math.round(fpses.reduce((a, b) => a + b) / fpses.length) + " fps";
     }
-    game.deltaTime = Date.now() - game.lastTime;
-    game.lastTime = Date.now();
-    fpses.push(1000 / game.deltaTime);
-    if (fpses.length > 10) {
-        fpses.shift();
-    }
-    fps.innerHTML = Math.round(fpses.reduce((a, b) => a + b) / fpses.length) + " fps";
 
     requestAnimationFrame(run);
 }
@@ -65,13 +69,18 @@ buttonContainer.classList.add("buttonContainer");
 document.body.appendChild(buttonContainer);
 const leftButton = document.createElement("div");
 leftButton.className = "controlButton left";
+leftButton.innerHTML = "&larr;";
 buttonContainer.appendChild(leftButton);
-const rightButton = document.createElement("div");
-rightButton.className = "controlButton right";
-buttonContainer.appendChild(rightButton);
 const actionButton = document.createElement("div");
 actionButton.className = "controlButton action";
+actionButton.innerHTML = "&uarr;";
 buttonContainer.appendChild(actionButton);
+const rightButton = document.createElement("div");
+rightButton.className = "controlButton right";
+rightButton.innerHTML = "&rarr;";
+buttonContainer.appendChild(rightButton);
+
+document.body.appendChild(buttonContainer);
 
 
 // touch button controls

@@ -1,5 +1,24 @@
-.gamePanel {
+body {
     --resolution: min(100vh, 100vw);
+    display: grid;
+    min-height: 100vh;
+    background-image: conic-gradient(at 125% 50%,
+            #b78cf7,
+            #ff7c94,
+            #ffcf0d,
+            #ff7c94,
+            #b78cf7);
+    font-family: system-ui;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.gamePanel {
     position: absolute;
     background-color: #fff;
     border-radius: 5%;
@@ -7,19 +26,6 @@
     height: calc(min(100vh, 100vw) * 0.9);
     top: calc(min(100vh, 100vw) * 0.05);
     left: calc(50vw - min(100vh, 100vw) * 0.45);
-}
-
-.roadworks {
-    --resolution: min(100vh, 100vw);
-    position: absolute;
-    background-color: #fff;
-    border-radius: 5%;
-    width: calc(var(--resolution) * 0.9);
-    height: calc(var(--resolution) * 0.9);
-    top: calc(var(--resolution) * 0.05);
-    left: calc(50vw - var(--resolution) * 0.45);
-    text-align: center;
-
 }
 
 .interface {
@@ -86,8 +92,7 @@
     right: 0;
     color: #fff;
     background-color: #000;
-    padding: 0.5em;
-    border-radius: 0 0 0 5%;
+    padding: calc(var(--resolution) * 0.005);
     font-size: calc(var(--resolution) * 0.05);
     font-weight: bold;
     z-index: 3;
@@ -220,49 +225,59 @@
     background-image: none;
 }
 
-
-
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-    overflow: hidden;
-}
-
-body {
-    place-content: center;
-    display: grid;
-    min-height: 100vh;
-    background-image: conic-gradient(at 125% 50%,
-            #b78cf7,
-            #ff7c94,
-            #ffcf0d,
-            #ff7c94,
-            #b78cf7);
-    font-family: system-ui;
-}
-
 .buttonContainer {
-    background-color: red;
+    user-select: none;
+    cursor: none;
+    background-color: hsl(0, 0%, 0%, 0.1);
     position: absolute;
     bottom: 0;
     left: 0;
-    z-index: 5;
-    width: var(--resolution + 500);
-    height: var(--resolution + 500);
+    width: 100%;
+    height: calc(100vh - var(--resolution));
 }
 
 .controlButton {
+    position: absolute;
+    background-color: #6cd8d8;
+    color: #fff;
+    /* align content center */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: calc(var(--resolution) * 0.2);
+    height: 100%;
 }
 
 .controlButton.left {
-    
-}
-
-.controlButton.right {
-    
+    background-color: #ff0000;
+    left: 0;
+    top: 0;
+    width: 30%;
 }
 
 .controlButton.action {
-    
+    background-color: #00b7ff;
+    left: 35%;
+    top: 0;
+    width: 30%;
+}
+
+.controlButton.right {
+    background-color: #00ff15;
+    top: 0;
+    left: 70%;
+    width: 30%;
+}
+
+.roadworks {
+    --resolution: min(100vh, 100vw);
+    position: absolute;
+    background-color: #fff;
+    border-radius: 5%;
+    width: calc(var(--resolution) * 0.9);
+    height: calc(var(--resolution) * 0.9);
+    top: calc(var(--resolution) * 0.05);
+    left: calc(50vw - var(--resolution) * 0.45);
+    text-align: center;
+
 }

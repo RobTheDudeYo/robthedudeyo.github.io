@@ -294,7 +294,6 @@ class Ball {
         // check left
         if (gridY > 0 && gridY < 16 && gridX > 0) {
             if (blocks[gridX - 1][gridY].type > 0 && this.x < blocks[gridX - 1][gridY].x + blocks[gridX - 1][gridY].width && this.velocity.x < 0) {
-                console.log("left")
                 if (!this.smasher) {
                     this.velocity.x *= -1;
                     this.x += this.velocity.x;
@@ -307,7 +306,6 @@ class Ball {
         // check right
         if (gridX < 10 && gridY > 0 && gridY < 16) {
             if (blocks[gridX + 1][gridY].type > 0 && this.x + this.width > blocks[gridX + 1][gridY].x && this.velocity.x > 0) {
-                console.log("right")
                 if (!this.smasher) {
                     this.velocity.x *= -1;
                     this.x += this.velocity.x;
@@ -320,7 +318,6 @@ class Ball {
         // check above
         if (gridY > 0 && gridY < 17) {
             if (blocks[gridX][gridY - 1].type > 0 && this.y < blocks[gridX][gridY - 1].y + blocks[gridX][gridY - 1].height && this.velocity.y < 0) {
-                console.log("above")
                 if (!this.smasher) {
                     this.velocity.y *= -1;
                     this.y += this.velocity.y;
@@ -335,7 +332,6 @@ class Ball {
             if (blocks[gridX][gridY + 1].type > 0 &&
                 this.y + this.height * 1.1 > blocks[gridX][gridY + 1].y &&
                 this.velocity.y > 0) {
-                console.log("below")
                 if (!this.smasher) {
                     this.velocity.y *= -1;
                     this.y += this.velocity.y;
@@ -353,7 +349,6 @@ class Ball {
                 blocks[gridX - 1][gridY - 1].type != 0 &&
                 this.x < blocks[gridX - 1][gridY - 1].x + blocks[gridX - 1][gridY - 1].width &&
                 this.y < blocks[gridX - 1][gridY - 1].y + blocks[gridX - 1][gridY - 1].height) {
-                console.log("top left")
                 if (!this.smasher) {
                     this.velocity.y *= -1;
                     this.velocity.x *= -1;
@@ -370,7 +365,6 @@ class Ball {
                 blocks[gridX + 1][gridY - 1].type != 0 &&
                 this.x + this.width > blocks[gridX + 1][gridY - 1].x &&
                 this.y < blocks[gridX + 1][gridY - 1].y + blocks[gridX + 1][gridY - 1].height) {
-                console.log("top right")
                 if (!this.smasher) {
                     this.velocity.y *= -1;
                     this.velocity.x *= -1;
@@ -387,7 +381,6 @@ class Ball {
                 blocks[gridX - 1][gridY + 1].type != 0 &&
                 this.x < blocks[gridX - 1][gridY + 1].x + blocks[gridX - 1][gridY + 1].width &&
                 this.y + this.height > blocks[gridX - 1][gridY + 1].y) {
-                console.log("bottom left")
                 if (!this.smasher) {
                     this.velocity.y *= -1;
                     this.velocity.x *= -1;
@@ -404,7 +397,6 @@ class Ball {
                 blocks[gridX + 1][gridY + 1].type != 0 &&
                 this.x + this.width > blocks[gridX + 1][gridY + 1].x &&
                 this.y + this.height > blocks[gridX + 1][gridY + 1].y) {
-                console.log("bottom right")
                 if (!this.smasher) {
                     this.velocity.y *= -1;
                     this.velocity.x *= -1;
