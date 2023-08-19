@@ -39,7 +39,7 @@ body {
 }
 
 .interface.panel {
-    background-color: rgba(0, 0, 0, 0.1);
+    /* background-color: rgba(0, 0, 0, 0.1); */
     top: calc(var(--resolution) * 0.725);
     width: calc(var(--resolution) * 0.95);
     height: calc(var(--resolution) * 0.175);
@@ -60,6 +60,20 @@ body {
     top: calc(var(--resolution) * 0.125);
     left: calc(var(--resolution) * 0.5);
     transform: translate(-100%, 0);
+}
+
+.interface.lives {
+    top: calc(var(--resolution) * 0.125);
+    right: calc(var(--resolution) * 0.075);
+}
+
+.livesBall {
+    background-image: url(favicon.ico);
+    background-size: contain;
+    background-color: #ff7eff;
+    border-radius: 50%;
+    width: calc(var(--resolution) / 40);
+    height: calc(var(--resolution) / 40);
 }
 
 .floatingText {
@@ -249,21 +263,21 @@ body {
 }
 
 .controlButton.left {
-    background-color: #ff0000;
+    /* background-color: #ff0000; */
     left: 0;
     top: 0;
     width: 30%;
 }
 
 .controlButton.action {
-    background-color: #00b7ff;
+    /* background-color: #00b7ff; */
     left: 35%;
     top: 0;
     width: 30%;
 }
 
 .controlButton.right {
-    background-color: #00ff15;
+    /* background-color: #00ff15; */
     top: 0;
     left: 70%;
     width: 30%;
