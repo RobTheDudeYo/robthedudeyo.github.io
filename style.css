@@ -9,6 +9,7 @@ body {
             #ff7c94,
             #b78cf7);
     font-family: system-ui;
+    touch-action: manipulation;
 }
 
 *,
