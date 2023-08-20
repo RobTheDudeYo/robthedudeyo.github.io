@@ -367,6 +367,7 @@ body {
 }
 
 .roadworks {
+    overflow: auto;
     --resolution: min(100vh, 100vw);
     position: absolute;
     background-color: #fff;
