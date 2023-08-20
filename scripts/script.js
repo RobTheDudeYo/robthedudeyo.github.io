@@ -8,7 +8,7 @@ let container = document.querySelector(".panel");
 let deltaTime = 0;
 let lastTime = Date.now();
 
-let gameState = "game";
+let gameState = "startMenu";
 let startMenu = null;
 let game = null;
 let endScreen = null;
