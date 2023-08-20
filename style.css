@@ -1,6 +1,7 @@
 body {
     --resolution: min(100vh, 100vw);
     display: grid;
+    margin-bottom: 0;
     min-height: 100vh;
     background-image: conic-gradient(at 125% 50%,
             #b78cf7,

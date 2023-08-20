@@ -12,7 +12,7 @@ class Game {
         this.currentLevelBlocks = 0;
         this.score = 0;
         this.multiplier = 1;
-        this.lives = 0;
+        this.lives = 2;
         this.sticky = 0;
         this.deltaTime = 0;
         this.lastTime = Date.now();
