@@ -44,7 +44,7 @@ class Leaderboard {
         this.element.classList.add("leaderboard");
         this.topText = document.createElement("div");
         this.topText.classList.add("leaderTopText");
-        this.topText.innerHTML = "Leaderboard";
+        this.topText.innerHTML = "Leaderboard not implemented yet";
         this.element.appendChild(this.topText);
         this.container.appendChild(this.element);
         this.leaders = [
