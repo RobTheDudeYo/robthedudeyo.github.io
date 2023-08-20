@@ -17,6 +17,7 @@ let endScreen = null;
 
 function run() {
     deltaTime = Date.now() - lastTime;
+    lastTime = Date.now();
     if (gameState == "startMenu") {
         if (!startMenu) {
             if (game) {
@@ -54,7 +55,6 @@ function run() {
     }
     fps.innerHTML = Math.round(fpses.reduce((a, b) => a + b) / fpses.length) + " fps";
 
-    lastTime = Date.now();
     requestAnimationFrame(run);
 }
 
