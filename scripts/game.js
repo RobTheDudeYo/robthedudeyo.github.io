@@ -268,6 +268,7 @@ class Ball {
         // wall collision
         if (this.x < 0 && this.velocity.x < 0 || this.x > this.resolution - this.width && this.velocity.x > 0) {
             this.velocity.x *= -1;
+            this.speedIncrease();
             this.x += (this.velocity.x * deltaTime) / 2;
             this.y += (this.velocity.y * deltaTime) / 2;
         }
