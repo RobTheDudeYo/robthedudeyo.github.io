@@ -15,7 +15,7 @@ class StartMenu {
         this.container.appendChild(this.buttons);
         this.optionsButton = document.createElement("div");
         this.optionsButton.classList.add("optionsButton");
-        this.optionsButton.innerHTML = "<del>Options</del>";
+        this.optionsButton.innerHTML = "Options";
         this.buttons.appendChild(this.optionsButton);
         this.startButton = document.createElement("div");
         this.startButton.classList.add("startButton");

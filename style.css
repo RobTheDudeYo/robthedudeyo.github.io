@@ -46,6 +46,7 @@ body {
 .optionsButton {
     background-color: #fada58;
     height: calc(var(--resolution) * 0.225);
+    text-decoration: line-through;
 }
 
 .startButton {
