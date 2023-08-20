@@ -85,7 +85,11 @@ document.addEventListener("keyup", (e) => {
 });
 document.addEventListener("keydown", (e) => {
     if (e.key == " ") {
-        game.serveBall();
+        if (gameState == "game") {
+            game.serveBall();
+        } else if (gameState == "startMenu") {
+            gameState = "game";
+        }
     }
 });
 
@@ -136,7 +140,11 @@ document.querySelector(".right").addEventListener("touchend", (e) => {
     }
 });
 document.querySelector(".action").addEventListener("touchstart", (e) => {
-    game.serveBall();
+    if (gameState == "game") {
+        game.serveBall();
+    } else if (gameState == "startMenu") {
+        gameState = "game";
+    }
 });
 
 
