@@ -76,11 +76,15 @@ body {
 
 .leader {
     font-size: calc(var(--resolution) * 0.05);
+    margin-left: calc(var(--resolution) * 0.025);
+    border-top: calc(var(--resolution) * 0.003) solid ;
 }
 
 .leaderScore {
     font-size: calc(var(--resolution) * 0.05);
     text-align: right;
+    margin-right: calc(var(--resolution) * 0.035);
+
 }
 
 .panel {
