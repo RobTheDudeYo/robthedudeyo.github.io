@@ -22,12 +22,12 @@ class StartMenu {
         this.startButton.innerHTML = "Start";
         this.buttons.appendChild(this.startButton);
         setTimeout(() => {
-        this.startButton.addEventListener("touchstart", (e) => {
-            gameState = "game";
-        });
-        this.startButton.addEventListener("click", (e) => {
-            gameState = "game";
-        });
+            this.startButton.addEventListener("touchstart", (e) => {
+                gameState = "game";
+            });
+            this.startButton.addEventListener("click", (e) => {
+                gameState = "game";
+            });
         }, 1);
     }
 
