@@ -4,8 +4,6 @@ class Game {
     constructor(container, levels) {
         this.container = container;
         this.resolution = container.getBoundingClientRect().width < container.getBoundingClientRect().height ? container.getBoundingClientRect().width : container.getBoundingClientRect().height;
-        this.container.style.width = this.resolution + "px";
-        this.container.style.height = this.resolution + "px";
         this.paddle = new Paddle(this.resolution, this.container);
         this.balls = [new Ball(this.resolution, this.container, this.paddle, true)];
         this.blocks = Array.from({ length: 11 }, () => []);
@@ -197,8 +195,6 @@ class Ball {
         this.smasher = false;
         this.element = document.createElement("div");
         this.element.classList = "ball";
-        this.element.style.width = this.width + "px";
-        this.element.style.height = this.height + "px";
         this.element.style.left = this.x + "px";
         this.element.style.top = this.y + "px";
         panel.appendChild(this.element);
