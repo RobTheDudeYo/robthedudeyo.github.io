@@ -46,6 +46,19 @@ class Game {
         setTimeout(() => {
             text.remove();
         }, 1000);
+
+        if (target instanceof Block) {
+            // pop blocks (and coke)
+            let popGraphic = document.createElement("div");
+            popGraphic.classList.add("popGraphic");
+            popGraphic.style.left = target.x + "px";
+            popGraphic.style.top = target.y + "px";
+            this.container.appendChild(popGraphic);
+            setTimeout(() => {
+                popGraphic.remove();
+            }, 300);
+        }
+
     }
 
     markServingBall() {

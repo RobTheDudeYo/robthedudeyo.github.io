@@ -8,7 +8,7 @@ let container = document.querySelector(".panel");
 let deltaTime = 0;
 let lastTime = Date.now();
 
-let gameState = "startMenu";
+let gameState = "game";
 let startMenu = null;
 let game = null;
 let endScreen = null;
@@ -28,6 +28,7 @@ function run() {
                 endScreen = null;
             }
             startMenu = new StartMenu(container);
+
         } else {
             gameState = startMenu.run();
         }
@@ -107,7 +108,7 @@ buttonContainer.appendChild(leftButton);
 
 const actionButton = document.createElement("div");
 actionButton.className = "controlButton action";
-actionButton.innerHTML = "&#x1F3AF;";
+actionButton.innerHTML = "l";
 buttonContainer.appendChild(actionButton);
 
 const rightButton = document.createElement("div");

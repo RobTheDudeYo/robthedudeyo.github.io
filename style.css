@@ -89,7 +89,7 @@ body {
 
 .panel {
     position: absolute;
-    background-color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 5%;
     width: calc(var(--resolution) * 0.9);
     height: calc(var(--resolution) * 0.9);
@@ -192,21 +192,20 @@ body {
 .ball {
     background-image: url(favicon.ico);
     background-size: contain;
-    z-index: 1;
+    z-index: 98;
     position: absolute;
-    background-color: #ff7eff;
+    box-shadow: inset 0 0 calc(var(--resolution) * 0.01) rgba(255, 255, 255, 0.75);
     border-radius: 50%;
     width: calc(var(--resolution) / 50);
     height: calc(var(--resolution) / 50);
 }
 
 .ball.serving {
-    z-index: 2;
+    z-index: 99;
     animation: serving 1s ease infinite;
 }
 
 .ball.smasher {
-    z-index: 2;
     scale: 1.2;
     background-image: none;
     background-color: #ffcf0d;
@@ -215,6 +214,7 @@ body {
 }
 
 .ball.smasher.serving {
+    z-index: 99;
     animation: serving 1s ease infinite, glow 0.5s linear infinite alternate;
 }
 
@@ -246,16 +246,15 @@ body {
     }
 }
 
-.block {
+.popGraphic {
     position: absolute;
-    border-radius: calc(var(--resolution) * 0.0075);
-    box-sizing: border-box;
-    border: calc(var(--resolution) * 0.003) solid #ff7eff;
-    background-image: radial-gradient(#ff7eff, #6cd8d8);
-}
-
-.block.b0 {
-    animation: popBlock 200ms;
+    border: calc(var(--resolution) * 0.004);
+    border-style: dashed;
+    border-color: #a0f1ff;
+    border-radius: 10%;
+    width: calc(var(--resolution) /12.5);
+    height: calc(var(--resolution) /25);
+    animation: popBlock 300ms;
     animation-fill-mode: forwards;
 }
 
@@ -271,59 +270,108 @@ body {
 
     100% {
         transform: scale(0);
+        visibility: hidden;
     }
 }
 
+.block {
+    position: absolute;
+    border-style: solid;
+    border-width: calc(var(--resolution) * 0.001);
+    border-color: #a0f1ff;
+    border-radius: 10%;
+    box-sizing: border-box;
+}
 
+.block.b0 {
+    /* empty */
+    border: none;
+}
 
-.block.b1 {
-    border-color: #ff7eff;
-    background-image: radial-gradient(#ff7eff, #7effff);
+.block.b11 {
+    /* standard block */
+    background-color: #6cd8d8;
 }
 
 .block.b2 {
-    border-color: #7effff;
-    background-image: radial-gradient(#7effff, #7effa5);
+    /* double points */
+    /* like b11 but more glorious and with a hint of green */
+    background-image: conic-gradient(at 125% 50%,
+            #8cf7a3,
+            #90dfd4,
+            #ffcf0d,
+            #90dfd4,
+            #8cf7a3);
 }
 
 .block.b3 {
-    border-color: #7effa5;
-    background-image: radial-gradient(#7effa5, #a57eff);
+    /* sticky balls */
+    /* glowing green */
+    background-image: conic-gradient(at 125% 50%,
+            #8cf7a3,
+            #90df90,
+            #ffcf0d,
+            #90df90,
+            #8cf7a3);
 }
 
 .block.b4 {
-    border-color: #a57eff;
-    background-image: radial-gradient(#a57eff, #ff7eff);
+    /* multiball! */
+    /* orange and blue */
+    background-image: conic-gradient(at 65% 80%,
+            #ff7c94,
+            #7c9bff,
+            #7c9bff,
+            #ff7c94);
 }
 
 .block.b5 {
-    border-color: #ff7eff;
-    background-image: radial-gradient(#ff7eff, #7effa5);
+    /* smasher ball */
+    /* golden */
+    background-image: conic-gradient(at 65% 80%,
+            #ffcf0d,
+            #cf8b32,
+            #cf8b32,
+            #ffcf0d);
 }
 
 .block.b6 {
-    border-color: #7effa5;
-    background-image: radial-gradient(#7effa5, #a57eff);
+    /* wide paddle */
+    /* blues and greens */
+    background-image: conic-gradient(at 65% 80%,
+            #8cf7a3,
+            #7c9bff,
+            #7c9bff,
+            #8cf7a3);
 }
 
 .block.b7 {
-    border-color: #a57eff;
-    background-image: radial-gradient(#a57eff, #7effa5);
+    /* narrow paddle */
+    /* black and red */
+    background-image: conic-gradient(at 65% 80%,
+            #ff0000,
+            #000000,
+            #000000,
+            #ff0000);
 }
 
 .block.b8 {
-    background-color: #ff7eff;
-    border-color: #7effff;
+    /* extra life */
+    /* black and green */
+    background-image: conic-gradient(at 65% 80%,
+            #8cf7a3,
+            #000000,
+            #000000,
+            #8cf7a3);
 }
 
 .block.b9 {
-    /* unbreakable blocks */
-    border-radius: 0;
-    background-color: beige;
-    border: none;
-    animation: none;
-    background-image: none;
+    /* unbreakable */
+    /* black and white */
+    border-color: #000;
+    border-width: calc(var(--resolution) * 0.0025);
 }
+    
 
 .buttonContainer {
     user-select: none;
@@ -339,7 +387,7 @@ body {
 .controlButton {
     border-radius: 10%;
     position: absolute;
-    background-color: #6cd8d8;
+    border: calc(var(--resolution) * 0.01) dashed #a0f1ff;
     color: #fff;
     display: flex;
     justify-content: center;
