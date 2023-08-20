@@ -368,14 +368,5 @@ body {
 
 .roadworks {
     overflow: auto;
-    --resolution: min(100vh, 100vw);
-    position: absolute;
-    background-color: #fff;
-    border-radius: 5%;
-    width: calc(var(--resolution) * 0.9);
-    height: calc(var(--resolution) * 0.9);
-    top: calc(var(--resolution) * 0.05);
-    left: calc(50vw - var(--resolution) * 0.45);
     text-align: center;
-
 }
