@@ -12,7 +12,7 @@ class Game {
         this.currentLevelBlocks = 0;
         this.score = 0;
         this.multiplier = 1;
-        this.lives = 2;
+        this.lives = 0;
         this.sticky = 0;
         this.deltaTime = 0;
         this.lastTime = Date.now();
@@ -99,8 +99,7 @@ class Game {
         if (this.balls.length == 0) {
             this.lives--;
             if (this.lives < 0) {
-                game.container.remove();
-                return "end";
+                return "endScreen";
             }
             this.multiplier = 1;
             this.balls.push(new Ball(this.resolution, this.container, this.paddle, true));
@@ -555,7 +554,7 @@ class interfaceAndHUD {
         this.resolution = resolution;
         this.game = game;
         this.panel = document.createElement("div");
-        this.panel.classList = "interface panel";
+        this.panel.classList = "interface container";
         this.game.container.appendChild(this.panel);
         this.game = game;
         this.score = document.createElement("div");

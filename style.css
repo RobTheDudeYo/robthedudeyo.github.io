@@ -19,14 +19,75 @@ body {
     overflow: hidden;
 }
 
-.gamePanel {
+.startMenuTitle {
+    position: absolute;
+    rotate: 10deg;
+    top: calc(var(--resolution) * 0.125);
+    right: calc(var(--resolution) * 0.04);
+    font-size: calc(var(--resolution) * 0.07);
+    text-align: right;
+}
+
+.startMenuButtons {
+    user-select: none;
+    -webkit-user-select: none;
+    position: absolute;
+    bottom: calc(var(--resolution) * 0.05);
+    right: calc(var(--resolution) * 0.05);
+    width: calc(var(--resolution) * 0.3);
+    height: calc(var(--resolution) * 0.5);
+    font-size: calc(var(--resolution) * 0.06);
+    text-align: center;
+    line-height: calc(var(--resolution) * 0.225);
+    color: #000000;
+}
+
+.optionsButton {
+    background-color: #fada58;
+    height: calc(var(--resolution) * 0.225);
+}
+
+.startButton {
+    position: relative;
+    background-color: #fada58;
+    margin-top: calc(var(--resolution) * 0.05);
+    height: calc(var(--resolution) * 0.225);
+}
+
+.leaderboard {
+    background-color: whitesmoke;
+    position: absolute;
+    top: calc(var(--resolution) * 0.05);
+    left: calc(var(--resolution) * 0.05);
+    width: calc(var(--resolution) * 0.45);
+    height: calc(var(--resolution) * 0.8);
+    overflow: auto;
+}
+
+.leaderTopText {
+    font-size: calc(var(--resolution) * 0.05);
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.leader {
+    font-size: calc(var(--resolution) * 0.05);
+}
+
+.leaderScore {
+    font-size: calc(var(--resolution) * 0.05);
+    text-align: right;
+}
+
+.panel {
     position: absolute;
     background-color: #fff;
     border-radius: 5%;
-    width: calc(min(100vh, 100vw) * 0.9);
-    height: calc(min(100vh, 100vw) * 0.9);
-    top: calc(min(100vh, 100vw) * 0.05);
-    left: calc(50vw - min(100vh, 100vw) * 0.45);
+    width: calc(var(--resolution) * 0.9);
+    height: calc(var(--resolution) * 0.9);
+    top: calc(var(--resolution) * 0.05);
+    left: calc(50vw - var(--resolution) * 0.45);
 }
 
 .interface {
@@ -39,7 +100,7 @@ body {
     font-weight: bold;
 }
 
-.interface.panel {
+.interface.container {
     /* background-color: rgba(0, 0, 0, 0.1); */
     top: calc(var(--resolution) * 0.725);
     width: calc(var(--resolution) * 0.95);
@@ -127,7 +188,9 @@ body {
     z-index: 1;
     position: absolute;
     background-color: #ff7eff;
-    border-radius: calc(var(--resolution) * 0.0075);
+    border-radius: 50%;
+    width: calc(var(--resolution) / 50);
+    height: calc(var(--resolution) / 50);
 }
 
 .ball.serving {

@@ -1,31 +1,57 @@
 
 
 const fps = document.querySelector(".fps");
-
 let fpses = [];
-let gameState = "game";
-let game;
-let container;
+
+let container = document.querySelector(".panel");
+
+let deltaTime = 0;
+let lastTime = Date.now();
+
+let gameState = "startMenu";
+let startMenu = null;
+let game = null;
+let endScreen = null;
 
 // game.initialiseLevel(11);
 
 function run() {
-    if (gameState == "game") {
+    deltaTime = Date.now() - lastTime;
+    if (gameState == "startMenu") {
+        if (!startMenu) {
+            if (game) {
+                game.container.innerHTML = "";
+                game = null;
+            }
+            if (endScreen) {
+                endScreen.container.innerHTML = "";
+                endScreen = null;
+            }
+            startMenu = new StartMenu(container);
+        }
+    } else if (gameState == "game") {
         if (!game) {
-            container = document.querySelector(".gamePanel");
+            if (startMenu) {
+                startMenu.container.innerHTML = "";
+                startMenu = null;
+            };
             game = new Game(container, levels);
             game.initialiseLevel(11);
         }
+        game.deltaTime = deltaTime;
         gameState = game.run();
-        game.deltaTime = Date.now() - game.lastTime;
-        game.lastTime = Date.now();
-        fpses.push(1000 / game.deltaTime);
-        if (fpses.length > 10) {
-            fpses.shift();
-        }
-        fps.innerHTML = Math.round(fpses.reduce((a, b) => a + b) / fpses.length) + " fps";
+    } else if (gameState == "endScreen") {
+        gameState = "startMenu";
     }
 
+    // update fps counter
+    fpses.push(1000 / deltaTime);
+    if (fpses.length > 10) {
+        fpses.shift();
+    }
+    fps.innerHTML = Math.round(fpses.reduce((a, b) => a + b) / fpses.length) + " fps";
+
+    lastTime = Date.now();
     requestAnimationFrame(run);
 }
 
