@@ -187,7 +187,7 @@ class Ball {
         this.height = resolution / 50;
         this.x = parentBall ? parentBall.x : paddle.x;
         this.y = parentBall ? parentBall.y : paddle.y - this.height;
-        this.speed = parentBall ? parentBall.speed : resolution * 0.00015;
+        this.speed = parentBall ? parentBall.speed : resolution * 0.00025;
         this.velocity = parentBall ? { x: parentBall.velocity.x * direction.x, y: parentBall.velocity.y * direction.y } : { x: 0, y: 0 };
         this.serving = serving ? true : false;
         this.paddleLock = 0.35;
