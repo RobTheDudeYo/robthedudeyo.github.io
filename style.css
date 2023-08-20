@@ -264,10 +264,14 @@ body {
         transform: scale(1);
     }
 
-    1% {
+    10% {
         transform: scale(1.5);
     }
 
+    50% {
+        transform: scale(0.3);
+    }
+    
     100% {
         transform: scale(0);
         visibility: hidden;
