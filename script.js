@@ -8,7 +8,7 @@ let container = document.querySelector(".panel");
 let deltaTime = 0;
 let lastTime = Date.now();
 
-let gameState = "game";
+let gameState = "startMenu";
 let startMenu = null;
 let game = null;
 let endScreen = null;
@@ -28,6 +28,8 @@ function run() {
                 endScreen = null;
             }
             startMenu = new StartMenu(container);
+        } else {
+            gameState = startMenu.run();
         }
     } else if (gameState == "game") {
         if (!game) {
@@ -140,5 +142,6 @@ document.querySelector(".action").addEventListener("touchstart", (e) => {
 
 
 
-
-requestAnimationFrame(run);
+setTimeout(() => {
+    requestAnimationFrame(run);
+}, 1);

@@ -32,7 +32,7 @@ class StartMenu {
     }
 
     run() {
-        return "startMenu"
+        return gameState;
     }
 }
 
