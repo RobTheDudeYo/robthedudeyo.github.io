@@ -465,7 +465,7 @@ class Block {
             10: "",
             2: "BONUS",
             3: "STICKY",
-            4: "X3",
+            4: "MULTI",
             5: "SMASH",
             6: "<--->",
             7: "<>",
