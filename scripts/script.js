@@ -40,7 +40,7 @@ function run() {
                 startMenu = null;
             };
             game = new Game(container, levels);
-            game.initialiseLevel(11);
+            game.initialiseLevel(12);
         }
         game.deltaTime = deltaTime;
         gameState = game.run();

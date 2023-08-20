@@ -281,6 +281,11 @@ body {
     border-color: #a0f1ff;
     border-radius: 10%;
     box-sizing: border-box;
+    text-align: center;
+    font-weight: bolder;
+    font-size: calc(var(--resolution) * 0.02);
+    color: rgb(255, 0, 170);
+    padding-top: calc(var(--resolution) * 0.0035);
 }
 
 .block.b0 {
@@ -356,7 +361,7 @@ body {
 }
 
 .block.b8 {
-    /* extra life */
+    /* slow */
     /* black and green */
     background-image: conic-gradient(at 65% 80%,
             #8cf7a3,

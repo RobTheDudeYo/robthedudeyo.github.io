@@ -461,6 +461,18 @@ class Ball {
 
 class Block {
     constructor(resolution, x, y, type, panel, balls, paddle) {
+        let blockText = {
+            10: "",
+            2: "BONUS",
+            3: "STICKY",
+            4: "X3",
+            5: "SMASH",
+            6: "<--->",
+            7: "<>",
+            8: "SLOW",
+            9: "",
+            0: ""
+        };
         this.resolution = resolution;
         this.width = resolution / 11;
         this.height = resolution / 25;
@@ -477,6 +489,7 @@ class Block {
         this.element.style.height = this.height + "px";
         this.element.style.left = this.x + "px";
         this.element.style.top = this.y + "px";
+        this.element.innerHTML = blockText[type];
         panel.appendChild(this.element);
     }
 
@@ -571,6 +584,9 @@ class Block {
             });
             game.currentLevelBlocks -= 1;
             this.type = 0;
+        }
+        if (this.type == 0) {
+            this.element.innerHTML = "";
         }
         this.element.classList = `block b${this.type + this.subtype}`;
     }
