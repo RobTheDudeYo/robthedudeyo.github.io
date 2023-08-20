@@ -252,12 +252,26 @@ body {
     box-sizing: border-box;
     border: calc(var(--resolution) * 0.003) solid #ff7eff;
     background-image: radial-gradient(#ff7eff, #6cd8d8);
-    transition: all 150ms linear;
 }
 
 .block.b0 {
-    transform: scale(0);
+    animation: popBlock 200ms;
+    animation-fill-mode: forwards;
+}
 
+@keyframes popBlock {
+
+    0% {
+        transform: scale(1);
+    }
+
+    1% {
+        transform: scale(1.5);
+    }
+
+    100% {
+        transform: scale(0);
+    }
 }
 
 
