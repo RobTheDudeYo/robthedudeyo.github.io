@@ -197,6 +197,19 @@ class Ball {
         this.element.style.left = this.x + "px";
         this.element.style.top = this.y + "px";
         panel.appendChild(this.element);
+        this.pops = [
+            new Audio("sounds/pop1.mp3"),
+            new Audio("sounds/pop2.mp3"),
+            new Audio("sounds/pop3.mp3"),
+            new Audio("sounds/pop4.mp3"),
+            new Audio("sounds/pop5.mp3")
+        ]
+    }
+
+    bubblePop() {
+        let pop = Math.floor(Math.random() * 5);
+        this.pops[pop].currentTime = 0;
+        this.pops[pop].play();
     }
 
     serve() {
@@ -457,6 +470,7 @@ class Block {
         ball.speedIncrease();
         let score = (game.multiplier + game.currentLevel) * 10
         if (this.type != 9) {
+            ball.bubblePop();
             game.score += score;
             game.multiplier += 0.1;
             game.multiplier = Math.round(game.multiplier * 100) / 100;
