@@ -187,6 +187,7 @@ body {
     z-index: 2;
     background-color: #90e1e7;
     border-radius: 0 0 calc(var(--resolution) * 0.1) calc(var(--resolution) * 0.1);
+    border-top: calc(var(--resolution) * 0.005) inset #9ff1ff;
 }
 
 .ball {
@@ -427,5 +428,5 @@ body {
     overflow: auto;
     text-align: center;
     background-color: rgba(255, 255, 255, 0.65);
-    height: calc(95vh);
+    height: calc(90vh);
 }
