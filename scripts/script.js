@@ -19,7 +19,6 @@ let startMenu = null;
 let game = null;
 let endScreen = null;
 
-// game.initialiseLevel(11);
 
 function run() {
     deltaTime = Date.now() - lastTime;

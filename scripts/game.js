@@ -159,7 +159,7 @@ class Paddle {
         this.x = (this.resolution / 2) - (this.width / 2);
         this.y = this.resolution * 0.85;
         this.direction = 0;
-        this.speed = this.resolution * 0.00045;
+        this.speed = this.resolution * 0.0006;
     }
 
     move(deltaTime) {
@@ -185,7 +185,7 @@ class Ball {
         this.x = parentBall ? parentBall.x : paddle.x;
         this.y = parentBall ? parentBall.y : paddle.y - this.height;
         this.speed = parentBall ? parentBall.speed : resolution * 0.00025;
-        this.velocity = parentBall ? { x: parentBall.velocity.x * direction.x, y: parentBall.velocity.y * direction.y } : { x: -1, y: -1 };
+        this.velocity = parentBall ? { x: parentBall.velocity.x * direction.x, y: parentBall.velocity.y * direction.y } : { x: 0, y: 0 };
         this.serving = serving ? true : false;
         this.paddleLock = 0.35;
         this.smasher = false;
@@ -424,8 +424,10 @@ class Ball {
     }
 
     speedIncrease() {
-        if (this.speed < this.resolution * 0.0004) {
+        if (this.speed < this.resolution * 0.0003) {
             this.speed += this.resolution * 0.00004;
+        } else {
+            this.speed = this.resolution * 0.0003;
         }
         let angle = Math.atan2(this.velocity.y, this.velocity.x);
         this.velocity.x = Math.cos(angle) * this.speed;
