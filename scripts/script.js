@@ -1,14 +1,20 @@
 
 
+const resolution = document.body.clientWidth < document.body.clientHeight ? document.body.clientWidth : document.body.clientHeight;
+
 const fps = document.querySelector(".fps");
 let fpses = [];
+let canvas = document.querySelector(".panel");
+canvas.width = resolution*0.9;
+canvas.height = resolution*0.9;
+let context = canvas.getContext("2d");
 
-let container = document.querySelector(".panel");
+
 
 let deltaTime = 0;
 let lastTime = Date.now();
 
-let gameState = "startMenu";
+let gameState = "game";
 let startMenu = null;
 let game = null;
 let endScreen = null;
@@ -19,45 +25,33 @@ function run() {
     deltaTime = Date.now() - lastTime;
     lastTime = Date.now();
     if (gameState == "startMenu") {
-        if (!startMenu) {
-            if (game) {
-                game.container.innerHTML = "";
-                game = null;
-            }
-            if (endScreen) {
-                endScreen.container.innerHTML = "";
-                endScreen = null;
-            }
-            startMenu = new StartMenu(container);
-
-        } else {
-            gameState = startMenu.run();
-        }
+        gameState = "game";
     } else if (gameState == "game") {
-        if (!game) {
-            if (startMenu) {
-                startMenu.container.innerHTML = "";
-                startMenu = null;
-            };
-            game = new Game(container, levels);
+        if (game == null) {
+            game = new Game();
             game.initialiseLevel(11);
         }
         game.deltaTime = deltaTime;
         gameState = game.run();
     } else if (gameState == "endScreen") {
-        gameState = "startMenu";
+        if (game) {
+            game = null;
+        }
+        gameState = "game"
     }
 
+    updateFPS();
+    requestAnimationFrame(run);
+}
+
+function updateFPS() {
     // update fps counter
     fpses.push(1000 / deltaTime);
     if (fpses.length > 10) {
         fpses.shift();
     }
-    fps.innerHTML = Math.round(fpses.reduce((a, b) => a + b) / fpses.length) + " fps";
-
-    requestAnimationFrame(run);
+    fps.innerHTML = Math.round(fpses.reduce((a, b) => a + b) / fpses.length);
 }
-
 
 // keyboard controls
 document.addEventListener("keydown", (e) => {
@@ -153,4 +147,4 @@ document.querySelector(".action").addEventListener("touchstart", (e) => {
 
 setTimeout(() => {
     requestAnimationFrame(run);
-}, 1);
+}, 100);
