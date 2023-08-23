@@ -159,7 +159,7 @@ class Paddle {
         this.x = (this.resolution / 2) - (this.width / 2);
         this.y = this.resolution * 0.85;
         this.direction = 0;
-        this.speed = this.resolution * 0.0006;
+        this.speed = this.resolution * 0.00055;
     }
 
     move(deltaTime) {
@@ -354,10 +354,10 @@ class Ball {
                 this.x < blocks[gridX - 1][gridY - 1].x + blocks[gridX - 1][gridY - 1].width &&
                 this.y < blocks[gridX - 1][gridY - 1].y + blocks[gridX - 1][gridY - 1].height) {
                 if (!this.smasher) {
-                    if (this.velocity.y < 0) {
+                    if (Math.abs(this.velocity.y) > Math.abs(this.velocity.x)) {
                         this.velocity.y *= -1;
                     }
-                    if (this.velocity.x < 0) {
+                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
                         this.velocity.x *= -1;
                     }
                 }
@@ -372,10 +372,10 @@ class Ball {
                 this.x + this.width > blocks[gridX + 1][gridY - 1].x &&
                 this.y < blocks[gridX + 1][gridY - 1].y + blocks[gridX + 1][gridY - 1].height) {
                 if (!this.smasher) {
-                    if (this.velocity.y < 0) {
+                    if (Math.abs(this.velocity.y) > Math.abs(this.velocity.x)) {
                         this.velocity.y *= -1;
                     }
-                    if (this.velocity.x > 0) {
+                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
                         this.velocity.x *= -1;
                     }
                 }
@@ -390,10 +390,10 @@ class Ball {
                 this.x < blocks[gridX - 1][gridY + 1].x + blocks[gridX - 1][gridY + 1].width &&
                 this.y + this.height > blocks[gridX - 1][gridY + 1].y) {
                 if (!this.smasher) {
-                    if (this.velocity.y > 0) {
+                    if (Math.abs(this.velocity.y) > Math.abs(this.velocity.x)) {
                         this.velocity.y *= -1;
                     }
-                    if (this.velocity.x < 0) {
+                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
                         this.velocity.x *= -1;
                     }
                 }
@@ -408,10 +408,10 @@ class Ball {
                 this.x + this.width > blocks[gridX + 1][gridY + 1].x &&
                 this.y + this.height > blocks[gridX + 1][gridY + 1].y) {
                 if (!this.smasher) {
-                    if (this.velocity.y > 0) {
+                    if (Math.abs(this.velocity.y) > Math.abs(this.velocity.x)) {
                         this.velocity.y *= -1;
                     }
-                    if (this.velocity.x > 0) {
+                    if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
                         this.velocity.x *= -1;
                     }
                 }
