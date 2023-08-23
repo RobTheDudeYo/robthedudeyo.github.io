@@ -392,6 +392,7 @@ body {
 }
 
 .controlButton {
+    touch-action: manipulation;
     border-radius: 10%;
     position: absolute;
     border: calc(var(--resolution) * 0.01) dashed #a0f1ff;
