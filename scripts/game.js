@@ -447,8 +447,8 @@ class Ball {
 class Block {
     constructor(resolution, x, y, type, panel, balls, paddle) {
         this.resolution = resolution;
-        this.width = resolution / 11;
-        this.height = resolution / 25;
+        this.width = this.resolution / 11;
+        this.height = this.resolution / 25;
         this.x = x * this.width
         this.y = (y * this.height) + this.height;
         this.type = type;

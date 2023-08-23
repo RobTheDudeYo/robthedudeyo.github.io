@@ -5,8 +5,8 @@ const resolution = document.body.clientWidth < document.body.clientHeight ? docu
 const fps = document.querySelector(".fps");
 let fpses = [];
 let canvas = document.querySelector(".panel");
-canvas.width = resolution*0.9;
-canvas.height = resolution*0.9;
+canvas.width = resolution * 0.9;
+canvas.height = resolution * 0.9;
 let context = canvas.getContext("2d");
 
 
