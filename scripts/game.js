@@ -184,7 +184,7 @@ class Ball {
         this.height = resolution / 50;
         this.x = parentBall ? parentBall.x : paddle.x;
         this.y = parentBall ? parentBall.y : paddle.y - this.height;
-        this.speed = parentBall ? parentBall.speed : resolution * 0.00025;
+        this.speed = parentBall ? parentBall.speed : resolution * 0.00015;
         this.velocity = parentBall ? { x: parentBall.velocity.x * direction.x, y: parentBall.velocity.y * direction.y } : { x: 0, y: 0 };
         this.serving = serving ? true : false;
         this.paddleLock = 0.35;
@@ -300,8 +300,8 @@ class Ball {
             if (blocks[gridX - 1][gridY].type > 0 && this.x < blocks[gridX - 1][gridY].x + blocks[gridX - 1][gridY].width && this.velocity.x < 0) {
                 if (!this.smasher) {
                     this.velocity.x *= -1;
-                    this.x += this.velocity.x;
-                    this.y += this.velocity.y;
+                    // this.x += this.velocity.x;
+                    // this.y += this.velocity.y;
                 }
                 blocks[gridX - 1][gridY].hit(this, game);
                 return;
@@ -312,8 +312,8 @@ class Ball {
             if (blocks[gridX + 1][gridY].type > 0 && this.x + this.width > blocks[gridX + 1][gridY].x && this.velocity.x > 0) {
                 if (!this.smasher) {
                     this.velocity.x *= -1;
-                    this.x += this.velocity.x;
-                    this.y += this.velocity.y;
+                    // this.x += this.velocity.x;
+                    // this.y += this.velocity.y;
                 }
                 blocks[gridX + 1][gridY].hit(this, game);
                 return;
@@ -324,8 +324,8 @@ class Ball {
             if (blocks[gridX][gridY - 1].type > 0 && this.y < blocks[gridX][gridY - 1].y + blocks[gridX][gridY - 1].height && this.velocity.y < 0) {
                 if (!this.smasher) {
                     this.velocity.y *= -1;
-                    this.y += this.velocity.y;
-                    this.x += this.velocity.x;
+                    // this.y += this.velocity.y;
+                    // this.x += this.velocity.x;
                 }
                 blocks[gridX][gridY - 1].hit(this, game);
                 return;
@@ -338,8 +338,8 @@ class Ball {
                 this.velocity.y > 0) {
                 if (!this.smasher) {
                     this.velocity.y *= -1;
-                    this.y += this.velocity.y;
-                    this.x += this.velocity.x;
+                    // this.y += this.velocity.y;
+                    // this.x += this.velocity.x;
                 }
                 blocks[gridX][gridY + 1].hit(this, game);
                 return;
@@ -357,9 +357,9 @@ class Ball {
                     if (this.velocity.y < 0) {
                         this.velocity.y *= -1;
                     }
-                    this.velocity.x *= -1;
-                    // this.y += this.velocity.y;
-                    // this.x += this.velocity.x;
+                    if (this.velocity.x < 0) {
+                        this.velocity.x *= -1;
+                    }
                 }
                 blocks[gridX - 1][gridY - 1].hit(this, game);
                 return;
@@ -375,9 +375,9 @@ class Ball {
                     if (this.velocity.y < 0) {
                         this.velocity.y *= -1;
                     }
-                    this.velocity.x *= -1;
-                    // this.y += this.velocity.y;
-                    // this.x += this.velocity.x;
+                    if (this.velocity.x > 0) {
+                        this.velocity.x *= -1;
+                    }
                 }
                 blocks[gridX + 1][gridY - 1].hit(this, game);
                 return;
@@ -393,9 +393,9 @@ class Ball {
                     if (this.velocity.y > 0) {
                         this.velocity.y *= -1;
                     }
-                    this.velocity.x *= -1;
-                    // this.y += this.velocity.y;
-                    // this.x += this.velocity.x;
+                    if (this.velocity.x < 0) {
+                        this.velocity.x *= -1;
+                    }
                 }
                 blocks[gridX - 1][gridY + 1].hit(this, game);
                 return;
@@ -411,9 +411,9 @@ class Ball {
                     if (this.velocity.y > 0) {
                         this.velocity.y *= -1;
                     }
-                    this.velocity.x *= -1;
-                    // this.y += this.velocity.y;
-                    // this.x += this.velocity.x;
+                    if (this.velocity.x > 0) {
+                        this.velocity.x *= -1;
+                    }
                 }
                 blocks[gridX + 1][gridY + 1].hit(this, game);
                 return;
@@ -433,7 +433,7 @@ class Ball {
 
     speedIncrease() {
         if (this.speed < this.resolution * 0.0003) {
-            this.speed += this.resolution * 0.00004;
+            this.speed += this.resolution * 0.000002;
         } else {
             this.speed = this.resolution * 0.0003;
         }
