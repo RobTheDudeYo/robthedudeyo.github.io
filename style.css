@@ -3,6 +3,7 @@ body {
     display: grid;
     margin-bottom: 0;
     min-height: 100vh;
+    min-width: 100vw;
     background-image: conic-gradient(at 125% 50%,
             #b78cf7,
             #ff7c94,
@@ -92,7 +93,7 @@ body {
     background-color: rgba(0, 0, 0, 0.25);
     border-radius: 5%;
     top: calc(var(--resolution) * 0.05);
-    left: calc(50vw - var(--resolution) * 0.45);
+    left: calc(50vw - (var(--resolution) * 0.45));
 }
 
 .interface {
