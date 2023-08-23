@@ -207,7 +207,6 @@ class Ball {
     serve() {
         if (this.serving) {
             this.serving = false;
-            console.log("serving");
             return true;
         } else {
             return false;
@@ -264,7 +263,7 @@ class Ball {
         }
 
         // paddle collision
-        if (this.y + this.height > paddle.y && this.y + this.height / 2 < paddle.y && this.x + this.width > paddle.x && this.x < paddle.x + paddle.width && this.velocity.y > 0) {
+        if (this.y + this.height > paddle.y && this.y < paddle.y + paddle.height && this.x + this.width > paddle.x && this.x < paddle.x + paddle.width && this.velocity.y > 0) {
             if (game.sticky) {
                 this.paddleLock = ((this.x + (this.width / 2)) - (paddle.x + (paddle.width / 2))) / (paddle.width / 2);
                 this.serving = true;
