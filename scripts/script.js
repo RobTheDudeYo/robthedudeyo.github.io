@@ -28,7 +28,6 @@ function run() {
     } else if (gameState == "game") {
         if (game == null) {
             game = new Game();
-            game.initialiseLevel(11);
         }
         game.deltaTime = deltaTime;
         gameState = game.run();

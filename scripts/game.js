@@ -8,7 +8,7 @@ class Game {
         this.balls = [new Ball(this.resolution, this.paddle, true)];
         this.blocks = Array.from({ length: 11 }, () => []);
         this.levels = levels;
-        this.currentLevel = 1;
+        this.currentLevel = 10;
         this.currentLevelBlocks = 0;
         this.score = 0;
         this.multiplier = 1;
@@ -172,7 +172,7 @@ class Paddle {
     }
 
     draw() {
-        context.fillStyle = "white";
+        context.fillStyle = "skyblue";
         context.fillRect(this.x, this.y, this.width, this.height);
     }
 }
@@ -226,7 +226,11 @@ class Ball {
     }
 
     draw() {
-        context.fillStyle = "red";
+        if (this.smasher) {
+            context.fillStyle = "yellow";
+        } else {
+            context.fillStyle = "red";
+        }
         context.fillRect(this.x, this.y, this.width, this.height);
     }
 
@@ -248,9 +252,8 @@ class Ball {
         if (this.x < 0 && this.velocity.x < 0 || this.x > this.resolution - this.width && this.velocity.x > 0) {
             this.velocity.x *= -1;
             this.speedIncrease();
-            this.x += (this.velocity.x * deltaTime) / 2;
-            this.y += (this.velocity.y * deltaTime) / 2;
         }
+
         // if we collide with the ceiling we've gone too far, reset to the bottom
         // hacky fix for a bug where the ball would get stuck in the ceiling
         if (this.y < 0 && this.velocity.y < 0 && !this.smasher) {
@@ -283,8 +286,6 @@ class Ball {
         let gridX = (Math.floor((this.x + (this.width / 2)) / (this.resolution / 11)));
         let gridY = (Math.floor((this.y + (this.width / 2)) / (this.resolution / 25))) - 1;
 
-
-
         // check current grid location, just in case we missed it otherwise
         // I originally had it reverse the velocity, but it didn't look good
         if (gridY > 0 && gridY < 16) {
@@ -293,7 +294,6 @@ class Ball {
                 return;
             }
         }
-
 
         // check left
         if (gridY > 0 && gridY < 16 && gridX > 0) {
@@ -354,10 +354,12 @@ class Ball {
                 this.x < blocks[gridX - 1][gridY - 1].x + blocks[gridX - 1][gridY - 1].width &&
                 this.y < blocks[gridX - 1][gridY - 1].y + blocks[gridX - 1][gridY - 1].height) {
                 if (!this.smasher) {
-                    this.velocity.y *= -1;
+                    if (this.velocity.y < 0) {
+                        this.velocity.y *= -1;
+                    }
                     this.velocity.x *= -1;
-                    this.y += this.velocity.y;
-                    this.x += this.velocity.x;
+                    // this.y += this.velocity.y;
+                    // this.x += this.velocity.x;
                 }
                 blocks[gridX - 1][gridY - 1].hit(this, game);
                 return;
@@ -370,10 +372,12 @@ class Ball {
                 this.x + this.width > blocks[gridX + 1][gridY - 1].x &&
                 this.y < blocks[gridX + 1][gridY - 1].y + blocks[gridX + 1][gridY - 1].height) {
                 if (!this.smasher) {
-                    this.velocity.y *= -1;
+                    if (this.velocity.y < 0) {
+                        this.velocity.y *= -1;
+                    }
                     this.velocity.x *= -1;
-                    this.y += this.velocity.y;
-                    this.x += this.velocity.x;
+                    // this.y += this.velocity.y;
+                    // this.x += this.velocity.x;
                 }
                 blocks[gridX + 1][gridY - 1].hit(this, game);
                 return;
@@ -386,10 +390,12 @@ class Ball {
                 this.x < blocks[gridX - 1][gridY + 1].x + blocks[gridX - 1][gridY + 1].width &&
                 this.y + this.height > blocks[gridX - 1][gridY + 1].y) {
                 if (!this.smasher) {
-                    this.velocity.y *= -1;
+                    if (this.velocity.y > 0) {
+                        this.velocity.y *= -1;
+                    }
                     this.velocity.x *= -1;
-                    this.y += this.velocity.y;
-                    this.x += this.velocity.x;
+                    // this.y += this.velocity.y;
+                    // this.x += this.velocity.x;
                 }
                 blocks[gridX - 1][gridY + 1].hit(this, game);
                 return;
@@ -402,10 +408,12 @@ class Ball {
                 this.x + this.width > blocks[gridX + 1][gridY + 1].x &&
                 this.y + this.height > blocks[gridX + 1][gridY + 1].y) {
                 if (!this.smasher) {
-                    this.velocity.y *= -1;
+                    if (this.velocity.y > 0) {
+                        this.velocity.y *= -1;
+                    }
                     this.velocity.x *= -1;
-                    this.y += this.velocity.y;
-                    this.x += this.velocity.x;
+                    // this.y += this.velocity.y;
+                    // this.x += this.velocity.x;
                 }
                 blocks[gridX + 1][gridY + 1].hit(this, game);
                 return;
@@ -438,18 +446,6 @@ class Ball {
 
 class Block {
     constructor(resolution, x, y, type, panel, balls, paddle) {
-        let blockText = {
-            10: "",
-            2: "BONUS",
-            3: "STICKY",
-            4: "MULTI",
-            5: "SMASH",
-            6: "<--->",
-            7: "<>",
-            8: "SLOW",
-            9: "",
-            0: ""
-        };
         this.resolution = resolution;
         this.width = resolution / 11;
         this.height = resolution / 25;
@@ -541,7 +537,7 @@ class Block {
             // game.floatingText(this, "Smasher!");
             this.balls.push(new Ball(this.resolution, this.paddle, true));
             let ball = this.balls[this.balls.length - 1]
-            ball.paddleLock = 1;
+            ball.paddleLock = 0.75;
             ball.speed = game.resolution * 0.0004;
             ball.smasher = true;
             game.currentLevelBlocks -= 1;
