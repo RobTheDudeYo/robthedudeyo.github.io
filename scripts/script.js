@@ -113,26 +113,31 @@ document.body.appendChild(buttonContainer);
 
 // touch button controls
 document.querySelector(".left").addEventListener("touchstart", (e) => {
+    e.preventDefault();
     if (game.paddle.direction > -1) {
         game.paddle.direction = -1;
     }
 });
 document.querySelector(".left").addEventListener("touchend", (e) => {
+    e.preventDefault();
     if (game.paddle.direction == -1) {
         game.paddle.direction = 0;
     }
 });
 document.querySelector(".right").addEventListener("touchstart", (e) => {
+    e.preventDefault();
     if (game.paddle.direction < 1) {
         game.paddle.direction = 1;
     }
 });
 document.querySelector(".right").addEventListener("touchend", (e) => {
+    e.preventDefault();
     if (game.paddle.direction == 1) {
         game.paddle.direction = 0;
     }
 });
 document.querySelector(".action").addEventListener("touchstart", (e) => {
+    e.preventDefault();
     if (gameState == "game") {
         game.serveBall();
     } else if (gameState == "startMenu") {
