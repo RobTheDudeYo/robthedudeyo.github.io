@@ -424,7 +424,7 @@ body {
 
 .roadworks {
     height: 90vh;
-    width: max(90vw, 90vh);
+    width: min(90vw, 90vh);
     top: 5vh;
     left: 5vw;
     overflow: auto;
