@@ -183,64 +183,7 @@
         ];
         try {
             const api = new RoadworksAPI();
-            const data = [
-                {
-                    "NAME": "P013353-THS4",
-                    "S_DATE": "20230821 0700",
-                    "E_DATE": "20230901 1600",
-                    "JOBID": "104662",
-                    "DESCRIPT": "Works",
-                    "Promoter": "THS - Highways",
-                    "Location": "ST. SAMPSON - LA ROUTE DES CAPELLES",
-                    "Type": "Road Closure",
-                    "TIA": "Very High",
-                    "Timing": "All Day",
-                    "WorkType": "Major Highway Works",
-                    "Authority": "THS"
-                },
-                {
-                    "NAME": "P013353-THS4",
-                    "S_DATE": "20230821 0700",
-                    "E_DATE": "20230901 1600",
-                    "JOBID": "104668",
-                    "DESCRIPT": "Diversion",
-                    "Promoter": "THS - Highways",
-                    "Location": "ST. SAMPSON - LA ROUTE DES CAPELLES",
-                    "Type": "Diversion (All Vehicles)",
-                    "TIA": "Very High",
-                    "Timing": "All Day",
-                    "WorkType": "Major Highway Works",
-                    "Authority": "THS"
-                },
-                {
-                    "NAME": "P013353-THS4",
-                    "S_DATE": "20230821 0700",
-                    "E_DATE": "20230901 1600",
-                    "JOBID": "104670",
-                    "DESCRIPT": "Diversion",
-                    "Promoter": "THS - Highways",
-                    "Location": "ST. SAMPSON - LA ROUTE DES CAPELLES",
-                    "Type": "Diversion (All Vehicles)",
-                    "TIA": "Very High",
-                    "Timing": "All Day",
-                    "WorkType": "Major Highway Works",
-                    "Authority": "THS"
-                },
-                {
-                    "NAME": "P013353-THS4",
-                    "S_DATE": "20230821 0700",
-                    "E_DATE": "20230901 1600",
-                    "JOBID": "104664",
-                    "DESCRIPT": "Diversion",
-                    "Promoter": "THS - Highways",
-                    "Location": "ST. SAMPSON - LA ROUTE DES LONGS CAMPS",
-                    "Type": "Diversion (All Vehicles)",
-                    "TIA": "Very High",
-                    "Timing": "All Day",
-                    "WorkType": "Major Highway Works",
-                    "Authority": "THS"
-                }
-            ]
+            const data = await api.get(watchedRoads);
             const textBox = document.getElementsByClassName("container")[0];
             if (!data.length) {
                 textBox.innerHTML = `
