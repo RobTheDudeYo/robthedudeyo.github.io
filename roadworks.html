@@ -48,31 +48,25 @@
             border-radius: 15px 15px 0 0;
             padding: max(2vh, 2vw);
             font-weight: bold;
+            font-size: 1.5em;
         }
 
         .date-time {
-            padding-left: max(1.5vh, 1.5vw);
             padding-top: max(1vh, 1vw);
             padding-bottom: max(0.5vh, 0.5vw);
-            padding-right: max(1vh, 1vw);
             font-weight: bold;
+            font-size: large;
         }
 
-        .event-duration {
-            padding-left: max(1vh, 1vw);
-        }
+        .event-duration {}
 
         .event-details {
-            padding-left: max(2vh, 2vw);
             font-style: italic;
         }
 
-        .event-description {
-            padding-left: max(2vh, 2vw);
-        }
+        .event-description {}
 
         .event-category {
-            padding-left: max(2vh, 2vw);
             margin-bottom: max(1vh, 1vw);
         }
 
@@ -189,7 +183,64 @@
         ];
         try {
             const api = new RoadworksAPI();
-            const data = await api.get(watchedRoads);
+            const data = [
+                {
+                    "NAME": "P013353-THS4",
+                    "S_DATE": "20230821 0700",
+                    "E_DATE": "20230901 1600",
+                    "JOBID": "104662",
+                    "DESCRIPT": "Works",
+                    "Promoter": "THS - Highways",
+                    "Location": "ST. SAMPSON - LA ROUTE DES CAPELLES",
+                    "Type": "Road Closure",
+                    "TIA": "Very High",
+                    "Timing": "All Day",
+                    "WorkType": "Major Highway Works",
+                    "Authority": "THS"
+                },
+                {
+                    "NAME": "P013353-THS4",
+                    "S_DATE": "20230821 0700",
+                    "E_DATE": "20230901 1600",
+                    "JOBID": "104668",
+                    "DESCRIPT": "Diversion",
+                    "Promoter": "THS - Highways",
+                    "Location": "ST. SAMPSON - LA ROUTE DES CAPELLES",
+                    "Type": "Diversion (All Vehicles)",
+                    "TIA": "Very High",
+                    "Timing": "All Day",
+                    "WorkType": "Major Highway Works",
+                    "Authority": "THS"
+                },
+                {
+                    "NAME": "P013353-THS4",
+                    "S_DATE": "20230821 0700",
+                    "E_DATE": "20230901 1600",
+                    "JOBID": "104670",
+                    "DESCRIPT": "Diversion",
+                    "Promoter": "THS - Highways",
+                    "Location": "ST. SAMPSON - LA ROUTE DES CAPELLES",
+                    "Type": "Diversion (All Vehicles)",
+                    "TIA": "Very High",
+                    "Timing": "All Day",
+                    "WorkType": "Major Highway Works",
+                    "Authority": "THS"
+                },
+                {
+                    "NAME": "P013353-THS4",
+                    "S_DATE": "20230821 0700",
+                    "E_DATE": "20230901 1600",
+                    "JOBID": "104664",
+                    "DESCRIPT": "Diversion",
+                    "Promoter": "THS - Highways",
+                    "Location": "ST. SAMPSON - LA ROUTE DES LONGS CAMPS",
+                    "Type": "Diversion (All Vehicles)",
+                    "TIA": "Very High",
+                    "Timing": "All Day",
+                    "WorkType": "Major Highway Works",
+                    "Authority": "THS"
+                }
+            ]
             const textBox = document.getElementsByClassName("container")[0];
             if (!data.length) {
                 textBox.innerHTML = `
@@ -200,9 +251,22 @@
                     </div>`;
             } else {
                 textBox.innerHTML = ``;
-                data.sort((a, b) => (a.Location.split(` - `)[1] > b.Location.split(` - `)[1]) ? 1 : -1);
+                data.sort((a, b) => {
+                    if (a.Type < b.Type) {
+                        return 1;
+                    } else if (a.Type > b.Type) {
+                        return -1;
+                    } else {
+                        if (a.Location.split(` - `)[1] < b.Location.split(` - `)[1]) {
+                            return -1;
+                        } else if (a.Location.split(` - `)[1] > b.Location.split(` - `)[1]) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                });
                 data.forEach(item => {
-                    // console.log(JSON.stringify(item, null, 4));
                     textBox.innerHTML += `
                     <div class="event">
                         <div class="event-road">
