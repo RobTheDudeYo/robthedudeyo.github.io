@@ -200,6 +200,7 @@
                     </div>`;
             } else {
                 textBox.innerHTML = ``;
+                data.sort((a, b) => (a.Location.split(` - `)[1] > b.Location.split(` - `)[1]) ? 1 : -1);
                 data.forEach(item => {
                     // console.log(JSON.stringify(item, null, 4));
                     textBox.innerHTML += `
