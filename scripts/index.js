@@ -1,17 +1,6 @@
 
 
 
-const colours = [
-    'red',
-    'orange',
-    'yellow',
-    'green',
-    'blue',
-    'purple',
-    'pink',
-    'brown',
-    'white',
-]
 
 
 let deltaTime = 0;
@@ -21,30 +10,26 @@ let lastTime = Date.now();
 const canvas = document.getElementById('header-canvas');
 const ctx = canvas.getContext('2d');
 
-let portrait = false
-if (window.innerWidth < window.innerHeight) {
-    portrait = true
-}
 
-const width = canvas.width = portrait ? window.innerWeight : window.innerWidth;
-const height = canvas.height = portrait ? window.innerHidth : 1000;
-const rotation = 90;
-const centerX = portrait ? window.innerHeight / 2 : window.innerWidth / 2;
-const centerY = portrait ? (window.innerWidth / 2) - 1000 : window.innerHeight / 2;
+const width = canvas.width = window.innerWidth;
+const height = canvas.height = 1000;
+font_size = width / 4;
+const centerX = window.innerWidth / 2;
+const centerY = window.innerHeight / 2;
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 
 
 class Rob {
-    constructor(colour = 8, x = centerX, y = centerY, parent = this) {
-        this.colour = colour
+    constructor(colour = false, x = mouseX, y = mouseY, parent = false) {
+        this.colour = colour ? colour : 100
         this.opacity = 1
         this.x = x
         this.y = y
         this.speed = 0
         this.angle = 0
-        this.targetX = parent.x
-        this.targetY = parent.y
+        this.targetX = parent.x ? parent.x : centerX
+        this.targetY = parent.y ? parent.y : centerY
         this.birth = Date.now()
         this.parent = parent
     }
@@ -53,30 +38,30 @@ class Rob {
         this.targetX = targetX
         this.targetY = targetY
         this.angle = Math.atan2(targetY - this.y, targetX - this.x)
-        this.speed = this.distance_from_target() * 25
+        this.speed = this.distance_from_target(targetX, targetY) * 20
+        if (this.speed < 40) {
+            console.log(this.speed)
+            this.speed = 40
+        }
         this.x += Math.cos(this.angle) * this.speed * deltaTime
         this.y += Math.sin(this.angle) * this.speed * deltaTime
     }
 
-    distance_from_target() {
-        let result = Math.sqrt(Math.pow(this.targetX - this.x, 2) + Math.pow(this.targetY - this.y, 2))
-        return result
+    distance_from_target(targetX, targetY) {
+        if (Math.abs(this.x - targetX) < 1 && Math.abs(this.y - targetY) < 1) {
+            return 0.5
+        }
+        return Math.sqrt(Math.pow(this.x - targetX, 2) + Math.pow(this.y - targetY, 2))
     }
 
 
 
-    draw(x = this.x, y = this.y) {
-        ctx.font = `600 400px "Courier New"`;
+    draw(x = this.x, y = this.y, colour = false) {
+        ctx.font = `600 ${font_size}px "Courier New"`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = colours[this.colour];
-        if (portrait) {
-            ctx.rotate(rotation * Math.PI / 180);
-            ctx.fillText('rob', x, y);
-            ctx.rotate(-rotation * Math.PI / 180);
-        } else {
-            ctx.fillText('rob', x, y);
-        }
+        ctx.fillStyle = colour ? colour : `hsl(${this.colour}, 100%, 50%)`
+        ctx.fillText('rob', x, y);
     }
 }
 
@@ -84,53 +69,56 @@ class Rob {
 
 
 
-const mainRob = new Rob("white", centerX, centerY)
-const mouseRob = new Rob("white")
-const robs = [new Rob("white", centerX, centerY, mouseRob)]
+const mainRob = new Rob(false, centerX, centerY)
+const mouseRob = new Rob(1)
+const robs = [new Rob(0, mouseRob.x, mouseRob.y, parent = mainRob)]
 
 let ticker = Date.now()
-let colourChange = false
 
 let colourIndex = 0
+let mouseRobColour = 0
 
 function run() {
     ctx.clearRect(0, 0, width, height);
-    mouseRob.move(mouseX, mouseY)
+    mouseRob.x = mouseX
+    mouseRob.y = mouseY
     deltaTime = (Date.now() - lastTime) / 1000;
     lastTime = Date.now();
 
-    if (robs.length < (colours.length - 1) * 3) {
-        console.log("new rob")
-        robs.push(new Rob(colourIndex, mainRob.x, mainRob.y, parent = robs[robs.length - 1] ? robs[robs.length - 1] : mainRob))
-        colourIndex++
-        if (colourIndex >= colours.length - 1) {
-            colourIndex = 0
+
+    for (let i = robs.length - 1; i >= 0; i--) {
+        robs[i].move()
+        if (i == 0) {
+            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 1 && robs.length > 2) {
+                robs.splice(i, 1)
+                robs[0].parent = mainRob
+            } else {
+                robs[i].draw()
+            }
+        } else {
+            robs[i].draw()
+            robs[i].colour -= 1
         }
     }
-    // mainRob.draw()
-    robs[0].colour = 8
-    robs[0].move(mouseX, mouseY)
 
-    for (let i = robs.length - 1; i > 0; i--) {
-        robs[i].move()
-        robs[i].draw()
-
+    if (robs.length < 1000) {
+        robs.push(new Rob(colourIndex, mouseRob.x, mouseRob.y, parent = robs[robs.length - 1]))
+        colourIndex -= 10
     }
-    robs[0].draw()
 
-    requestAnimationFrame(run);
+    // mouseRob.draw()
+    mainRob.draw(centerX, centerY, "white")
+
+    setTimeout(() => {
+        requestAnimationFrame(run);
+    }, 1000 / 60);
 }
 
 
 canvas.addEventListener('mousemove', update_mouse_pos)
 function update_mouse_pos(event) {
-    if (portrait) {
-        mouseX = event.clientY
-        mouseY = -event.clientX
-    } else {
-        mouseX = event.clientX
-        mouseY = event.clientY
-    }
+    mouseX = event.clientX
+    mouseY = event.clientY
 }
 
 run()
