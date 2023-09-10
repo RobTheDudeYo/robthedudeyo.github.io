@@ -144,6 +144,9 @@ document.querySelector(".action").addEventListener("touchstart", (e) => {
         gameState = "game";
     }
 });
+document.querySelector(".panel").addEventListener("touchstart", (e) => {
+    e.preventDefault();
+});
 
 
 
