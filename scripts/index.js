@@ -37,11 +37,12 @@ class Rob {
     move(targetX = this.parent.x, targetY = this.parent.y) {
         this.targetX = targetX
         this.targetY = targetY
-        this.angle = Math.atan2(targetY - this.y, targetX - this.x)
+        this.angle = Math.atan2(mainRob.y - this.y, mainRob.x - this.x)
         this.speed = this.distance_from_target(targetX, targetY) * 20
-        if (this.speed < 40) {
-            console.log(this.speed)
-            this.speed = 40
+        if (this.speed < 1) {
+            this.speed = 1
+        } else if (this.speed > 100) {
+            this.speed = 100
         }
         this.x += Math.cos(this.angle) * this.speed * deltaTime
         this.y += Math.sin(this.angle) * this.speed * deltaTime
