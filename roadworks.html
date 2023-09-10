@@ -211,23 +211,24 @@
                 });
                 data.forEach(item => {
                     textBox.innerHTML += `
-                    <div class="event">
-                        <div class="event-road">
-                            ${capitalizeFirstLetterOfEachWord(item.Location.split(` - `)[1])}
+                        <div class="event">
+                            <div class="event-road">
+                                ${capitalizeFirstLetterOfEachWord(item.Location.split(` - `)[1])}
+                            </div>
+                            <div class="date-time">
+                                ${formatDate(item.S_DATE)} - ${formatDate(item.E_DATE)}
+                            </div>
+                            <div class="event-duration">
+                                ${item.Timing}
+                            </div>
+                            <div class="event-description">
+                                ${item.Type}
+                            </div>
+                            <div class="event-category">
+                                ${item.Promoter}
+                            </div>
                         </div>
-                        <div class="date-time">
-                            ${formatDate(item.S_DATE)} - ${formatDate(item.E_DATE)}
-                        </div>
-                        <div class="event-duration">
-                            ${item.Timing}
-                        </div>
-                        <div class="event-description">
-                            ${item.Type}
-                        </div>
-                        <div class="event-category">
-                            ${item.Promoter}
-                        </div>
-                    </div>`;
+                    `;
                 });
             }
         } catch (e) {
