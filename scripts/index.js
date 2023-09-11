@@ -101,11 +101,11 @@ function run() {
                 robs[0].parent = mainRob
             } else {
                 robs[i].draw()
-                robs[i].colour -= 10
+                robs[i].colour += 5
             }
         } else {
             robs[i].draw()
-            robs[i].colour -= 10
+            robs[i].colour += 5
         }
     }
 
