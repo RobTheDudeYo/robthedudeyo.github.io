@@ -6,6 +6,7 @@
 let deltaTime = 0;
 let lastTime = Date.now();
 
+const fps_counter = document.getElementsByClassName("fps-counter")[0];
 
 const canvas = document.getElementById('header-canvas');
 const ctx = canvas.getContext('2d');
@@ -13,7 +14,7 @@ const ctx = canvas.getContext('2d');
 
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
-font_size = width / 4;
+const font_size = width / 4;
 const centerX = window.innerWidth / 2;
 const centerY = window.innerHeight / 2;
 let mouseX = window.innerWidth / 2;
@@ -42,24 +43,16 @@ class Rob {
         this.targetX = targetX
         this.targetY = targetY
         this.angle = Math.atan2(targetY - this.y, targetX - this.x)
-        this.speed = 1000 // this.distance_from_target(targetX, targetY) * 25
-        if (this.speed > 100) {
-            this.speed = 100
-        }
+        this.speed = 100
         this.x += Math.cos(this.angle) * this.speed * deltaTime
         this.y += Math.sin(this.angle) * this.speed * deltaTime
 
-        this.targetX = targetX
-        this.targetY = targetY
-        this.angle = Math.atan2(mainRob.y - this.y, mainRob.x - this.x)
-        this.x += Math.cos(this.angle) * (this.speed / 2) * deltaTime
-        this.y += Math.sin(this.angle) * (this.speed / 2) * deltaTime
+        let angle_to_center = Math.atan2(mainRob.y - this.y, mainRob.x - this.x)
+        this.x += Math.cos(angle_to_center) * (this.speed / 6) * deltaTime
+        this.y += Math.sin(angle_to_center) * (this.speed / 6) * deltaTime
     }
 
     distance_from_target(targetX, targetY) {
-        if (Math.abs(this.x - targetX) < 1 && Math.abs(this.y - targetY) < 1) {
-            return 0.5
-        }
         return Math.sqrt(Math.pow(this.x - targetX, 2) + Math.pow(this.y - targetY, 2))
     }
 
@@ -69,7 +62,7 @@ class Rob {
         ctx.font = `600 ${font_size}px "Courier New"`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = colour ? colour : `hsl(${this.colour}, 100%, 50%)`
+        ctx.fillStyle = colour ? colour : `hsl(${this.colour}, 65%, 75%)`
         ctx.fillText(word, x, y);
     }
 }
@@ -89,42 +82,37 @@ let mouseRobColour = 0
 let touching = false
 
 function run() {
-    console.log("this is ", robs.length)
     ctx.clearRect(0, 0, width, height);
     mouseRob.x = mouseX
     mouseRob.y = mouseY
     deltaTime = (Date.now() - lastTime) / 1000;
     lastTime = Date.now();
 
-    for (let i = robs.length - 1; i >= 0; i--) {
-        robs[i].move()
-        if (i == 0) {
-            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 1 && robs.length > 1) {
-                robs.splice(i, 1)
-                robs[0].parent = mainRob
-            } else {
-                robs[i].draw()
-                robs[i].colour += 5
-            }
-        } else {
-            robs[i].draw()
-            robs[i].colour += 5
-        }
+
+
+    if (robs[0].distance_from_target(mainRob.x, mainRob.y) < 1 && robs.length > 1) {
+        robs.splice(0, 1)
+        robs[0].parent = mainRob
     }
+    for (let i = 0; i < robs.length; i++) {
+        robs[i].move()
+        robs[i].draw()
+        robs[i].colour -= 3
+    }
+
 
     if (robs.length < 500 && (touching || mouseX != centerX || mouseY != centerY)) {
         robs.push(new Rob(colourIndex, mouseRob.x, mouseRob.y, parent = robs[robs.length - 1]))
-        colourIndex += 1
     }
     if (!touching) {
         mouseX = centerX
         mouseY = centerY
     }
-    // mouseRob.draw()
+    colourIndex -= 1
     mainRob.draw(centerX, centerY, "white")
-    setTimeout(() => {
-        requestAnimationFrame(run);
-    }, 1000 / 60);
+    // mouseRob.draw()
+    fps_counter.innerHTML = Math.round(1 / deltaTime)
+    requestAnimationFrame(run);
 }
 
 

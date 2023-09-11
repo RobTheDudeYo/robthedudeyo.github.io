@@ -13,3 +13,14 @@ body {
     transform: translate(-50%, 0);
     position: relative;
 }
+
+.fps-counter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 0.5em;
+    background-color: rgba(0, 0, 0, 0.5);
+}
