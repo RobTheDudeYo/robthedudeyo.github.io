@@ -66,7 +66,7 @@ class Rob {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = colour ? colour : `hsl(${this.colour}, 100%, 50%)`
-        ctx.fillText('rob', x, y);
+        ctx.fillText('nob', x, y);
     }
 }
 
