@@ -115,20 +115,22 @@ function run() {
     // mouseRob.draw()
     mainRob.draw(centerX, centerY, "white")
 
-    // make mouse fall towards the center
-    mouseX += (centerX - mouseX) * deltaTime * 0.25
-    mouseY += (centerY - mouseY) * deltaTime * 0.25
 
     setTimeout(() => {
         requestAnimationFrame(run);
     }, 1000 / 60);
 }
 
-canvas.addEventListener('touch', update_mouse_pos)
+canvas.addEventListener('touchstart', update_mouse_pos)
 canvas.addEventListener('mousemove', update_mouse_pos)
 function update_mouse_pos(event) {
     mouseX = event.clientX
     mouseY = event.clientY
+}
+canvas.addEventListener('touchend', clear_mouse_pos)
+function clear_mouse_pos() {
+mouseX = mainRob.x
+mouseY = mainRob.y
 }
 
 run()
