@@ -103,7 +103,7 @@ function run() {
     for (let i = robs.length - 1; i >= 0; i--) {
         robs[i].move()
         if (i == 0) {
-            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 10 && robs.length > 1) {
+            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 5) {
                 robs.splice(i, 1)
                 robs[0].parent = mainRob
             } else {
