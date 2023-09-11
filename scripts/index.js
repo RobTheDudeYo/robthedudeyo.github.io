@@ -55,7 +55,7 @@ class Rob {
     }
 
     distance_from_target(targetX, targetY) {
-        if (Math.abs(this.x) - Math.abs(targetX) < 1 && Math.abs(this.y) - Math.abs(targetY) < 1) {
+        if (Math.abs(this.x - targetX) < 1 && Math.abs(this.y - targetY) < 1) {
             return 0.5
         }
         return Math.sqrt(Math.pow(this.x - targetX, 2) + Math.pow(this.y - targetY, 2))
