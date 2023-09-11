@@ -96,11 +96,12 @@ function run() {
     for (let i = robs.length - 1; i >= 0; i--) {
         robs[i].move()
         if (i == 0) {
-            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 1 && robs.length > 2) {
+            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 1 && robs.length > 1) {
                 robs.splice(i, 1)
                 robs[0].parent = mainRob
             } else {
                 robs[i].draw()
+                robs[i].colour += 1
             }
         } else {
             robs[i].draw()
