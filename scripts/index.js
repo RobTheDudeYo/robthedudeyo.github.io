@@ -123,8 +123,8 @@ function run() {
     mainRob.draw(centerX, centerY, "white")
 
     // make mouse fall towards the center
-    mouseX += (centerX - mouseX) * deltaTime * 1
-    mouseY += (centerY - mouseY) * deltaTime * 1
+    mouseX += (centerX - mouseX) * deltaTime * 0.25
+    mouseY += (centerY - mouseY) * deltaTime * 0.25
 
     setTimeout(() => {
         requestAnimationFrame(run);
