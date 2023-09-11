@@ -37,8 +37,20 @@ class Rob {
     move(targetX = this.parent.x, targetY = this.parent.y) {
         this.targetX = targetX
         this.targetY = targetY
+        this.angle = Math.atan2(targetY - this.y, targetX - this.x)
+        this.speed = this.distance_from_target(mainRob.x, targetY) * 25
+        if (this.speed < 1) {
+            this.speed = 1
+        } else if (this.speed > 100) {
+            this.speed = 100
+        }
+        this.x += Math.cos(this.angle) * this.speed * deltaTime
+        this.y += Math.sin(this.angle) * this.speed * deltaTime
+
+        this.targetX = targetX
+        this.targetY = targetY
         this.angle = Math.atan2(mainRob.y - this.y, mainRob.x - this.x)
-        this.speed = this.distance_from_target(targetX, targetY) * 20
+        this.speed = this.distance_from_target(mainRob.x, mainRob.y) * 1
         if (this.speed < 1) {
             this.speed = 1
         } else if (this.speed > 100) {
@@ -110,12 +122,16 @@ function run() {
     // mouseRob.draw()
     mainRob.draw(centerX, centerY, "white")
 
+    // make mouse fall towards the center
+    mouseX += (centerX - mouseX) * deltaTime * 1
+    mouseY += (centerY - mouseY) * deltaTime * 1
+
     setTimeout(() => {
         requestAnimationFrame(run);
     }, 1000 / 60);
 }
 
-
+canvas.addEventListener('touch', update_mouse_pos)
 canvas.addEventListener('mousemove', update_mouse_pos)
 function update_mouse_pos(event) {
     mouseX = event.clientX
