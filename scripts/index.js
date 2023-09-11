@@ -55,7 +55,7 @@ class Rob {
     }
 
     distance_from_target(targetX, targetY) {
-        if (this.x - targetX < 1 && this.y - targetY < 1) {
+        if (Math.abs(this.x) - Math.abs(targetX) < 1 && Math.abs(this.y) - Math.abs(targetY) < 1) {
             return 0.5
         }
         return Math.sqrt(Math.pow(this.x - targetX, 2) + Math.pow(this.y - targetY, 2))
@@ -96,7 +96,7 @@ function run() {
     for (let i = robs.length - 1; i >= 0; i--) {
         robs[i].move()
         if (i == 0) {
-            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 2 && robs.length > 2) {
+            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 1 && robs.length > 2) {
                 robs.splice(i, 1)
                 robs[0].parent = mainRob
             } else {
