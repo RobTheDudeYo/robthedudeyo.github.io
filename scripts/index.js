@@ -126,12 +126,9 @@ function run() {
 }
 
 canvas.addEventListener('touchmove', update_mouse_pos)
-canvas.addEventListener('mousemove', update_mouse_pos)
 function update_mouse_pos(event) {
     mouseX = event.clientX
     mouseY = event.clientY
-
-// fix this for touch
 }
 
 run()
