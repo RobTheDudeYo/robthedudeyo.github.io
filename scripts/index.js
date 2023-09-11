@@ -96,7 +96,7 @@ function run() {
     for (let i = robs.length - 1; i >= 0; i--) {
         robs[i].move()
         if (i == 0) {
-            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 10 && robs.length > 1) {
+            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 2 && robs.length > 2) {
                 robs.splice(i, 1)
                 robs[0].parent = mainRob
             } else {
@@ -130,6 +130,8 @@ canvas.addEventListener('mousemove', update_mouse_pos)
 function update_mouse_pos(event) {
     mouseX = event.clientX
     mouseY = event.clientY
+
+// fix this for touch
 }
 
 run()
