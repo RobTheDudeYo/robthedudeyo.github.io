@@ -99,11 +99,10 @@ function run() {
     deltaTime = (Date.now() - lastTime) / 1000;
     lastTime = Date.now();
 
-if (robs[1]) {
     for (let i = robs.length - 1; i >= 0; i--) {
         robs[i].move()
         if (i == 0) {
-            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 1) {
+            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 1 && robs.length > 1) {
                 robs.splice(i, 1)
                 robs[0].parent = mainRob
             } else {
@@ -114,7 +113,6 @@ if (robs[1]) {
             robs[i].colour += 1
         }
     }
-}
 
     if (robs.length < 1000) {
         robs.push(new Rob(colourIndex, mouseRob.x, mouseRob.y, parent = robs[robs.length - 1]))
