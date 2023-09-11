@@ -38,7 +38,7 @@ class Rob {
         this.targetX = targetX
         this.targetY = targetY
         this.angle = Math.atan2(targetY - this.y, targetX - this.x)
-        this.speed = this.distance_from_target(mainRob.x, targetY) * 25
+        this.speed = this.distance_from_target(targetX, targetY) * 25
         if (this.speed < 1) {
             this.speed = 1
         } else if (this.speed > 100) {
