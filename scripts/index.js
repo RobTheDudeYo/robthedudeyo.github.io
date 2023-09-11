@@ -107,16 +107,13 @@ function run() {
         }
     }
 
-    if (robs.length < 1000) {
+    if (robs.length < 500) {
         robs.push(new Rob(colourIndex, mouseRob.x, mouseRob.y, parent = robs[robs.length - 1]))
         colourIndex -= 10
     }
 
-    // mouseRob.draw()
+    mouseRob.draw()
     mainRob.draw(centerX, centerY, "white")
-
-    mouseX = mainRob.x;
-    mouseY = mainRob.y;
     setTimeout(() => {
         requestAnimationFrame(run);
     }, 1000 / 60);
