@@ -94,7 +94,6 @@ function run() {
         robs[i].colour -= 3
     }
 
-    console.log(robs.length)
     robs[0].move()
     if (robs[0].distance_from_target(centerX, centerY) < 0.7) {
         clean()
