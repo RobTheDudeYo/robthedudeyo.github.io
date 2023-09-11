@@ -111,7 +111,7 @@ function run() {
             }
         } else {
             robs[i].draw()
-            robs[i].colour -= 1
+            robs[i].colour += 1
         }
     }
 
