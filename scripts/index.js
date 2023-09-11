@@ -127,6 +127,8 @@ document.addEventListener('mousemove', (e) => {
 })
 
 document.addEventListener('touchmove', (e) => {
+    // block default behaviour
+    e.preventDefault()
     mouseX = e.touches[0].clientX
     mouseY = e.touches[0].clientY
 })
