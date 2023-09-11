@@ -82,6 +82,7 @@ let ticker = Date.now()
 
 let colourIndex = 0
 let mouseRobColour = 0
+let touching = false
 
 function run() {
     console.log("this is ", robs.length)
@@ -107,7 +108,7 @@ function run() {
         }
     }
 
-    if (robs.length < 500 && mouseX != centerX && mouseY != centerY) {
+    if (robs.length < 500 && (touching || mouseX != centerX || mouseY != centerY)) {
         robs.push(new Rob(colourIndex, mouseRob.x, mouseRob.y, parent = robs[robs.length - 1]))
         colourIndex += 1
     }
@@ -126,8 +127,17 @@ document.addEventListener('mousemove', (e) => {
     mouseY = e.clientY
 })
 
+document.addEventListener('touchstart', (e) => {
+    e.preventDefault()
+    touching = true
+})
+
+document.addEventListener('touchend', (e) => {
+    e.preventDefault()
+    touching = false
+})
+
 document.addEventListener('touchmove', (e) => {
-    // block default behaviour
     e.preventDefault()
     mouseX = e.touches[0].clientX
     mouseY = e.touches[0].clientY
