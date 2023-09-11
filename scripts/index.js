@@ -92,6 +92,7 @@ let colourIndex = 0
 let mouseRobColour = 0
 
 function run() {
+    console.log(robs.length)
     ctx.clearRect(0, 0, width, height);
     mouseRob.x = mouseX
     mouseRob.y = mouseY
@@ -102,7 +103,7 @@ function run() {
     for (let i = robs.length - 1; i >= 0; i--) {
         robs[i].move()
         if (i == 0) {
-            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 1 && robs.length > 2) {
+            if (robs[i].distance_from_target(mainRob.x, mainRob.y) < 1 && robs.length > 1) {
                 robs.splice(i, 1)
                 robs[0].parent = mainRob
             } else {
