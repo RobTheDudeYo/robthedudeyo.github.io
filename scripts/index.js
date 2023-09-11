@@ -48,8 +48,8 @@ class Rob {
         this.targetX = targetX
         this.targetY = targetY
         this.angle = Math.atan2(mainRob.y - this.y, mainRob.x - this.x)
-        this.x += Math.cos(this.angle) * this.speed * deltaTime
-        this.y += Math.sin(this.angle) * this.speed * deltaTime
+        this.x += Math.cos(this.angle) * (this.speed / 2) * deltaTime
+        this.y += Math.sin(this.angle) * (this.speed / 2) * deltaTime
     }
 
     distance_from_target(targetX, targetY) {
