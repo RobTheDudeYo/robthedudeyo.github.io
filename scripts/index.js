@@ -38,7 +38,7 @@ class Rob {
         this.targetX = targetX
         this.targetY = targetY
         this.angle = Math.atan2(targetY - this.y, targetX - this.x)
-        this.speed = this.distance_from_target(targetX, targetY) * 25
+        this.speed = 1000 // this.distance_from_target(targetX, targetY) * 25
         if (this.speed > 100) {
             this.speed = 100
         }
@@ -66,7 +66,7 @@ class Rob {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = colour ? colour : `hsl(${this.colour}, 100%, 50%)`
-        ctx.fillText('rob', x, y);
+        ctx.fillText('w', x, y);
     }
 }
 
@@ -84,7 +84,7 @@ let colourIndex = 0
 let mouseRobColour = 0
 
 function run() {
-    console.log(robs.length)
+    console.log("this is ", robs.length)
     ctx.clearRect(0, 0, width, height);
     mouseRob.x = mouseX
     mouseRob.y = mouseY
@@ -99,31 +99,37 @@ function run() {
                 robs[0].parent = mainRob
             } else {
                 robs[i].draw()
-                robs[i].colour -= 1
+                robs[i].colour += 5
             }
         } else {
             robs[i].draw()
-            robs[i].colour -= 1
+            robs[i].colour += 5
         }
     }
 
-    if (robs.length < 500) {
+    if (robs.length < 500 && mouseX != centerX && mouseY != centerY) {
         robs.push(new Rob(colourIndex, mouseRob.x, mouseRob.y, parent = robs[robs.length - 1]))
-        colourIndex -= 10
+        colourIndex += 1
     }
-
-    mouseRob.draw()
+    mouseX = centerX
+    mouseY = centerY
+    // mouseRob.draw()
     mainRob.draw(centerX, centerY, "white")
     setTimeout(() => {
         requestAnimationFrame(run);
     }, 1000 / 60);
 }
 
-canvas.addEventListener('mousemove', update_mouse_pos)
-function update_mouse_pos(event) {
-    mouseX = event.clientX
-    mouseY = event.clientY
-}
+
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX
+    mouseY = e.clientY
+})
+
+document.addEventListener('touchmove', (e) => {
+    mouseX = e.touches[0].clientX
+    mouseY = e.touches[0].clientY
+})
 
 
 run()
