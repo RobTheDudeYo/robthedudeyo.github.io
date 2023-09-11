@@ -99,7 +99,7 @@ function run() {
     deltaTime = (Date.now() - lastTime) / 1000;
     lastTime = Date.now();
 
-if (robs.length > 0) {
+if (robs[0]) {
     for (let i = robs.length - 1; i >= 0; i--) {
         robs[i].move()
         if (i == 0) {
