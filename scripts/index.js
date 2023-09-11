@@ -1,6 +1,6 @@
 
 
-
+// rob
 
 
 let deltaTime = 0;
@@ -19,6 +19,10 @@ const centerY = window.innerHeight / 2;
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 
+let word = "rob"
+if (Math.random() < 0.1) {
+    word = "nob"
+}
 
 class Rob {
     constructor(colour = false, x = mouseX, y = mouseY, parent = false) {
@@ -66,7 +70,7 @@ class Rob {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = colour ? colour : `hsl(${this.colour}, 100%, 50%)`
-        ctx.fillText('nob', x, y);
+        ctx.fillText(word, x, y);
     }
 }
 
@@ -112,8 +116,10 @@ function run() {
         robs.push(new Rob(colourIndex, mouseRob.x, mouseRob.y, parent = robs[robs.length - 1]))
         colourIndex += 1
     }
-    mouseX = centerX
-    mouseY = centerY
+    if (!touching) {
+        mouseX = centerX
+        mouseY = centerY
+    }
     // mouseRob.draw()
     mainRob.draw(centerX, centerY, "white")
     setTimeout(() => {
