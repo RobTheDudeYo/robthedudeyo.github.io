@@ -125,7 +125,7 @@ function run() {
     }, 1000 / 60);
 }
 
-canvas.addEventListener('touch', update_mouse_pos)
+canvas.addEventListener('touchmove', update_mouse_pos)
 canvas.addEventListener('mousemove', update_mouse_pos)
 function update_mouse_pos(event) {
     mouseX = event.clientX
