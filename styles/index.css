@@ -1,25 +1,15 @@
 
 body {
-    overflow-x: hidden;
-    /* summer, warm, sky, sand, sea */
-    background-color: black;
-    color: white;
+    overflow: hidden;
+    background-color: white;
     font-family: monospace;
-    font-size: 16px;
-    line-height: 1.5;
     margin: 0;
     padding: 0;
 }
 
-.test_div {
-    position: relative;
-    border: 1px solid white;
-
-}
-
 #header-canvas {
+    background-color: black;
     left: 50vw;
     transform: translate(-50%, 0);
     position: relative;
-    background-color: black;
 }

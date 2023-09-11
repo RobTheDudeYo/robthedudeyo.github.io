@@ -12,7 +12,7 @@ const ctx = canvas.getContext('2d');
 
 
 const width = canvas.width = window.innerWidth;
-const height = canvas.height = 1000;
+const height = canvas.height = window.innerHeight;
 font_size = width / 4;
 const centerX = window.innerWidth / 2;
 const centerY = window.innerHeight / 2;
@@ -66,7 +66,7 @@ class Rob {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = colour ? colour : `hsl(${this.colour}, 100%, 50%)`
-        ctx.fillText('w', x, y);
+        ctx.fillText('rob', x, y);
     }
 }
 
