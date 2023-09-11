@@ -117,7 +117,7 @@ function run() {
 
     if (robs.length < 1000) {
         robs.push(new Rob(colourIndex, mouseRob.x, mouseRob.y, parent = robs[robs.length - 1]))
-        colourIndex -= 10
+        colourIndex += 10
     }
 
     // mouseRob.draw()
