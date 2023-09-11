@@ -6,7 +6,6 @@
 let deltaTime = 0;
 let lastTime = Date.now();
 
-const fps_counter = document.getElementsByClassName("fps-counter")[0];
 
 const canvas = document.getElementById('header-canvas');
 const ctx = canvas.getContext('2d');
@@ -21,7 +20,7 @@ let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 
 let word = "rob"
-if (Math.random() < 0.1) {
+if (Math.random() < 0.06) {
     word = "nob"
 }
 
@@ -47,7 +46,7 @@ class Rob {
         this.x += Math.cos(this.angle) * this.speed * deltaTime
         this.y += Math.sin(this.angle) * this.speed * deltaTime
 
-        let angle_to_center = Math.atan2(mainRob.y - this.y, mainRob.x - this.x)
+        let angle_to_center = Math.atan2(centerY - this.y, centerX - this.x)
         this.x += Math.cos(angle_to_center) * (this.speed / 6) * deltaTime
         this.y += Math.sin(angle_to_center) * (this.speed / 6) * deltaTime
     }
@@ -62,7 +61,7 @@ class Rob {
         ctx.font = `600 ${font_size}px "Courier New"`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = colour ? colour : `hsl(${this.colour}, 65%, 75%)`
+        ctx.fillStyle = colour ? colour : `hsl(${this.colour}, 65%, 85%)`
         ctx.fillText(word, x, y);
     }
 }
@@ -75,7 +74,6 @@ const mainRob = new Rob(false, centerX, centerY)
 const mouseRob = new Rob(1)
 const robs = [new Rob(0, mouseRob.x, mouseRob.y, parent = mainRob)]
 
-let ticker = Date.now()
 
 let colourIndex = 0
 let mouseRobColour = 0
@@ -90,16 +88,22 @@ function run() {
 
 
 
-    if (robs[0].distance_from_target(mainRob.x, mainRob.y) < 1 && robs.length > 1) {
-        robs.splice(0, 1)
-        robs[0].parent = mainRob
-    }
-    for (let i = 0; i < robs.length; i++) {
+    for (let i = 1; i < robs.length; i++) {
         robs[i].move()
         robs[i].draw()
         robs[i].colour -= 3
     }
 
+    robs[0].move()
+    if (robs[0].distance_from_target(mainRob.x, mainRob.y) < 1.1) {
+        robs[0].x = mainRob.x
+        robs[0].y = mainRob.y
+        robs[0].draw()
+        if (robs.length > 1) {
+            robs.splice(0, 1)
+            robs[0].parent = mainRob
+        }
+    }
 
     if (robs.length < 500 && (touching || mouseX != centerX || mouseY != centerY)) {
         robs.push(new Rob(colourIndex, mouseRob.x, mouseRob.y, parent = robs[robs.length - 1]))
@@ -111,8 +115,24 @@ function run() {
     colourIndex -= 1
     mainRob.draw(centerX, centerY, "white")
     // mouseRob.draw()
-    fps_counter.innerHTML = Math.round(1 / deltaTime)
+    update_fps()
     requestAnimationFrame(run);
+}
+
+
+const fps_counter = document.getElementsByClassName("fps-counter")[0];
+let fps = 1;
+let last_fps = 0;
+let fps_last_time = Date.now();
+
+function update_fps() {
+    if (Date.now() - fps_last_time > 1000) {
+        last_fps = fps;
+        fps = 0;
+        fps_last_time = Date.now();
+    }
+    fps++;
+    fps_counter.innerHTML = last_fps < 1 ? "_" : last_fps - 1;
 }
 
 
