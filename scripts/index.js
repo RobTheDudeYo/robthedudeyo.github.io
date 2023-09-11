@@ -20,7 +20,7 @@ let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 
 let word = "rob"
-if (Math.random() < 0.06) {
+if (Math.random() < 0.04) {
     word = "nob"
 }
 
@@ -94,15 +94,10 @@ function run() {
         robs[i].colour -= 3
     }
 
+    console.log(robs.length)
     robs[0].move()
-    if (robs[0].distance_from_target(mainRob.x, mainRob.y) < 1.1) {
-        robs[0].x = mainRob.x
-        robs[0].y = mainRob.y
-        robs[0].draw()
-        if (robs.length > 1) {
-            robs.splice(0, 1)
-            robs[0].parent = mainRob
-        }
+    if (robs[0].distance_from_target(centerX, centerY) < 0.7) {
+        clean()
     }
 
     if (robs.length < 500 && (touching || mouseX != centerX || mouseY != centerY)) {
@@ -117,6 +112,20 @@ function run() {
     // mouseRob.draw()
     update_fps()
     requestAnimationFrame(run);
+}
+
+function clean() {
+    robs[0].x = mainRob.x
+    robs[0].y = mainRob.y
+    if (robs.length > 1) {
+        robs.splice(0, 1)
+        robs[0].parent = mainRob
+        if (robs[0].distance_from_target(centerX, centerY) < 0.7) {
+            clean()
+        }
+    } else {
+        robs[0].draw()
+    }
 }
 
 
