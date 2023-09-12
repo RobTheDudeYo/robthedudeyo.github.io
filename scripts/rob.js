@@ -126,7 +126,7 @@ function update_fps() {
         fps_last_time = Date.now();
     }
     fps++;
-    fps_counter.innerHTML = last_fps < 1 ? "_" : `${last_fps - 1} fps, ${robs.length} ${word}${robs.length > 0 ? "s" : ""}`;
+    fps_counter.innerHTML = last_fps < 1 ? "_" : `${last_fps - 1} fps, ${robs.length} ${word}${robs.length == 1 ? "" : "s"}`;
 }
 
 document.addEventListener('mousemove', (e) => {
