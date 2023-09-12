@@ -100,8 +100,8 @@ function run() {
 }
 
 function clean() {
-    robs[0].x = mainRob.x
-    robs[0].y = mainRob.y
+    robs[0].x = centerX
+    robs[0].y = centerY
     if (robs.length > 1) {
         robs.splice(0, 1)
         robs[0].parent = mainRob
