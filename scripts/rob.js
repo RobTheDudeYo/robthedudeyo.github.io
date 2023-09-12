@@ -82,7 +82,7 @@ function run() {
     }
 
     robs[0].move()
-    if (robs[0].distance_from_target(centerX, centerY) < 0.4 || robs[0].distance_from_target(centerX, centerY) > 100) {
+    if (robs[0].distance_from_target(centerX, centerY) < 0.4) {
         clean()
     }
 
@@ -106,7 +106,7 @@ function clean() {
     if (robs.length > 1) {
         robs.splice(0, 1)
         robs[0].parent = mainRob
-        if (robs[0].distance_from_target(centerX, centerY) < 0.4 || robs[0].distance_from_target(centerX, centerY > 100) {
+        if (robs[0].distance_from_target(centerX, centerY) < 0.4) {
             clean()
         }
     } else {
