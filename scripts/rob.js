@@ -21,8 +21,8 @@ if (Math.random() < 0.01) {
 }
 
 class Rob {
-    constructor(colour = false, x = mouseX, y = mouseY, parent = false) {
-        this.colour = colour ? colour : 100
+    constructor(colour = false, x = centerX, y = centerY, parent = false) {
+        this.colour = colour ? colour : 2000
         this.opacity = 1
         this.x = x
         this.y = y
@@ -35,10 +35,8 @@ class Rob {
     }
 
     move(targetX = this.parent.x, targetY = this.parent.y) {
-        this.targetX = targetX
-        this.targetY = targetY
         this.angle = Math.atan2(targetY - this.y, targetX - this.x)
-        this.speed = 95
+        this.speed = this.distance_from_target(targetX, targetY) < 1 ? this.distance_from_target(targetX, targetY) : 100
         this.x += Math.cos(this.angle) * this.speed * deltaTime
         this.y += Math.sin(this.angle) * this.speed * deltaTime
 
@@ -48,7 +46,7 @@ class Rob {
     }
 
     distance_from_target(targetX, targetY) {
-        return Math.sqrt(Math.pow(this.x - targetX, 2) + Math.pow(this.y - targetY, 2))
+        return Math.sqrt(Math.pow(targetX - this.x, 2) + Math.pow(targetY - this.y, 2))
     }
 
     draw(x = this.x, y = this.y, colour = false) {
@@ -65,7 +63,6 @@ const mouseRob = new Rob(1)
 const robs = [new Rob(0, mouseRob.x, mouseRob.y, parent = mainRob)]
 
 let colourIndex = 0
-let mouseRobColour = 0
 let touching = false
 
 function run() {
@@ -75,14 +72,12 @@ function run() {
     deltaTime = (Date.now() - lastTime) / 1000;
     lastTime = Date.now();
 
-    for (let i = 1; i < robs.length; i++) {
+    for (let i = 0; i < robs.length; i++) {
         robs[i].move()
-        robs[i].draw()
         robs[i].colour -= 3.5
     }
 
-    robs[0].move()
-    if (((robs.length > 1) && (robs[0].distance_from_target(centerX, centerY) < 0.5)) || (robs[0].x < -width * 0.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 0.5 || robs[0].y > height * 1.5)) {
+    if (((robs.length > 1) && (robs[0].distance_from_target(centerX, centerY) < 0.7)) || (robs[0].x < -width * 0.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 0.5 || robs[0].y > height * 1.5)) {
         clean()
     }
     if (robs.length < 500 && (touching || mouseX != centerX || mouseY != centerY)) {
@@ -93,7 +88,11 @@ function run() {
         mouseY = centerY
     }
     colourIndex -= 5
-    mainRob.draw(centerX, centerY, "white")
+
+    for (let i = robs.length - 1; i > 0; i--) {
+        robs[i].draw()
+    }
+    mainRob.draw()
     // mouseRob.draw()
     update_fps()
     requestAnimationFrame(run);
@@ -105,11 +104,9 @@ function clean() {
     if (robs.length > 1) {
         robs.splice(0, 1)
         robs[0].parent = mainRob
-        if (((robs.length > 1) && (robs[0].distance_from_target(centerX, centerY) < 0.5)) || (robs[0].x < -width * 0.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 0.5 || robs[0].y > height * 1.5)) {
+        if (((robs.length > 1) && (robs[0].distance_from_target(centerX, centerY) < 0.7)) || (robs[0].x < -width * 0.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 0.5 || robs[0].y > height * 1.5)) {
             clean()
         }
-    } else {
-        robs[0].draw()
     }
 }
 
