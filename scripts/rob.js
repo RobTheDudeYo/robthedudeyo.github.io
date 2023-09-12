@@ -1,15 +1,11 @@
 
-
 // rob
-
 
 let deltaTime = 0;
 let lastTime = Date.now();
 
-
 const canvas = document.getElementById('header-canvas');
 const ctx = canvas.getContext('2d');
-
 
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
@@ -55,8 +51,6 @@ class Rob {
         return Math.sqrt(Math.pow(this.x - targetX, 2) + Math.pow(this.y - targetY, 2))
     }
 
-
-
     draw(x = this.x, y = this.y, colour = false) {
         ctx.font = `600 ${font_size}px "Courier New"`;
         ctx.textAlign = 'center';
@@ -66,14 +60,9 @@ class Rob {
     }
 }
 
-
-
-
-
 const mainRob = new Rob(false, centerX, centerY)
 const mouseRob = new Rob(1)
 const robs = [new Rob(0, mouseRob.x, mouseRob.y, parent = mainRob)]
-
 
 let colourIndex = 0
 let mouseRobColour = 0
@@ -86,12 +75,10 @@ function run() {
     deltaTime = (Date.now() - lastTime) / 1000;
     lastTime = Date.now();
 
-
-
     for (let i = 1; i < robs.length; i++) {
         robs[i].move()
         robs[i].draw()
-        robs[i].colour -= 3
+        robs[i].colour -= 3.5
     }
 
     robs[0].move()
@@ -119,14 +106,13 @@ function clean() {
     if (robs.length > 1) {
         robs.splice(0, 1)
         robs[0].parent = mainRob
-        if (robs[0].distance_from_target(centerX, centerY) < 0.7) {
+        if (robs[0].distance_from_target(centerX, centerY) < 0.5) {
             clean()
         }
     } else {
         robs[0].draw()
     }
 }
-
 
 const fps_counter = document.getElementsByClassName("fps-counter")[0];
 let fps = 1;
@@ -140,9 +126,8 @@ function update_fps() {
         fps_last_time = Date.now();
     }
     fps++;
-    fps_counter.innerHTML = last_fps < 1 ? "_" : last_fps - 1;
+    fps_counter.innerHTML = last_fps < 1 ? "_" : `${last_fps - 1} fps, ${robs.length} ${word}s`;
 }
-
 
 document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX
@@ -164,6 +149,5 @@ document.addEventListener('touchmove', (e) => {
     mouseX = e.touches[0].clientX
     mouseY = e.touches[0].clientY
 })
-
 
 run()
