@@ -82,13 +82,9 @@ function run() {
     }
 
     robs[0].move()
-    if (robs[0].distance_from_target(centerX, centerY) < 0.4) {
+    if ((robs[0].distance_from_target(centerX, centerY) < 0.4) || (robs[0].x < -width*0.5 || robs[0].x > width*1.5 || robs[0].y < -height*0.5 || robs[0].y > height*1.5)) {
         clean()
     }
-    if (robs[0].x < -width*0.5 || robs[0].x > width*1.5 || robs[0].y < -height*0.5 || robs[0].y > height*1.5) {
-    robs[0].x = centerX
-    robs[0].y = centerY
-}
     if (robs.length < 500 && (touching || mouseX != centerX || mouseY != centerY)) {
         robs.push(new Rob(colourIndex, mouseRob.x, mouseRob.y, parent = robs[robs.length - 1]))
     }
@@ -109,7 +105,7 @@ function clean() {
     if (robs.length > 1) {
         robs.splice(0, 1)
         robs[0].parent = mainRob
-        if (robs[0].distance_from_target(centerX, centerY) < 0.4) {
+        if ((robs[0].distance_from_target(centerX, centerY) < 0.4) || (robs[0].x < -width*0.5 || robs[0].x > width*1.5 || robs[0].y < -height*0.5 || robs[0].y > height*1.5)) {
             clean()
         }
     } else {
