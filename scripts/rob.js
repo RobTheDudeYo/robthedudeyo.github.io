@@ -16,7 +16,7 @@ let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 
 let word = "rob"
-if (Math.random() < 0.04) {
+if (Math.random() < 0.01) {
     word = "nob"
 }
 
@@ -38,7 +38,7 @@ class Rob {
         this.targetX = targetX
         this.targetY = targetY
         this.angle = Math.atan2(targetY - this.y, targetX - this.x)
-        this.speed = 100
+        this.speed = 95
         this.x += Math.cos(this.angle) * this.speed * deltaTime
         this.y += Math.sin(this.angle) * this.speed * deltaTime
 
@@ -82,7 +82,7 @@ function run() {
     }
 
     robs[0].move()
-    if ((robs[0].distance_from_target(centerX, centerY) < 0.4) || (robs[0].x < -width*0.5 || robs[0].x > width*1.5 || robs[0].y < -height*0.5 || robs[0].y > height*1.5)) {
+    if (((robs.length > 1) && (robs[0].distance_from_target(centerX, centerY) < 0.5)) || (robs[0].x < -width * 0.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 0.5 || robs[0].y > height * 1.5)) {
         clean()
     }
     if (robs.length < 500 && (touching || mouseX != centerX || mouseY != centerY)) {
@@ -92,7 +92,7 @@ function run() {
         mouseX = centerX
         mouseY = centerY
     }
-    colourIndex -= 1
+    colourIndex -= 5
     mainRob.draw(centerX, centerY, "white")
     // mouseRob.draw()
     update_fps()
@@ -105,7 +105,7 @@ function clean() {
     if (robs.length > 1) {
         robs.splice(0, 1)
         robs[0].parent = mainRob
-        if ((robs[0].distance_from_target(centerX, centerY) < 0.4) || (robs[0].x < -width*0.5 || robs[0].x > width*1.5 || robs[0].y < -height*0.5 || robs[0].y > height*1.5)) {
+        if (((robs.length > 1) && (robs[0].distance_from_target(centerX, centerY) < 0.5)) || (robs[0].x < -width * 0.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 0.5 || robs[0].y > height * 1.5)) {
             clean()
         }
     } else {
@@ -114,39 +114,55 @@ function clean() {
 }
 
 const fps_counter = document.getElementsByClassName("fps-counter")[0];
-let fps = 1;
-let last_fps = 0;
-let fps_last_time = Date.now();
+let fpses = [];
 
 function update_fps() {
-    if (Date.now() - fps_last_time > 1000) {
-        last_fps = fps;
-        fps = 0;
-        fps_last_time = Date.now();
+    fpses.push(1 / deltaTime)
+    if (fpses.length > 10) {
+        fpses.splice(0, 1)
     }
-    fps++;
-    fps_counter.innerHTML = last_fps < 1 ? "_" : `${last_fps - 1} fps, ${robs.length} ${word}${robs.length == 1 ? "" : "s"}`;
+    let fps = 0
+    for (let i = 0; i < fpses.length; i++) {
+        fps += fpses[i]
+    }
+    fps /= fpses.length
+    fps_counter.innerHTML = `${Math.round(fps)} fps, ${robs.length} ${word}${robs.length == 1 ? "" : "s"}`
 }
 
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX
-    mouseY = e.clientY
-})
+const is_mobile = /Mobi|Android/i.test(navigator.userAgent);
+if (is_mobile) {
+    document.addEventListener('touchstart', (e) => {
+        e.preventDefault()
+        mouseX = e.touches[0].clientX
+        mouseY = e.touches[0].clientY
+        touching = true
+    })
 
-document.addEventListener('touchstart', (e) => {
-    e.preventDefault()
-    touching = true
-})
+    document.addEventListener('touchend', (e) => {
+        e.preventDefault()
+        touching = false
+    })
 
-document.addEventListener('touchend', (e) => {
-    e.preventDefault()
-    touching = false
-})
-
-document.addEventListener('touchmove', (e) => {
-    e.preventDefault()
-    mouseX = e.touches[0].clientX
-    mouseY = e.touches[0].clientY
-})
+    document.addEventListener('touchmove', (e) => {
+        e.preventDefault()
+        mouseX = e.touches[0].clientX
+        mouseY = e.touches[0].clientY
+    })
+} else {
+    document.addEventListener('mousedown', (e) => {
+        mouseX = e.clientX
+        mouseY = e.clientY
+        touching = true
+    })
+    document.addEventListener('mouseup', (e) => {
+        touching = false
+    })
+    document.addEventListener('mousemove', (e) => {
+        if (touching) {
+            mouseX = e.clientX
+            mouseY = e.clientY
+        }
+    })
+}
 
 run()
