@@ -84,7 +84,8 @@ function run() {
     robs[0].move()
     if (robs[0].distance_from_target(centerX, centerY) < 0.4) {
         clean()
-    } else if (robs[0].x < -width || robs[0].x > width*2 || robs[0].y < -height || robs[0].y > height*2) {
+    }
+    if (robs[0].x < -width || robs[0].x > width*2 || robs[0].y < -height || robs[0].y > height*2) {
     robs[0].x = centerX
     robs[0].y = centerY
 }
