@@ -50,7 +50,7 @@ class Rob {
     }
 
     draw(x = this.x, y = this.y, colour = false) {
-        ctx.font = `600 ${font_size}px "Courier New"`;
+        ctx.font = `900 ${font_size}px "Courier New"`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = colour ? colour : `hsl(${this.colour}, 65%, 85%)`
@@ -59,16 +59,13 @@ class Rob {
 }
 
 const mainRob = new Rob(false, centerX, centerY)
-const mouseRob = new Rob(1)
-const robs = [new Rob(0, mouseRob.x, mouseRob.y, parent = mainRob)]
+const robs = [new Rob(0, mouseX, mouseY, parent = mainRob)]
 
 let colourIndex = 0
 let touching = false
 
 function run() {
     ctx.clearRect(0, 0, width, height);
-    mouseRob.x = mouseX
-    mouseRob.y = mouseY
     deltaTime = (Date.now() - lastTime) / 1000;
     lastTime = Date.now();
 
@@ -81,7 +78,7 @@ function run() {
         clean()
     }
     if (robs.length < 500 && (touching || mouseX != centerX || mouseY != centerY)) {
-        robs.push(new Rob(colourIndex, mouseRob.x, mouseRob.y, parent = robs[robs.length - 1]))
+        robs.push(new Rob(colourIndex, mouseX, mouseY, parent = robs[robs.length - 1]))
     }
     if (!touching) {
         mouseX = centerX
@@ -93,7 +90,6 @@ function run() {
         robs[i].draw()
     }
     mainRob.draw()
-    // mouseRob.draw()
     update_fps()
     requestAnimationFrame(run);
 }
