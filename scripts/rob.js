@@ -7,13 +7,22 @@ let lastTime = Date.now();
 const canvas = document.getElementById('header-canvas');
 const ctx = canvas.getContext('2d');
 
-const width = canvas.width = window.innerWidth;
-const height = canvas.height = window.innerHeight;
-const font_size = width / 4;
-const centerX = window.innerWidth / 2;
-const centerY = window.innerHeight / 2;
-let mouseX = window.innerWidth / 2;
-let mouseY = window.innerHeight / 2;
+const width = window.innerWidth;
+const height = window.innerHeight;
+canvas.width = width;
+canvas.height = height;
+const font_size = height / 2;
+const centerX = width / 2;
+const centerY = height / 2;
+let mouseX = centerX;
+let mouseY = centerY;
+// console.log("width: ", width)
+// console.log("height: ", height)
+// console.log("font_size: ", font_size)
+// console.log("centerX: ", centerX)
+// console.log("centerY: ", centerY)
+// console.log("mouseX: ", mouseX)
+// console.log("mouseY: ", mouseY)
 
 let word = "rob"
 if (Math.random() < 0.01) {
@@ -35,14 +44,19 @@ class Rob {
     }
 
     move(targetX = this.parent.x, targetY = this.parent.y) {
-        this.angle = Math.atan2(targetY - this.y, targetX - this.x)
-        this.speed = this.distance_from_target(targetX, targetY) < 1 ? this.distance_from_target(targetX, targetY) : 100
-        this.x += Math.cos(this.angle) * this.speed * deltaTime
-        this.y += Math.sin(this.angle) * this.speed * deltaTime
+        if (this.distance_from_target(centerX, centerY) < 1) {
+            this.x = centerX
+            this.y = centerY
+        } else {
+            this.angle = Math.atan2(targetY - this.y, targetX - this.x)
+            this.speed = this.distance_from_target(targetX, targetY) < 1 ? this.distance_from_target(targetX, targetY) : 100
+            this.x += Math.cos(this.angle) * this.speed * deltaTime
+            this.y += Math.sin(this.angle) * this.speed * deltaTime
 
-        let angle_to_center = Math.atan2(centerY - this.y, centerX - this.x)
-        this.x += Math.cos(angle_to_center) * (this.speed / 6) * deltaTime
-        this.y += Math.sin(angle_to_center) * (this.speed / 6) * deltaTime
+            let angle_to_center = Math.atan2(centerY - this.y, centerX - this.x)
+            this.x += Math.cos(angle_to_center) * (this.speed / 6) * deltaTime
+            this.y += Math.sin(angle_to_center) * (this.speed / 6) * deltaTime
+        }
     }
 
     distance_from_target(targetX, targetY) {
@@ -84,7 +98,7 @@ function run() {
         mouseX = centerX
         mouseY = centerY
     }
-    colourIndex -= 5
+    colourIndex -= 1
 
     for (let i = robs.length - 1; i > 0; i--) {
         robs[i].draw()
@@ -126,8 +140,9 @@ const is_mobile = /Mobi|Android/i.test(navigator.userAgent);
 if (is_mobile) {
     document.addEventListener('touchstart', (e) => {
         e.preventDefault()
-        mouseX = e.touches[0].clientX
-        mouseY = e.touches[0].clientY
+        let pos = getMousePos(canvas, e.touches[0])
+        mouseX = pos.x
+        mouseY = pos.y
         touching = true
     })
 
@@ -138,13 +153,15 @@ if (is_mobile) {
 
     document.addEventListener('touchmove', (e) => {
         e.preventDefault()
-        mouseX = e.touches[0].clientX
-        mouseY = e.touches[0].clientY
+        let pos = getMousePos(canvas, e.touches[0])
+        mouseX = pos.x
+        mouseY = pos.y
     })
 } else {
     document.addEventListener('mousedown', (e) => {
-        mouseX = e.clientX
-        mouseY = e.clientY
+        let pos = getMousePos(canvas, e)
+        mouseX = pos.x
+        mouseY = pos.y
         touching = true
     })
     document.addEventListener('mouseup', (e) => {
@@ -152,10 +169,19 @@ if (is_mobile) {
     })
     document.addEventListener('mousemove', (e) => {
         if (touching) {
-            mouseX = e.clientX
-            mouseY = e.clientY
+            let pos = getMousePos(canvas, e)
+            mouseX = pos.x
+            mouseY = pos.y
         }
     })
+}
+
+function getMousePos(canvas, event) {
+    let area = canvas.getBoundingClientRect();
+    return {
+        x: event.clientX - area.left,
+        y: event.clientY - area.top
+    }
 }
 
 run()
