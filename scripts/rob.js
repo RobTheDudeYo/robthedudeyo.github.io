@@ -3,7 +3,7 @@
 
 let deltaTime = 0;
 let lastTime = Date.now();
- 
+
 const canvas = document.getElementById('header-canvas');
 const ctx = canvas.getContext('2d');
 
@@ -44,7 +44,7 @@ class Rob {
     }
 
     move(targetX = this.parent.x, targetY = this.parent.y) {
-        if (this.distance_from_target(centerX, centerY) < 1) {
+        if ((this.distance_from_target(centerX, centerY) < 1) && (robs[0] == this)) {
             this.x = centerX
             this.y = centerY
         } else {
