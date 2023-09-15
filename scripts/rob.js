@@ -44,7 +44,7 @@ class Rob {
     }
 
     move(targetX = this.parent.x, targetY = this.parent.y) {
-        if ((this.distance_from_target(centerX, centerY) < 1) && (robs[0] == this)) {
+        if ((this.distance_from_target(centerX, centerY) < 0.5) && (robs[0] == this)) {
             this.x = centerX
             this.y = centerY
         } else {
@@ -100,7 +100,7 @@ function run() {
     }
     colourIndex -= 1
 
-    for (let i = robs.length - 1; i > 0; i--) {
+    for (let i = 0; i < robs.length; i++) {
         robs[i].draw()
     }
     mainRob.draw()
