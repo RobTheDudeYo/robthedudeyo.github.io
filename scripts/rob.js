@@ -3,7 +3,7 @@
 
 let deltaTime = 0;
 let lastTime = Date.now();
-
+ 
 const canvas = document.getElementById('header-canvas');
 const ctx = canvas.getContext('2d');
 
