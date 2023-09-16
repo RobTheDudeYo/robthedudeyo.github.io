@@ -39,12 +39,19 @@ class Ball {
         this.speed = ((Math.abs(mouseX - this.x) / 10) + (Math.abs(mouseY - this.y) / 10)) / 2
         this.x += Math.cos(this.angle) * this.speed * deltaTime * 100
         this.y += Math.sin(this.angle) * this.speed * deltaTime * 100
-        if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
-            this.x = centerX
-            this.y = centerY
+        if (this.x < 0) {
+            this.x = 0
+            this.speed = 0
+        } else if (this.x > width) {
+            this.x = width
+            this.speed = 0
+        } else if (this.y < 0) {
+            this.y = 0
+            this.speed = 0
+        } else if (this.y > height) {
+            this.y = height
             this.speed = 0
         }
-
     }
 
     draw() {
