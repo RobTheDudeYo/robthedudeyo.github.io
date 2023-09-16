@@ -31,7 +31,7 @@ if (Math.random() < 0.01) {
 
 class Rob {
     constructor(colour = false, x = centerX, y = centerY, parent = false) {
-        this.colour = colour ? colour : 2000
+        this.colour = colour ? colour : 180
         this.opacity = 1
         this.x = x
         this.y = y
@@ -44,7 +44,7 @@ class Rob {
     }
 
     move(targetX = this.parent.x, targetY = this.parent.y) {
-        if ((this.distance_from_target(centerX, centerY) < 0.5) && (robs[0] == this)) {
+        if (this.x - centerX < 1 && this.y - centerY < 1 && (robs[0] == this)) {
             this.x = centerX
             this.y = centerY
         } else {
