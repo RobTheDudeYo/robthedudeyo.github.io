@@ -1,0 +1,26 @@
+body {
+    overflow: hidden;
+    background-color: black;
+    font-family: monospace;
+    margin: 0;
+    padding: 0;
+}
+
+#canvas {
+    background-color: black;
+    left: 50vw;
+    transform: translate(-50%, 0);
+    position: relative;
+}
+
+.fps-counter {
+    /* bottom left */
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    color: greenyellow;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 0.5em;
+    background-color: rgba(0, 0, 0, 0.5);
+}
