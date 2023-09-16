@@ -16,13 +16,6 @@ const centerX = width / 2;
 const centerY = height / 2;
 let mouseX = centerX;
 let mouseY = centerY;
-// console.log("width: ", width)
-// console.log("height: ", height)
-// console.log("font_size: ", font_size)
-// console.log("centerX: ", centerX)
-// console.log("centerY: ", centerY)
-// console.log("mouseX: ", mouseX)
-// console.log("mouseY: ", mouseY)
 
 let word = "rob"
 if (Math.random() < 0.01) {
@@ -32,35 +25,32 @@ if (Math.random() < 0.01) {
 class Rob {
     constructor(colour = false, x = centerX, y = centerY, parent = false) {
         this.colour = colour ? colour : 180
-        this.opacity = 1
         this.x = x
         this.y = y
         this.speed = 0
         this.angle = 0
         this.targetX = parent.x ? parent.x : centerX
         this.targetY = parent.y ? parent.y : centerY
-        this.birth = Date.now()
         this.parent = parent
     }
 
     move(targetX = this.parent.x, targetY = this.parent.y) {
-        if (this.x - centerX < 1 && this.y - centerY < 1 && (robs[0] == this)) {
+        if (Math.abs(robs[0].x - centerX) < 1 && Math.abs(robs[0].y - centerY) < 1 && (robs[0] == this)) {
+            // center the rob if it's the first one and it's close enough to the center
+            // so it's ready and tidy for deletion
             this.x = centerX
             this.y = centerY
         } else {
+            // move the rob towards the target
             this.angle = Math.atan2(targetY - this.y, targetX - this.x)
-            this.speed = this.distance_from_target(targetX, targetY) < 1 ? this.distance_from_target(targetX, targetY) : 100
+            this.speed = font_size / 3
             this.x += Math.cos(this.angle) * this.speed * deltaTime
             this.y += Math.sin(this.angle) * this.speed * deltaTime
-
+            // nudge the rob towards the center a bit
             let angle_to_center = Math.atan2(centerY - this.y, centerX - this.x)
             this.x += Math.cos(angle_to_center) * (this.speed / 6) * deltaTime
             this.y += Math.sin(angle_to_center) * (this.speed / 6) * deltaTime
         }
-    }
-
-    distance_from_target(targetX, targetY) {
-        return Math.sqrt(Math.pow(targetX - this.x, 2) + Math.pow(targetY - this.y, 2))
     }
 
     draw(x = this.x, y = this.y, colour = false) {
@@ -79,42 +69,56 @@ let colourIndex = 0
 let touching = false
 
 function run() {
-    ctx.clearRect(0, 0, width, height);
+    // clear the canvas with alpha so the robs fade
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+    ctx.fillRect(0, 0, width, height);
     deltaTime = (Date.now() - lastTime) / 1000;
     lastTime = Date.now();
 
+    // move and recolour the robs
     for (let i = 0; i < robs.length; i++) {
         robs[i].move()
         robs[i].colour -= 3.5
     }
 
-    if (((robs.length > 1) && (robs[0].distance_from_target(centerX, centerY) < 0.7)) || (robs[0].x < -width * 0.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 0.5 || robs[0].y > height * 1.5)) {
+    // delete the robs that are too far away or centered
+    if (((robs.length > 1) && (Math.abs(robs[0].x - centerX) < 1 && Math.abs(robs[0].y - centerY) < 1)) || (robs[0].x < -width * 1.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 1.5 || robs[0].y > height * 1.5)) {
         clean()
     }
+
+    // add new robs if there's room and user is interacting
     if (robs.length < 500 && (touching || mouseX != centerX || mouseY != centerY)) {
         robs.push(new Rob(colourIndex, mouseX, mouseY, parent = robs[robs.length - 1]))
     }
+
+    // reset the mouse position if the user isn't interacting
     if (!touching) {
         mouseX = centerX
         mouseY = centerY
     }
+
+    // change the starting colour of the next new rob
     colourIndex -= 1
 
-    for (let i = 0; i < robs.length; i++) {
+    // draw the robs
+    for (let i = 1; i < robs.length; i++) {
         robs[i].draw()
     }
     mainRob.draw()
+
     update_fps()
     requestAnimationFrame(run);
 }
 
 function clean() {
-    robs[0].x = centerX
-    robs[0].y = centerY
     if (robs.length > 1) {
+        // delete the first rob
         robs.splice(0, 1)
         robs[0].parent = mainRob
-        if (((robs.length > 1) && (robs[0].distance_from_target(centerX, centerY) < 0.7)) || (robs[0].x < -width * 0.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 0.5 || robs[0].y > height * 1.5)) {
+
+        // continue deleting robs that are too far away or centered
+        if (((robs.length > 1) && (Math.abs(robs[0].x - centerX) < 1 && Math.abs(robs[0].y - centerY) < 1)) || (robs[0].x < -width * 1.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 1.5 || robs[0].y > height * 1.5)) {
+            // mmmmm recursion
             clean()
         }
     }
@@ -177,6 +181,8 @@ if (is_mobile) {
 }
 
 function getMousePos(canvas, event) {
+    // how to get mouse position on canvas from https://stackoverflow.com/a/17130415
+    // (thanks for the link, github copilot!)
     let area = canvas.getBoundingClientRect();
     return {
         x: event.clientX - area.left,
