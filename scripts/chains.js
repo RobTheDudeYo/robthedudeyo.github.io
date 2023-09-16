@@ -37,8 +37,8 @@ class Ball {
     update(deltaTime) {
         this.angle = Math.atan2(mouseY - this.y, mouseX - this.x)
         this.speed = ((Math.abs(mouseX - this.x) / 10) + (Math.abs(mouseY - this.y) / 10)) / 2
-        this.x += Math.cos(this.angle) * this.speed * deltaTime * 100
-        this.y += Math.sin(this.angle) * this.speed * deltaTime * 100
+        this.x += Math.cos(this.angle) * this.speed * deltaTime
+        this.y += Math.sin(this.angle) * this.speed * deltaTime
         if (this.x < 0) {
             this.x = 0
         } else if (this.x > width) {
@@ -67,7 +67,7 @@ ctx.fillRect(0, 0, width, height);
 function run() {
     ctx.fillStyle = 'rgba(209, 244, 11, 1)';
     ctx.fillRect(0, 0, width, height);
-    deltaTime = (Date.now() - lastTime) / 1000;
+    deltaTime = (Date.now() - lastTime) / 10;
     lastTime = Date.now();
 
     ball1.update(deltaTime)
@@ -83,7 +83,7 @@ function run() {
 const fps_counter = document.getElementsByClassName("fps-counter")[0];
 let fpses = [];
 function update_fps() {
-    fpses.push(1 / deltaTime)
+    fpses.push(100 / deltaTime)
     if (fpses.length > 10) {
         fpses.splice(0, 1)
     }
