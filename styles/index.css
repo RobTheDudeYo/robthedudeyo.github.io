@@ -30,3 +30,8 @@ button:hover {
     background-color: black;
     color: white;
 }
+
+::selection {
+    background-color: pink;
+    color: skyblue;
+}
