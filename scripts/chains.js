@@ -37,6 +37,7 @@ class Ball {
     update(deltaTime) {
         this.angle = Math.atan2(mouseY - this.y, mouseX - this.x)
         this.speed = ((Math.abs(mouseX - this.x) / 10) + (Math.abs(mouseY - this.y) / 10)) / 2
+        this.speed = Math.round(this.speed * 1000) / 1000
         this.x += Math.cos(this.angle) * this.speed * deltaTime
         this.y += Math.sin(this.angle) * this.speed * deltaTime
         if (this.x < 0) {
@@ -65,7 +66,7 @@ let touching = false
 ctx.fillStyle = 'rgba(209, 244, 11, 1)';
 ctx.fillRect(0, 0, width, height);
 function run() {
-    ctx.fillStyle = 'rgba(209, 244, 11, 1)';
+    ctx.fillStyle = 'rgba(209, 244, 11, 0.5)';
     ctx.fillRect(0, 0, width, height);
     deltaTime = (Date.now() - lastTime) / 10;
     lastTime = Date.now();
