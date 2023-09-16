@@ -41,16 +41,12 @@ class Ball {
         this.y += Math.sin(this.angle) * this.speed * deltaTime * 100
         if (this.x < 0) {
             this.x = 0
-            this.speed = 0
         } else if (this.x > width) {
             this.x = width
-            this.speed = 0
         } else if (this.y < 0) {
             this.y = 0
-            this.speed = 0
         } else if (this.y > height) {
             this.y = height
-            this.speed = 0
         }
     }
 
