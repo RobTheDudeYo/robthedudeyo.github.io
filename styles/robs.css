@@ -6,15 +6,11 @@ body {
     padding: 0;
 }
 
-#header-canvas {
+#canvas {
     background-color: black;
-    left: 50vw;
-    transform: translate(-50%, 0);
-    position: relative;
 }
 
 .fps-counter {
-    /* bottom left */
     position: absolute;
     left: 0;
     bottom: 0;

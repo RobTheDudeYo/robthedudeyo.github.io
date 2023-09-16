@@ -4,7 +4,7 @@
 let deltaTime = 0;
 let lastTime = Date.now();
 
-const canvas = document.getElementById('header-canvas');
+const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 const width = window.innerWidth;
@@ -27,7 +27,7 @@ class Rob {
         this.colour = colour ? colour : 180
         this.x = x
         this.y = y
-        this.speed = 0
+        this.speed = width > height ? font_size / 3 : font_size / 2
         this.angle = 0
         this.targetX = parent.x ? parent.x : centerX
         this.targetY = parent.y ? parent.y : centerY
@@ -43,7 +43,6 @@ class Rob {
         } else {
             // move the rob towards the target
             this.angle = Math.atan2(targetY - this.y, targetX - this.x)
-            this.speed = font_size / 3
             this.x += Math.cos(this.angle) * this.speed * deltaTime
             this.y += Math.sin(this.angle) * this.speed * deltaTime
             // nudge the rob towards the center a bit
@@ -82,9 +81,7 @@ function run() {
     }
 
     // delete the robs that are too far away or centered
-    if (((robs.length > 1) && (Math.abs(robs[0].x - centerX) < 1 && Math.abs(robs[0].y - centerY) < 1)) || (robs[0].x < -width * 1.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 1.5 || robs[0].y > height * 1.5)) {
-        clean()
-    }
+    clean()
 
     // add new robs if there's room and user is interacting
     if (robs.length < 500 && (touching || mouseX != centerX || mouseY != centerY)) {
@@ -111,18 +108,15 @@ function run() {
 }
 
 function clean() {
-    if (robs.length > 1) {
+    if ((robs.length > 1) && ((Math.abs(robs[0].x - centerX) < 1 && Math.abs(robs[0].y - centerY) < 1) || (robs[0].x < -width * 0.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 0.5 || robs[0].y > height * 1.5))) {
         // delete the first rob
         robs.splice(0, 1)
         robs[0].parent = mainRob
-
-        // continue deleting robs that are too far away or centered
-        if (((robs.length > 1) && (Math.abs(robs[0].x - centerX) < 1 && Math.abs(robs[0].y - centerY) < 1)) || (robs[0].x < -width * 1.5 || robs[0].x > width * 1.5 || robs[0].y < -height * 1.5 || robs[0].y > height * 1.5)) {
-            // mmmmm recursion
-            clean()
-        }
+        // mmmmm recursion
+        clean()
     }
 }
+
 
 const fps_counter = document.getElementsByClassName("fps-counter")[0];
 let fpses = [];
