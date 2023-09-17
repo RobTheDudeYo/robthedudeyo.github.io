@@ -92,8 +92,8 @@ function run() {
     lastTime = Date.now();
 
     mouse.update()
-    mouse.draw()
     dot.update()
+    mouse.draw()
     dot.draw()
 
 
