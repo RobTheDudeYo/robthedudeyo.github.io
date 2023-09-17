@@ -16,87 +16,26 @@ const centerY = height / 2;
 let mouseX = centerX;
 let mouseY = centerY;
 
-let word = "rob"
-if (Math.random() < 0.01) {
-    word = "nob"
-}
+const a_number = Math.floor(Math.random() * 100)
 
-let star_location = 0
+console.log(a_number)
 
-class Mouse {
-    constructor(x, y) {
-        this.x = x
-        this.y = y
-        this.colour = 'rgba(0, 0, 0, 1)'
-    }
-
-    update() {
-        this.x = mouseX
-        this.y = mouseY
-    }
-
-    draw() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 1)'
-        ctx.beginPath()
-        ctx.arc(this.x, this.y, 10, 0, Math.PI * 2)
-        ctx.fill()
-    }
-}
-
-class Dot {
-    constructor(x, y, radius, color) {
-        this.x = x
-        this.y = y
-        this.vector = { x: 10, y: 0 }
-        this.radius = radius
-        this.color = color
-    }
-
-    update(deltaTime) {
-        let dx = mouseX - this.x
-        let dy = mouseY - this.y
-        let distance = Math.sqrt(dx * dx + dy * dy)
-        let angle = Math.atan2(dy, dx)
-        let force = 0.25
-        this.vector.x += Math.cos(angle) * force
-        this.vector.y += Math.sin(angle) * force
-
-        this.x += this.vector.x
-        this.y += this.vector.y
-    }
-
-    draw() {
-        ctx.fillStyle = this.color
-        ctx.beginPath()
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
-        ctx.fill()
-    }
-}
-
-const mouse = new Mouse(centerX, centerY)
-const dot = new Dot(centerX + 10, centerY + 50, 10, 'rgba(0, 0, 0, 1)')
-
-let touching = false
 
 ctx.fillStyle = 'rgba(209, 244, 11, 1)';
 ctx.fillRect(0, 0, width, height);
 
 function run() {
-    ctx.fillStyle = 'rgba(209, 244, 11, 0.1)';
+    ctx.fillStyle = 'rgba(209, 244, 11, 1)';
     ctx.fillRect(0, 0, width, height);
     deltaTime = (Date.now() - lastTime) / 10;
     lastTime = Date.now();
 
-    mouse.update()
-    mouse.draw()
-    dot.update(deltaTime)
-    dot.draw()
+
 
 
     update_fps()
     requestAnimationFrame(run);
 }
-
 
 
 const fps_counter = document.getElementsByClassName("fps-counter")[0];
@@ -114,6 +53,7 @@ function update_fps() {
     fps_counter.innerHTML = `${Math.round(fps)} fps`
 }
 
+let touching = false
 const is_mobile = /Mobi|Android/i.test(navigator.userAgent);
 if (is_mobile) {
     document.addEventListener('touchstart', (e) => {
