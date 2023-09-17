@@ -52,17 +52,21 @@ class Dot {
         this.color = color
     }
 
-    update(deltaTime) {
+    update() {
         let dx = mouseX - this.x
         let dy = mouseY - this.y
-        let distance = Math.sqrt(dx * dx + dy * dy)
-        let angle = Math.atan2(dy, dx)
-        let force = 0.25
-        this.vector.x += Math.cos(angle) * force
-        this.vector.y += Math.sin(angle) * force
-
+        let dist = Math.sqrt(dx * dx + dy * dy)
+        this.vector.x += dx / dist
+        this.vector.y += dy / dist
         this.x += this.vector.x
         this.y += this.vector.y
+        this.vector.x *= 0.999
+        this.vector.y *= 0.999
+        if (this.x < 0 || this.x > width) {
+            this.vector.x *= -1
+        } else if (this.y < 0 || this.y > height) {
+            this.vector.y *= -1
+        }
     }
 
     draw() {
@@ -89,7 +93,7 @@ function run() {
 
     mouse.update()
     mouse.draw()
-    dot.update(deltaTime)
+    dot.update()
     dot.draw()
 
 
