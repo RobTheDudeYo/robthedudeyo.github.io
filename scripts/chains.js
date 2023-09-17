@@ -60,8 +60,8 @@ class Dot {
         this.vector.y += dy / dist
         this.x += this.vector.x
         this.y += this.vector.y
-        this.vector.x *= 0.999
-        this.vector.y *= 0.999
+        this.vector.x *= 0.996
+        this.vector.y *= 0.996
         if (this.x < 0 || this.x > width) {
             this.vector.x *= -1
         } else if (this.y < 0 || this.y > height) {
