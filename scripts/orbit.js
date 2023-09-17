@@ -17,7 +17,6 @@ let mouseX = centerX;
 let mouseY = centerY;
 
 
-let star_location = 0
 
 class Mouse {
     constructor(x, y) {
