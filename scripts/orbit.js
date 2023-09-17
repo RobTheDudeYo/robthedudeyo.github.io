@@ -16,10 +16,6 @@ const centerY = height / 2;
 let mouseX = centerX;
 let mouseY = centerY;
 
-let word = "rob"
-if (Math.random() < 0.01) {
-    word = "nob"
-}
 
 let star_location = 0
 
