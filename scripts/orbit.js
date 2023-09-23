@@ -151,8 +151,6 @@ if (is_mobile) {
     })
 }
 function getMousePos(canvas, event) {
-    // how to get mouse position on canvas from https://stackoverflow.com/a/17130415
-    // (thanks for the link, github copilot!)
     let area = canvas.getBoundingClientRect();
     return {
         x: event.clientX - area.left,
