@@ -56,7 +56,7 @@ class Block {
 
 
 let little_block = new Block(width*0.1, height * 0.9 - width * 0.2, width * 0.2, 1, 0, 'red');
-let big_block = new Block(width*0.4, height * 0.9 - width * 0.4, width * 0.4, 10000000000, -0.00001, 'blue');
+let big_block = new Block(width*0.4, height * 0.9 - width * 0.4, width * 0.4, 100000000000000, -0.000001, 'blue');
 
 function run() {
     ctx.fillStyle = 'white';
@@ -72,14 +72,13 @@ function run() {
 
 
     update();
-    console.log(collisions);
 
     draw();
 
     // draw the number of collisions, top left
     ctx.fillStyle = 'black';
-    ctx.font = `${width*0.25}px Courier New`;
-    ctx.fillText(collisions, 0, width * 0.175);
+    ctx.font = `${width*0.2}px Courier New`;
+    ctx.fillText(collisions, 0, width * 0.15);
 
     update_fps()
     requestAnimationFrame(run);
@@ -87,7 +86,7 @@ function run() {
 
 
 function update() {
-    for (let i = 0; i < 100000; i++) {
+    for (let i = 0; i < 1000000; i++) {
         little_block.update();
         if (little_block.x < 0) {
             little_block.x = 0;
