@@ -65,7 +65,7 @@ class Block {
 
 
 let little_block = new Block(width * 0.1, height * 0.9 - width * 0.1, width * 0.1, 1, 0, 'red');
-let big_block = new Block(width * 0.21, height * 0.9 - width * 0.3, width * 0.3, 100000000000000, -0.00001, 'blue');
+let big_block = new Block(width * 0.21, height * 0.9 - width * 0.3, width * 0.3, 100000000000000, -0.000001, 'blue');
 
 
 let last_collisions = 0;
@@ -88,7 +88,7 @@ function run() {
 
 
 function update() {
-    for (let i = 0; i < 100000; i++) {
+    for (let i = 0; i < 1000000; i++) {
         little_block.update();
         if (little_block.x < 0) {
             little_block.x = 0;
@@ -212,5 +212,5 @@ draw()
 
 // "click/tap to start"
 ctx.fillStyle = 'black';
-ctx.font = `${width * 0.05}px Courier New`;
+ctx.font = `900 ${width * 0.05}px Courier New`;
 ctx.fillText("click/tap to start", width * 0.1, height * 0.5);
