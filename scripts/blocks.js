@@ -135,6 +135,12 @@ function draw() {
     ctx.font = `${width * 0.2}px Courier New`;
     ctx.fillText(collisions, 0, width * 0.15);
 
+
+    // write this.mass (+'kg') on the block
+    ctx.font = `${100}px Courier New`;
+    ctx.fillText(`${little_block.mass}kg`, little_block.x, little_block.y);
+    ctx.fillText(`100trillion kg`, big_block.x, big_block.y);
+
     update_fps()
 }
 
