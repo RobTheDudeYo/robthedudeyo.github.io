@@ -7,6 +7,15 @@ let lastTime = Date.now();
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
+const clickSound = new Audio('../sounds/click.mp3');
+clickSound.volume = 0.1;
+function playSound() {
+    clickSound.currentTime = 0;
+    clickSound.play();
+}
+
+
+
 const width = window.innerWidth;
 const height = window.innerHeight;
 canvas.width = width;
@@ -55,38 +64,31 @@ class Block {
 }
 
 
-let little_block = new Block(width*0.1, height * 0.9 - width * 0.2, width * 0.2, 1, 0, 'red');
-let big_block = new Block(width*0.4, height * 0.9 - width * 0.4, width * 0.4, 100000000000000, -0.000001, 'blue');
+let little_block = new Block(width * 0.1, height * 0.9 - width * 0.1, width * 0.1, 1, 0, 'red');
+let big_block = new Block(width * 0.21, height * 0.9 - width * 0.3, width * 0.3, 100000000000000, -0.00001, 'blue');
+
+
+let last_collisions = 0;
 
 function run() {
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, width, height);
     deltaTime = (Date.now() - lastTime) / 10;
     lastTime = Date.now();
-
-    // draw a line from left to right, center of screen
-    ctx.beginPath();
-    ctx.moveTo(0, height * 0.9);
-    ctx.lineTo(width, height * 0.9);
-    ctx.stroke();
-
 
     update();
 
     draw();
 
-    // draw the number of collisions, top left
-    ctx.fillStyle = 'black';
-    ctx.font = `${width*0.2}px Courier New`;
-    ctx.fillText(collisions, 0, width * 0.15);
+    if (collisions > last_collisions) {
+        playSound();
+        last_collisions = collisions;
+    }
 
-    update_fps()
     requestAnimationFrame(run);
 }
 
 
 function update() {
-    for (let i = 0; i < 1000000; i++) {
+    for (let i = 0; i < 100000; i++) {
         little_block.update();
         if (little_block.x < 0) {
             little_block.x = 0;
@@ -109,6 +111,13 @@ function update() {
 
 
 function draw() {
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, width, height);
+    // draw a line from left to right, center of screen
+    ctx.beginPath();
+    ctx.moveTo(0, height * 0.9);
+    ctx.lineTo(width, height * 0.9);
+    ctx.stroke();
 
     if (little_block.x < 0) {
         little_block.draw(0);
@@ -120,14 +129,14 @@ function draw() {
     } else {
         big_block.draw(big_block.x);
     }
+
+    // draw the number of collisions
+    ctx.fillStyle = 'black';
+    ctx.font = `${width * 0.2}px Courier New`;
+    ctx.fillText(collisions, 0, width * 0.15);
+
+    update_fps()
 }
-
-
-
-
-
-
-
 
 const fps_counter = document.getElementsByClassName("fps-counter")[0];
 let fpses = [];
@@ -146,6 +155,7 @@ function update_fps() {
 
 const is_mobile = /Mobi|Android/i.test(navigator.userAgent);
 let touching = false
+let clicked = false
 if (is_mobile) {
     document.addEventListener('touchstart', (e) => {
         e.preventDefault()
@@ -153,6 +163,10 @@ if (is_mobile) {
         mouseX = pos.x
         mouseY = pos.y
         touching = true
+        if (!clicked) {
+            run()
+            clicked = true
+        }
     })
     document.addEventListener('touchend', (e) => {
         e.preventDefault()
@@ -170,6 +184,10 @@ if (is_mobile) {
         mouseX = pos.x
         mouseY = pos.y
         touching = true
+        if (!clicked) {
+            run()
+            clicked = true
+        }
     })
     document.addEventListener('mouseup', (e) => {
         touching = false
@@ -190,4 +208,9 @@ function getMousePos(canvas, event) {
     }
 }
 
-run()
+draw()
+
+// "click/tap to start"
+ctx.fillStyle = 'black';
+ctx.font = `${width * 0.05}px Courier New`;
+ctx.fillText("click/tap to start", width * 0.1, height * 0.5);
