@@ -64,8 +64,8 @@ class Block {
 }
 
 
-let little_block = new Block(width * 0.1, height * 0.9 - width * 0.1, width * 0.1, 1, 0, 'red');
-let big_block = new Block(width * 0.21, height * 0.9 - width * 0.3, width * 0.3, 100000000000000, -0.000001, 'blue');
+let little_block = new Block(width * 0.1, height * 0.95 - width * 0.1, width * 0.1, 1, 0, 'red');
+let big_block = new Block(width * 0.21, height * 0.95 - width * 0.3, width * 0.3, 100000000000000, -0.000001, 'blue');
 
 
 let last_collisions = 0;
@@ -115,8 +115,8 @@ function draw() {
     ctx.fillRect(0, 0, width, height);
     // draw a line from left to right, center of screen
     ctx.beginPath();
-    ctx.moveTo(0, height * 0.9);
-    ctx.lineTo(width, height * 0.9);
+    ctx.moveTo(0, height * 0.95);
+    ctx.lineTo(width, height * 0.95);
     ctx.stroke();
 
     if (little_block.x < 0) {
@@ -136,10 +136,10 @@ function draw() {
     ctx.fillText(collisions, 0, width * 0.15);
 
 
-    // write this.mass (+'kg') on the block
-    ctx.font = `${100}px Courier New`;
-    ctx.fillText(`${little_block.mass}kg`, little_block.x, little_block.y);
-    ctx.fillText(`100trillion kg`, big_block.x, big_block.y);
+    // write this.mass (+'kg') on the blocks
+    ctx.font = `${50}px Courier New`;
+    ctx.fillText(`1kg`, little_block.x, little_block.y);
+    ctx.fillText(`100 trillion kg`, big_block.x, big_block.y);
 
     update_fps()
 }
@@ -218,5 +218,5 @@ draw()
 
 // "click/tap to start"
 ctx.fillStyle = 'black';
-ctx.font = `900 ${width * 0.05}px Courier New`;
-ctx.fillText("click/tap to start", width * 0.1, height * 0.5);
+ctx.font = `900 ${width * 0.025}px Courier New`;
+ctx.fillText("click/tap to start", width * 0.225, height * 0.5);
