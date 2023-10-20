@@ -458,24 +458,34 @@ class Block {
 
     draw() {
         if (this.type != 0) {
-            if (this.type == 10) {
-                context.fillStyle = "white";
-            } else if (this.type == 2) {
-                context.fillStyle = "red";
-            } else if (this.type == 3) {
-                context.fillStyle = "orange";
-            } else if (this.type == 4) {
-                context.fillStyle = "yellow";
-            } else if (this.type == 5) {
-                context.fillStyle = "green";
-            } else if (this.type == 6) {
-                context.fillStyle = "blue";
-            } else if (this.type == 7) {
-                context.fillStyle = "purple";
-            } else if (this.type == 8) {
-                context.fillStyle = "pink";
-            } else if (this.type == 9) {
-                context.fillStyle = "black";
+            switch (this.type) {
+                case 10:
+                    context.fillStyle = "white";
+                    break;
+                case 2:
+                    context.fillStyle = "red";
+                    break;
+                case 3:
+                    context.fillStyle = "orange";
+                    break;
+                case 4:
+                    context.fillStyle = "yellow";
+                    break;
+                case 5:
+                    context.fillStyle = "green";
+                    break;
+                case 6:
+                    context.fillStyle = "blue";
+                    break;
+                case 7:
+                    context.fillStyle = "purple";
+                    break;
+                case 8:
+                    context.fillStyle = "pink";
+                    break;
+                case 9:
+                    context.fillStyle = "black";
+                    break;
             }
             context.fillRect(this.x, this.y, this.width, this.height);
         }
