@@ -283,10 +283,9 @@ class Ball {
         // this current grid location, so it doesn't have to loop through all the blocks
         // instead it just looks in the spaces around the ball
         let gridX = (Math.floor((this.x + (this.width / 2)) / (this.resolution / 11)));
-        let gridY = (Math.floor((this.y + (this.width / 2)) / (this.resolution / 25))) - 1;
+        let gridY = (Math.floor((this.y + (this.width / 2)) / (this.resolution / 25)));
 
         // check current grid location, just in case we missed it otherwise
-        // I originally had it reverse the velocity, but it didn't look good
         if (gridY > 0 && gridY < 16) {
             if (blocks[gridX][gridY].type != 9 && blocks[gridX][gridY].type != 0) {
                 blocks[gridX][gridY].hit(this, game);
@@ -449,7 +448,7 @@ class Block {
         this.width = this.resolution / 11;
         this.height = this.resolution / 25;
         this.x = x * this.width
-        this.y = (y * this.height) + this.height;
+        this.y = y * this.height;
         this.type = type;
         this.subtype = type == 10 ? 1 : 0;
         this.balls = balls;
@@ -481,6 +480,7 @@ class Block {
             context.fillRect(this.x, this.y, this.width, this.height);
         }
     }
+
 
     hit(ball, game) {
         ball.speedIncrease();
