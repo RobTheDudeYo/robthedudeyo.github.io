@@ -19,6 +19,7 @@ async function main() {
     let positionAttributeLocation = gl.getAttribLocation(program, "a_position");
     let resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
     let timeUniformLocation = gl.getUniformLocation(program, "u_time");
+    let randomUniformLocation = gl.getUniformLocation(program, "u_random");
     let textureUniformLocation = gl.getUniformLocation(program, "u_texture");
 
     let backgroundTexture = new Image();
@@ -26,14 +27,11 @@ async function main() {
     await new Promise((resolve) => {
         backgroundTexture.onload = () => resolve();
     });
-
     let texture = gl.createTexture();
     gl.activeTexture(gl.TEXTURE0 + 0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundTexture);
     gl.generateMipmap(gl.TEXTURE_2D);
-
-
 
     let positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -67,6 +65,7 @@ async function main() {
     gl.useProgram(program);
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
     gl.uniform1f(timeUniformLocation, performance.now() / 1000);
+    gl.uniform1f(randomUniformLocation, Math.random());
     gl.uniform1i(textureUniformLocation, 0);
 
     let primitiveType = gl.TRIANGLES;

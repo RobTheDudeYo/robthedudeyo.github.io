@@ -5,9 +5,10 @@ precision highp float;
 in vec2 pos;
 out vec4 outColour;
 
-uniform sampler2D u_texture;
-uniform float u_time;
 uniform vec2 u_resolution;
+uniform float u_time;
+uniform float u_random;
+uniform sampler2D u_texture;
 
 vec3 rainbow(in float t);
 mat2 rotate(float angle);
@@ -19,7 +20,7 @@ void main() {
 
     vec3 colour = texture(u_texture,uv*0.75).rgb;
     float gray = smoothstep(1.5,0.0,(colour.x+colour.y+colour.z)/3.0);
-    colour = rainbow(-u_time*0.05+gray+uv.x*0.05+uv.y*0.25);
+    colour = rainbow(u_random-u_time*0.05+gray+uv.x*0.05+uv.y*0.25);
 
     outColour = vec4(colour,1.0);
 }
