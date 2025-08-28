@@ -8,8 +8,8 @@ async function main() {
     }
 
     let [vertexShaderSource, fragmentShaderSource] = await Promise.all([
-        loadText("./shader.vertex"),
-        loadText("./shader.fragment"),
+        loadText("./periodic/shader.vertex"),
+        loadText("./periodic/shader.fragment"),
     ]);
 
     let vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
@@ -21,6 +21,12 @@ async function main() {
     let timeUniformLocation = gl.getUniformLocation(program, "u_time");
     let randomUniformLocation = gl.getUniformLocation(program, "u_random");
     let textureUniformLocation = gl.getUniformLocation(program, "u_texture");
+    let mouseUniformLocation = gl.getUniformLocation(program, "u_mouse");
+
+    canvas.addEventListener('mousemove', (e) => {
+        let pos = getMousePos(canvas, e);
+        gl.uniform2f(mouseUniformLocation, pos.x, canvas.height - pos.y);
+    });
 
     let backgroundTexture = new Image();
     backgroundTexture.src = "./background_texture.png";
@@ -146,6 +152,14 @@ function resizeCanvasToDisplaySize(canvas) {
         return true;
     }
     return false;
+}
+
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+    };
 }
 
 
