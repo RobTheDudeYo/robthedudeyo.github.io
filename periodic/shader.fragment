@@ -6,12 +6,9 @@ out vec4 outColour;
 
 uniform vec2 u_resolution;
 uniform float u_time;
-uniform float u_random;
 uniform vec2 u_mouse;
-uniform sampler2D u_texture;
 
 vec3 rainbow(in float t);
-mat2 rotate(float angle);
 
 void main() {
     vec2 uv = (gl_FragCoord.xy-0.5*u_resolution) / max(u_resolution.x,u_resolution.y);
@@ -35,10 +32,4 @@ vec3 rainbow(in float t) {
     vec3 d = vec3(0.0,0.33,0.67);
 
     return a + b*cos(6.28318*(c*t+d));
-}
-
-mat2 rotate(float angle) {
-    float s = sin(angle);
-    float c = cos(angle);
-    return mat2(c, -s, s, c);
 }
