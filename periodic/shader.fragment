@@ -17,13 +17,13 @@ void main() {
     vec2 uv = (gl_FragCoord.xy-0.5*u_resolution) / max(u_resolution.x,u_resolution.y);
     uv *= 40.0;
     uv += 0.5;
-    vec2 mouse_uv = (u_mouse-0.5*u_resolution) / max(u_resolution.x,u_resolution.y);
-    float id_dist = length(floor(uv) - mouse_uv*40.0);
+    vec2 mouse_uv = ((u_mouse-0.5*u_resolution) / max(u_resolution.x,u_resolution.y))*40.0;
+    float id_dist = length(floor(uv) - mouse_uv);
     uv = fract(uv)-0.5;
 
-    float size = (sin(id_dist-u_time)*0.5+0.5)*0.5;
+    float size = max(0.05,(sin(id_dist-u_time)*0.5+0.5)*0.5);
 
-    vec3 colour = vec3(smoothstep(size-0.05,size,length(uv)));
+    vec3 colour = rainbow(id_dist*0.05)*smoothstep(size,size-0.05,length(uv));
 
     outColour = vec4(colour,1.0);
 }
