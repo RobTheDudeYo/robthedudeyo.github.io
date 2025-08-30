@@ -8,8 +8,8 @@ async function main() {
     }
 
     let [vertexShaderSource, fragmentShaderSource] = await Promise.all([
-        loadText("./periodic/shader.vertex"),
-        loadText("./periodic/shader.fragment"),
+        loadText("./rotation/shader.vertex"),
+        loadText("./rotation/shader.fragment"),
     ]);
 
     let vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
