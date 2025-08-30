@@ -20,7 +20,7 @@ void main() {
 
     float l = line(uv, vec2(-0.4,0.0), vec2(0.4,0.0), 0.05);
 
-    vec3 colour = rainbow(sin(id.x-2.0*id.y-u_time)*0.5)*l;
+    vec3 colour = rainbow(sin(id.x-2.0*id.y-u_time)*0.5+0.5)*l;
 
     outColour = vec4(colour,1.0);
 }
