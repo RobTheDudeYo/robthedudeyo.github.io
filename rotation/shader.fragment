@@ -16,11 +16,11 @@ void main() {
     vec2 uv = (gl_FragCoord.xy-0.5*u_resolution) / max(u_resolution.x,u_resolution.y);
     vec2 id = floor(uv*70.0)*0.1;
     uv = fract(uv*70.0)-0.5;
-    uv *= rotate(sin(id.x-2.0*id.y-u_time*2.0));
+    uv *= rotate(sin(id.x-2.0*id.y-u_time));
 
     float l = line(uv, vec2(-0.4,0.0), vec2(0.4,0.0), 0.05);
 
-    vec3 colour = rainbow(id.x*0.25)*l;
+    vec3 colour = rainbow(sin(id.x-2.0*id.y-u_time))*l;
 
     outColour = vec4(colour,1.0);
 }
