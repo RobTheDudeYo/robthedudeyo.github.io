@@ -8,8 +8,8 @@ async function main() {
     }
 
     let [vertexShaderSource, fragmentShaderSource] = await Promise.all([
-        loadText("./rotation/shader.vertex"),
-        loadText("./rotation/shader.fragment"),
+        loadText("./periodic/shader.vertex"),
+        loadText("./periodic/shader.fragment"),
     ]);
 
     let vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
@@ -153,14 +153,17 @@ function resizeCanvasToDisplaySize(canvas) {
     }
     return false;
 }
-
 function getMousePos(canvas, evt) {
-    var rect = canvas.getBoundingClientRect();
+    let rect = canvas.getBoundingClientRect();
+    let scaleX = canvas.width / rect.width;
+    let scaleY = canvas.height / rect.height;
+
     return {
-        x: evt.clientX - rect.left,
-        y: evt.clientY - rect.top
+        x: (evt.clientX - rect.left) * scaleX,
+        y: (evt.clientY - rect.top) * scaleY
     };
 }
+
 
 
 main();
