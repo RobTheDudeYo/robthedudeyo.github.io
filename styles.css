@@ -3,6 +3,8 @@ html {
     color: black;
     font-family: 'Courier New', Courier, monospace;
     pointer-events: none;
+    /* touch controls: none */
+    user-select: none;
 }
 
 body {
@@ -32,6 +34,7 @@ main {
     font-size: 1.5em;
     margin-top: 10px;
     pointer-events: auto;
+    user-select: auto;
 }
 
 footer {}
