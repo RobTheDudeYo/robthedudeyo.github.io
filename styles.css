@@ -2,7 +2,7 @@ html {
     background-color: black;
     color: black;
     font-family: 'Courier New', Courier, monospace;
-    text-align: center;
+    pointer-events: none;
 }
 
 body {
@@ -12,13 +12,10 @@ body {
     flex-direction: column;
 }
 
-header {
-    border: 1px solid red;
-}
+header {}
 
 main {
     flex: 1;
-    border: 1px solid blue;
 }
 
 #wallpaper {
@@ -27,10 +24,14 @@ main {
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 1000;
+    z-index: -1;
+    pointer-events: auto;
 }
 
-footer {
-
-    border: 1px solid green;
+#shader-select {
+    font-size: 1.5em;
+    margin-top: 10px;
+    pointer-events: auto;
 }
+
+footer {}

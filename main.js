@@ -1,5 +1,5 @@
 
-async function main() {
+async function main(shader_name = "clouds") {
     let canvas = document.getElementById("wallpaper");
     let gl = canvas.getContext("webgl2");
     if (!gl) {
@@ -8,8 +8,8 @@ async function main() {
     }
 
     let [vertexShaderSource, fragmentShaderSource] = await Promise.all([
-        loadText("./periodic/shader.vertex"),
-        loadText("./periodic/shader.fragment"),
+        loadText("./" + shader_name + "/shader.vertex"),
+        loadText("./" + shader_name + "/shader.fragment"),
     ]);
 
     let vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
@@ -78,9 +78,9 @@ async function main() {
     let count = 6;
     gl.drawArrays(primitiveType, offset, count);
 
+    let running = true;
 
-
-    while (true) {
+    while (running) {
         if (resizeCanvasToDisplaySize(gl.canvas)) {
             positions = [
                 0, 0,
@@ -97,6 +97,20 @@ async function main() {
         }
         gl.uniform1f(timeUniformLocation, performance.now() / 1000);
         gl.drawArrays(primitiveType, 0, count);
+        let shaderSelect = document.getElementById("shader-select");
+        if (shaderSelect) {
+            if (shaderSelect.value !== shader_name) {
+                running = false;
+                gl.deleteTexture(texture);
+                gl.deleteBuffer(positionBuffer);
+                gl.deleteShader(vertexShader);
+                gl.deleteShader(fragmentShader);
+                gl.deleteProgram(program);
+                canvas.replaceWith(canvas.cloneNode(true));
+                await main(shaderSelect.value);
+                break;
+            }
+        }
         await new Promise(requestAnimationFrame);
     }
 
