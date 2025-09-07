@@ -12,9 +12,10 @@ vec3 rainbow(in float t);
 
 void main() {
     vec2 uv = (gl_FragCoord.xy-0.5*u_resolution) / max(u_resolution.x,u_resolution.y);
-    uv *= 40.0;
+    float mult = max(u_resolution.x,u_resolution.y)/40.0;
+    uv *= mult;
     uv += 0.5;
-    vec2 mouse_uv = ((u_mouse-0.5*u_resolution) / max(u_resolution.x,u_resolution.y))*40.0;
+    vec2 mouse_uv = ((u_mouse-0.5*u_resolution) / max(u_resolution.x,u_resolution.y))*mult;
     float id_dist = length(floor(uv) - mouse_uv);
     uv = fract(uv)-0.5;
 

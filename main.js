@@ -1,5 +1,5 @@
 
-async function main(shader_name = "clouds") {
+async function main(shader_name = "periodic") {
     let canvas = document.getElementById("wallpaper");
     let gl = canvas.getContext("webgl2");
     if (!gl) {
@@ -20,7 +20,7 @@ async function main(shader_name = "clouds") {
     let resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
     let timeUniformLocation = gl.getUniformLocation(program, "u_time");
     let randomUniformLocation = gl.getUniformLocation(program, "u_random");
-    let textureUniformLocation = gl.getUniformLocation(program, "u_texture");
+    let cloudstextureUniformLocation = gl.getUniformLocation(program, "u_clouds_texture");
     let mouseUniformLocation = gl.getUniformLocation(program, "u_mouse");
 
     canvas.addEventListener('mousemove', (e) => {
@@ -28,15 +28,15 @@ async function main(shader_name = "clouds") {
         gl.uniform2f(mouseUniformLocation, pos.x, canvas.height - pos.y);
     });
 
-    let backgroundTexture = new Image();
-    backgroundTexture.src = "./background_texture.png";
+    let cloudsTexture = new Image();
+    cloudsTexture.src = "./clouds.png";
     await new Promise((resolve) => {
-        backgroundTexture.onload = () => resolve();
+        cloudsTexture.onload = () => resolve();
     });
-    let texture = gl.createTexture();
+    let clouds_texture = gl.createTexture();
     gl.activeTexture(gl.TEXTURE0 + 0);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundTexture);
+    gl.bindTexture(gl.TEXTURE_2D, clouds_texture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, cloudsTexture);
     gl.generateMipmap(gl.TEXTURE_2D);
 
     let positionBuffer = gl.createBuffer();
@@ -72,7 +72,7 @@ async function main(shader_name = "clouds") {
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
     gl.uniform1f(timeUniformLocation, performance.now() / 1000);
     gl.uniform1f(randomUniformLocation, Math.random());
-    gl.uniform1i(textureUniformLocation, 0);
+    gl.uniform1i(cloudstextureUniformLocation, 0);
 
     let primitiveType = gl.TRIANGLES;
     let count = 6;
@@ -101,7 +101,7 @@ async function main(shader_name = "clouds") {
         if (shaderSelect) {
             if (shaderSelect.value !== shader_name) {
                 running = false;
-                gl.deleteTexture(texture);
+                gl.deleteTexture(clouds_texture);
                 gl.deleteBuffer(positionBuffer);
                 gl.deleteShader(vertexShader);
                 gl.deleteShader(fragmentShader);
